@@ -933,6 +933,8 @@ namespace AmpShell.Views
         private void GameAddButton_Click(object sender, EventArgs e)
         {
             var newGame = new Game();
+            newGame.Signature = UserDataAccessor.GetAUniqueSignature();
+
             if (e is DragEventArgs dragArgs)
             {
                 string[] files = (string[])dragArgs.Data.GetData(DataFormats.FileDrop);
@@ -952,14 +954,12 @@ namespace AmpShell.Views
                 }
             }
 
-            newGame.Signature = UserDataAccessor.GetAUniqueSignature();
-
-            GameForm newGameForm = new GameForm(newGame, true);
+            GameForm newGameForm = new GameForm(newGame);
 
             if (newGameForm.ShowDialog(this) == DialogResult.OK)
             {
                 Category concernedCategory = GetSelectedCategory();
-                concernedCategory.AddChild(newGameForm.GameInstance);
+                concernedCategory.AddChild(newGameForm.ViewModel.Model);
                 RedrawAllUserData();
             }
         }

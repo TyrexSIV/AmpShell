@@ -1,25 +1,50 @@
-﻿/*AmpShell : .NET front-end for DOSBox
- * Copyright (C) 2009, 2019 Maximilien Noal
- *This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with this program.
- * If not, see <http://www.gnu.org/licenses/>.*/
-
-using AmpShell.Model;
+﻿using AmpShell.Model;
 using AmpShell.Notification;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace AmpShell.ViewModel
 {
     public class GameViewModel : PropertyChangedNotifier
     {
         public Game Model { get; private set; }
+
+        public GameViewModel() : base()
+        {
+            Model = new Game();
+            ReplacePortableModePathsWithRealPaths();
+        }
+
+        public GameViewModel(Game model)
+        {
+            Model = model;
+            ReplacePortableModePathsWithRealPaths();
+        }
+
+        private void ReplacePortableModePathsWithRealPaths()
+        {
+            Model.Icon = Model.Icon.Replace("AppPath", Application.StartupPath);
+            Model.DOSEXEPath = Model.DOSEXEPath.Replace("AppPath", Application.StartupPath);
+            Model.Directory = Model.Directory.Replace("AppPath", Application.StartupPath);
+            Model.DBConfPath = Model.DBConfPath.Replace("AppPath", Application.StartupPath);
+            Model.CDPath = Model.CDPath.Replace("AppPath", Application.StartupPath);
+            Model.AdditionalCommands = Model.AdditionalCommands.Replace("AppPath", Application.StartupPath);
+            Model.SetupEXEPath = Model.SetupEXEPath.Replace("AppPath", Application.StartupPath);
+            Model.AlternateDOSBoxExePath = Model.AlternateDOSBoxExePath.Replace("AppPath", Application.StartupPath);
+        }
+
+        public bool IsDataValid()
+        {
+            if (string.IsNullOrWhiteSpace(Model.Name) || string.IsNullOrWhiteSpace(Model.DOSEXEPath) || string.IsNullOrWhiteSpace(Model.Directory))
+            {
+                return false;
+            }
+            return true;
+        }
     }
 }

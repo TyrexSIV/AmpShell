@@ -10,7 +10,7 @@
 
 using AmpShell.DAL;
 using AmpShell.Model;
-
+using AmpShell.ViewModel;
 using System;
 using System.Drawing;
 using System.IO;
@@ -20,70 +20,60 @@ namespace AmpShell.Views
 {
     public partial class GameForm : Form
     {
-        public GameForm(Game editedGame, bool newGame = false)
+        public GameViewModel ViewModel { get; private set; }
+
+        public GameForm()
         {
             InitializeComponent();
-            GameInstance = editedGame;
+            ViewModel = new GameViewModel();
+            NoConsoleCheckBox.Checked = UserDataAccessor.UserData.GamesNoConsole;
+            FullscreenCheckBox.Checked = UserDataAccessor.UserData.GamesInFullScreen;
+            QuitOnExitCheckBox.Checked = UserDataAccessor.UserData.GamesQuitOnExit;
+            GameAdditionalCommandsTextBox.Text = UserDataAccessor.UserData.GamesAdditionalCommands;
+        }
 
-            //fill the form with the Game's data.
-            Text = "Editing " + GameInstance.Name + "...";
-            if (string.IsNullOrWhiteSpace(GameInstance.Icon) == false && GameInstance.Icon != null)
+        public GameForm(Game editedGame)
+        {
+            InitializeComponent();
+            ViewModel = new GameViewModel(editedGame);
+            if (File.Exists(ViewModel.Model.Icon))
             {
-                string realLocation;
-                realLocation = GameInstance.Icon.Replace("AppPath", Application.StartupPath);
-                if (File.Exists(realLocation))
-                {
-                    GameIconPictureBox.Image = Image.FromFile(realLocation).GetThumbnailImage(64, 64, null, IntPtr.Zero);
-                    GameIconPictureBox.ImageLocation = realLocation;
-                }
+                GameIconPictureBox.Image = Image.FromFile(ViewModel.Model.Icon).GetThumbnailImage(64, 64, null, IntPtr.Zero);
+                GameIconPictureBox.ImageLocation = ViewModel.Model.Icon;
             }
-            
-            GameNameTextbox.Text = GameInstance.Name;
-            GameLocationTextbox.Text = GameInstance.DOSEXEPath;
-            GameDirectoryTextbox.Text = GameInstance.Directory;
-            GameCustomConfigurationTextbox.Text = GameInstance.DBConfPath;
-            NoConfigCheckBox.Checked = GameInstance.NoConfig;
-            GameCDPathTextBox.Text = GameInstance.CDPath;
-            GameAdditionalCommandsTextBox.Text = GameInstance.AdditionalCommands;
-            AlternateDOSBoxLocationTextbox.Text = GameInstance.AlternateDOSBoxExePath;
-            NoConsoleCheckBox.Checked = GameInstance.NoConsole;
-            QuitOnExitCheckBox.Checked = GameInstance.QuitOnExit;
-            FullscreenCheckBox.Checked = GameInstance.InFullScreen;
-            GameSetupTextBox.Text = GameInstance.SetupEXEPath;
-            UseIOCTLRadioButton.Checked = GameInstance.UseIOCTL;
-            IsAFloppyDiskRadioButton.Checked = GameInstance.MountAsFloppy;
+
+            GameNameTextbox.Text = ViewModel.Model.Name;
+            GameLocationTextbox.Text = ViewModel.Model.DOSEXEPath;
+            GameDirectoryTextbox.Text = ViewModel.Model.Directory;
+            GameCustomConfigurationTextbox.Text = ViewModel.Model.DBConfPath;
+            NoConfigCheckBox.Checked = ViewModel.Model.NoConfig;
+            GameCDPathTextBox.Text = ViewModel.Model.CDPath;
+            GameAdditionalCommandsTextBox.Text = ViewModel.Model.AdditionalCommands;
+            AlternateDOSBoxLocationTextbox.Text = ViewModel.Model.AlternateDOSBoxExePath;
+            NoConsoleCheckBox.Checked = ViewModel.Model.NoConsole;
+            QuitOnExitCheckBox.Checked = ViewModel.Model.QuitOnExit;
+            FullscreenCheckBox.Checked = ViewModel.Model.InFullScreen;
+            GameSetupTextBox.Text = ViewModel.Model.SetupEXEPath;
+            UseIOCTLRadioButton.Checked = ViewModel.Model.UseIOCTL;
+            IsAFloppyDiskRadioButton.Checked = ViewModel.Model.MountAsFloppy;
             if (UseIOCTLRadioButton.Checked == false && IsAFloppyDiskRadioButton.Checked == false)
             {
                 NoneRadioButton.Checked = true;
             }
 
-            GameLocationTextbox.Text = GameLocationTextbox.Text.Replace("AppPath", Application.StartupPath);
-            GameDirectoryTextbox.Text = GameDirectoryTextbox.Text.Replace("AppPath", Application.StartupPath);
-            GameCustomConfigurationTextbox.Text = GameCustomConfigurationTextbox.Text.Replace("AppPath", Application.StartupPath);
-            GameCDPathTextBox.Text = GameCDPathTextBox.Text.Replace("AppPath", Application.StartupPath);
-            GameAdditionalCommandsTextBox.Text = GameAdditionalCommandsTextBox.Text.Replace("AppPath", Application.StartupPath);
-            GameSetupTextBox.Text = GameSetupTextBox.Text.Replace("AppPath", Application.StartupPath);
-            AlternateDOSBoxLocationTextbox.Text = AlternateDOSBoxLocationTextbox.Text.Replace("AppPath", Application.StartupPath);
-
-            if (newGame)
-            {
-                NoConsoleCheckBox.Checked = UserDataAccessor.UserData.GamesNoConsole;
-                FullscreenCheckBox.Checked = UserDataAccessor.UserData.GamesInFullScreen;
-                QuitOnExitCheckBox.Checked = UserDataAccessor.UserData.GamesQuitOnExit;
-                GameAdditionalCommandsTextBox.Text = UserDataAccessor.UserData.GamesAdditionalCommands;
-            }
-            else
-            {
-                OK.Text = "&Save and apply";
-                OK.Width = 102;
-                OK.Location = new Point(Cancel.Location.X - 106, Cancel.Location.Y);
-                OK.Image = Properties.Resources.saveHS;
-                Cancel.Text = "&Don't save";
-            }
+            ModifyViewForEditing();
 
         }
 
-        public Game GameInstance { get; private set; }
+        private void ModifyViewForEditing()
+        {
+            Text = "Editing " + ViewModel.Model.Name + "...";
+            OK.Text = "&Save and apply";
+            OK.Width = 102;
+            OK.Location = new Point(Cancel.Location.X - 106, Cancel.Location.Y);
+            OK.Image = Properties.Resources.saveHS;
+            Cancel.Text = "&Don't save";
+        }
 
         private void Cancel_Click(object sender, EventArgs e)
         {
@@ -97,60 +87,55 @@ namespace AmpShell.Views
         /// <param name="e"></param>
         private void OK_Click(object sender, EventArgs e)
         {
-            //if the game has a name but no executable nor directory mounted as C: specified...
-            if (string.IsNullOrWhiteSpace(GameNameTextbox.Text) == false)
-            {
-                if (string.IsNullOrWhiteSpace(GameLocationTextbox.Text) && string.IsNullOrWhiteSpace(GameDirectoryTextbox.Text))
-                {
-                    MessageBox.Show(this, "You must enter the game's executable location or the directory that will be mounted as C:", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);//... show an error.
-                }
-                //else : the game has a name and a directory mounted has C:
-                else
-                {
-                    //close the form
-                    GameInstance.DOSEXEPath = GameLocationTextbox.Text;
-                    GameInstance.DBConfPath = GameCustomConfigurationTextbox.Text;
-                    GameInstance.NoConfig = NoConfigCheckBox.Checked;
-                    GameInstance.AdditionalCommands = GameAdditionalCommandsTextBox.Text;
-                    GameInstance.NoConsole = NoConsoleCheckBox.Checked;
-                    GameInstance.InFullScreen = FullscreenCheckBox.Checked;
-                    GameInstance.QuitOnExit = QuitOnExitCheckBox.Checked;
-                    GameInstance.Directory = GameDirectoryTextbox.Text;
-                    GameInstance.Name = GameNameTextbox.Text;
-                    GameInstance.CDPath = GameCDPathTextBox.Text;
-                    GameInstance.SetupEXEPath = GameSetupTextBox.Text;
-                    GameInstance.AlternateDOSBoxExePath = AlternateDOSBoxLocationTextbox.Text;
-                    if (string.IsNullOrWhiteSpace(GameIconPictureBox.ImageLocation) == false)
-                    {
-                        GameInstance.Icon = GameIconPictureBox.ImageLocation;
-                    }
-                    else
-                    {
-                        GameInstance.Icon = string.Empty;
-                    }
-
-                    GameInstance.UseIOCTL = UseIOCTLRadioButton.Checked;
-                    GameInstance.MountAsFloppy = IsAFloppyDiskRadioButton.Checked;
-                    if (string.IsNullOrWhiteSpace(GameCDPathTextBox.Text) == false)
-                    {
-                        if (File.Exists(GameCDPathTextBox.Text))
-                        {
-                            GameInstance.CDIsAnImage = true;
-                        }
-                        else
-                        {
-                            GameInstance.CDIsAnImage = false;
-                        }
-                    }
-                    DialogResult = DialogResult.OK;
-                    Close();
-                }
-            }
             //if the game has no name
-            else
+            if(string.IsNullOrWhiteSpace(GameNameTextbox.Text))
             {
                 MessageBox.Show(this, "You must enter the game's name.", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
             }
+
+            if(ViewModel.IsDataValid() == false)
+            {
+                MessageBox.Show(this, "You must enter the game's executable location or the directory that will be mounted as C:", Text, MessageBoxButtons.OK, MessageBoxIcon.Information);//... show an error.
+                return;
+            }
+            
+            ViewModel.Model.DOSEXEPath = GameLocationTextbox.Text;
+            ViewModel.Model.DBConfPath = GameCustomConfigurationTextbox.Text;
+            ViewModel.Model.NoConfig = NoConfigCheckBox.Checked;
+            ViewModel.Model.AdditionalCommands = GameAdditionalCommandsTextBox.Text;
+            ViewModel.Model.NoConsole = NoConsoleCheckBox.Checked;
+            ViewModel.Model.InFullScreen = FullscreenCheckBox.Checked;
+            ViewModel.Model.QuitOnExit = QuitOnExitCheckBox.Checked;
+            ViewModel.Model.Directory = GameDirectoryTextbox.Text;
+            ViewModel.Model.Name = GameNameTextbox.Text;
+            ViewModel.Model.CDPath = GameCDPathTextBox.Text;
+            ViewModel.Model.SetupEXEPath = GameSetupTextBox.Text;
+            ViewModel.Model.AlternateDOSBoxExePath = AlternateDOSBoxLocationTextbox.Text;
+            if (string.IsNullOrWhiteSpace(GameIconPictureBox.ImageLocation) == false)
+            {
+                ViewModel.Model.Icon = GameIconPictureBox.ImageLocation;
+            }
+            else
+            {
+                ViewModel.Model.Icon = string.Empty;
+            }
+
+            ViewModel.Model.UseIOCTL = UseIOCTLRadioButton.Checked;
+            ViewModel.Model.MountAsFloppy = IsAFloppyDiskRadioButton.Checked;
+            if (string.IsNullOrWhiteSpace(GameCDPathTextBox.Text) == false)
+            {
+                if (File.Exists(GameCDPathTextBox.Text))
+                {
+                    ViewModel.Model.CDIsAnImage = true;
+                }
+                else
+                {
+                    ViewModel.Model.CDIsAnImage = false;
+                }
+            }
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         /// <summary>
@@ -472,13 +457,13 @@ namespace AmpShell.Views
             catch (OutOfMemoryException)
             {
                 MessageBox.Show(this, "There was an error in the image file, or it's format is not supported. Please check the file.", "Changing the game's icon", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                if (string.IsNullOrWhiteSpace(GameInstance.Icon))
+                if (string.IsNullOrWhiteSpace(ViewModel.Model.Icon))
                 {
                     GameIconPictureBox.Image = Properties.Resources.Generic_Application1;
                 }
                 else
                 {
-                    GameIconPictureBox.Image = Image.FromFile(GameInstance.Icon).GetThumbnailImage(64, 64, null, IntPtr.Zero);
+                    GameIconPictureBox.Image = Image.FromFile(ViewModel.Model.Icon).GetThumbnailImage(64, 64, null, IntPtr.Zero);
                 }
             }
         }
@@ -520,25 +505,25 @@ namespace AmpShell.Views
         private string SearchFolderDialogStartDirectory()
         {
             string initialDirectory = string.Empty;
-            if (string.IsNullOrWhiteSpace(GameInstance.DOSEXEPath) == false && Directory.Exists(Path.GetDirectoryName(GameInstance.DOSEXEPath)))
+            if (string.IsNullOrWhiteSpace(ViewModel.Model.DOSEXEPath) == false && Directory.Exists(Path.GetDirectoryName(ViewModel.Model.DOSEXEPath)))
             {
-                initialDirectory = Path.GetDirectoryName(GameInstance.DOSEXEPath);
+                initialDirectory = Path.GetDirectoryName(ViewModel.Model.DOSEXEPath);
             }
-            else if (string.IsNullOrWhiteSpace(GameInstance.Directory) == false && Directory.Exists(GameInstance.Directory))
+            else if (string.IsNullOrWhiteSpace(ViewModel.Model.Directory) == false && Directory.Exists(ViewModel.Model.Directory))
             {
-                initialDirectory = GameInstance.Directory;
+                initialDirectory = ViewModel.Model.Directory;
             }
-            else if (string.IsNullOrWhiteSpace(GameInstance.SetupEXEPath) == false && Directory.Exists(Path.GetDirectoryName(GameInstance.SetupEXEPath)))
+            else if (string.IsNullOrWhiteSpace(ViewModel.Model.SetupEXEPath) == false && Directory.Exists(Path.GetDirectoryName(ViewModel.Model.SetupEXEPath)))
             {
-                initialDirectory = Path.GetDirectoryName(GameInstance.SetupEXEPath);
+                initialDirectory = Path.GetDirectoryName(ViewModel.Model.SetupEXEPath);
             }
-            else if (string.IsNullOrWhiteSpace(GameInstance.Icon) == false && File.Exists(GameInstance.Icon))
+            else if (string.IsNullOrWhiteSpace(ViewModel.Model.Icon) == false && File.Exists(ViewModel.Model.Icon))
             {
-                initialDirectory = Path.GetDirectoryName(GameInstance.Icon);
+                initialDirectory = Path.GetDirectoryName(ViewModel.Model.Icon);
             }
-            else if (string.IsNullOrWhiteSpace(GameInstance.DBConfPath) == false && Directory.Exists(Path.GetDirectoryName(GameInstance.DBConfPath)))
+            else if (string.IsNullOrWhiteSpace(ViewModel.Model.DBConfPath) == false && Directory.Exists(Path.GetDirectoryName(ViewModel.Model.DBConfPath)))
             {
-                initialDirectory = Path.GetDirectoryName(GameInstance.DBConfPath);
+                initialDirectory = Path.GetDirectoryName(ViewModel.Model.DBConfPath);
             }
             else if (string.IsNullOrWhiteSpace(UserDataAccessor.UserData.GamesDefaultDir) == false && Directory.Exists(UserDataAccessor.UserData.GamesDefaultDir))
             {

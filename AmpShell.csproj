@@ -55,6 +55,7 @@
     <Compile Include="Notification\PropertyChangedNotifier.cs" />
     <Compile Include="Serialization\ObjectSerializer.cs" />
     <Compile Include="ViewModel\CategoryViewModel.cs" />
+    <Compile Include="ViewModel\GameViewModel.cs" />
     <Compile Include="WinShell\LinkTarget.cs" />
     <Compile Include="Views\AboutBox.cs">
       <SubType>Form</SubType>
