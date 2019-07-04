@@ -11,13 +11,14 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Xml;
 using System.Xml.Serialization;
 
 namespace AmpShell.Serialization
 {
     public static class ObjectSerializer
     {
-        public static object Deserialize<T>(string xmlPath, T targetObjectType) where T : Type
+        public static object DeserializeFromDisk<T>(string xmlPath, T targetObjectType) where T : Type
         {
             XmlSerializer deserializer = new XmlSerializer(targetObjectType);
             var reader = new StreamReader(xmlPath, Encoding.Unicode);
@@ -26,12 +27,47 @@ namespace AmpShell.Serialization
             return targetObjectInstance;
         }
 
-        public static void Serialize<T>(string xmlPath, object objectToSerialize, T typeOfObjectToSerialize) where T : Type
+        public static void SerializeToDisk<T>(string xmlPath, object objectToSerialize, T typeOfObjectToSerialize) where T : Type
         {
             XmlSerializer serializer = new XmlSerializer(typeOfObjectToSerialize);
             var writer = new StreamWriter(xmlPath, false, Encoding.Unicode);
             serializer.Serialize(writer, objectToSerialize);
             writer.Close();
+        }
+
+        private static T DeserializeXML<T>(string xmlData) where T : new()
+        {
+            if (string.IsNullOrEmpty(xmlData))
+            {
+                return default;
+            }
+
+            TextReader tr = new StringReader(xmlData);
+            T DocItms = new T();
+            XmlSerializer xms = new XmlSerializer(DocItms.GetType());
+            DocItms = (T)xms.Deserialize(tr);
+
+            return DocItms == null ? default : DocItms;
+        }
+
+        private static string SeralizeObjectToXML<T>(T xmlObject)
+        {
+            StringBuilder sbTR = new StringBuilder();
+            XmlSerializer xmsTR = new XmlSerializer(xmlObject.GetType());
+            XmlWriterSettings xwsTR = new XmlWriterSettings();
+
+            XmlWriter xmwTR = XmlWriter.Create(sbTR, xwsTR);
+            xmsTR.Serialize(xmwTR, xmlObject);
+
+            return sbTR.ToString();
+        }
+
+
+
+        public static T CloneObject<T>(T objClone) where T : new()
+        {
+            string objectToString = SeralizeObjectToXML<T>(objClone);
+            return DeserializeXML<T>(objectToString);
         }
     }
 }

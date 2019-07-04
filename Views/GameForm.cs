@@ -8,9 +8,9 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.*/
 
-using AmpShell.DAL;
 using AmpShell.Model;
 using AmpShell.ViewModel;
+
 using System;
 using System.Drawing;
 using System.IO;
@@ -26,21 +26,14 @@ namespace AmpShell.Views
         {
             InitializeComponent();
             ViewModel = new GameViewModel();
-            NoConsoleCheckBox.Checked = UserDataAccessor.UserData.GamesNoConsole;
-            FullscreenCheckBox.Checked = UserDataAccessor.UserData.GamesInFullScreen;
-            QuitOnExitCheckBox.Checked = UserDataAccessor.UserData.GamesQuitOnExit;
-            GameAdditionalCommandsTextBox.Text = UserDataAccessor.UserData.GamesAdditionalCommands;
+            Initialize();
         }
 
         public GameForm(Game editedGame)
         {
             InitializeComponent();
             ViewModel = new GameViewModel(editedGame);
-            if (File.Exists(ViewModel.Model.Icon))
-            {
-                GameIconPictureBox.Image = Image.FromFile(ViewModel.Model.Icon).GetThumbnailImage(64, 64, null, IntPtr.Zero);
-                GameIconPictureBox.ImageLocation = ViewModel.Model.Icon;
-            }
+            Initialize();
 
             GameNameTextbox.Text = ViewModel.Model.Name;
             GameLocationTextbox.Text = ViewModel.Model.DOSEXEPath;
@@ -62,7 +55,12 @@ namespace AmpShell.Views
             }
 
             ModifyViewForEditing();
+        }
 
+        private void Initialize()
+        {
+            GameIconPictureBox.DataBindings.Add("ImageLocation", ViewModel.Model, "Icon");
+            GameIconPictureBox.DataBindings.Add("Image", ViewModel, "IconThumbnail");
         }
 
         private void ModifyViewForEditing()
@@ -77,6 +75,7 @@ namespace AmpShell.Views
 
         private void Cancel_Click(object sender, EventArgs e)
         {
+            ViewModel.CancelModifications();
             Close();
         }
 
@@ -145,26 +144,7 @@ namespace AmpShell.Views
         /// <param name="e"></param>
         private void GameLocationBrowseButton_Click(object sender, EventArgs e)
         {
-            OpenFileDialog gameExeFileDialog = new OpenFileDialog();
-            if (UserDataAccessor.UserData.PortableMode == true)
-            {
-                gameExeFileDialog.InitialDirectory = Application.StartupPath;
-            }
-            else if (string.IsNullOrWhiteSpace(GameLocationTextbox.Text) == false && Directory.Exists(Path.GetDirectoryName(GameLocationTextbox.Text)))
-            {
-                gameExeFileDialog.InitialDirectory = Path.GetDirectoryName(GameLocationTextbox.Text);
-            }
-            else
-            {
-                gameExeFileDialog.InitialDirectory = SearchFolderDialogStartDirectory();
-            }
-
-            gameExeFileDialog.Title = GameLocationLabel.Text;
-            gameExeFileDialog.Filter = "DOS executable files (*.bat;*.cmd;*.com;*.exe)|*.bat;*.cmd;*.com;*.exe;*.BAT;*.CMD;*.COM;*.EXE";
-            if (gameExeFileDialog.ShowDialog(this) == DialogResult.OK)
-            {
-                GameLocationTextbox.Text = gameExeFileDialog.FileName;
-            }
+            ViewModel.BrowseForGameLocation();
         }
 
         /// <summary>
@@ -174,26 +154,7 @@ namespace AmpShell.Views
         /// <param name="e"></param>
         private void GameCustomConfigurationBrowseButton_Click(object sender, EventArgs e)
         {
-            OpenFileDialog customConfigFileDialog = new OpenFileDialog();
-            if (UserDataAccessor.UserData.PortableMode == true)
-            {
-                customConfigFileDialog.InitialDirectory = Application.StartupPath;
-            }
-            else if (string.IsNullOrWhiteSpace(GameCustomConfigurationTextbox.Text) == false && Directory.Exists(Path.GetDirectoryName(GameCustomConfigurationTextbox.Text)))
-            {
-                customConfigFileDialog.InitialDirectory = Path.GetDirectoryName(GameCustomConfigurationTextbox.Text);
-            }
-            else
-            {
-                customConfigFileDialog.InitialDirectory = SearchFolderDialogStartDirectory();
-            }
-
-            customConfigFileDialog.Title = GameCustomCofigurationLabel.Text;
-            customConfigFileDialog.Filter = "DOSBox configuration file (*.conf)|*.conf;*.CONF";
-            if (customConfigFileDialog.ShowDialog(this) == DialogResult.OK)
-            {
-                GameCustomConfigurationTextbox.Text = customConfigFileDialog.FileName;
-            }
+            ViewModel.BrowseForCustomConfigurationFile();
         }
 
         /// <summary>
@@ -222,28 +183,7 @@ namespace AmpShell.Views
         /// <param name="e"></param>
         private void GameCDPathBrowseButton_Click(object sender, EventArgs e)
         {
-            OpenFileDialog cdImageFileDialog = new OpenFileDialog
-            {
-                Title = GameCDPathLabel.Text,
-                Filter = "DOSBox compatible CD images (*.bin;*.cue;*.iso;*.img)|*.bin;*.cue;*.iso;*.img;*.BIN;*.CUE;*.ISO;*.IMG"
-            };
-            if (UserDataAccessor.UserData.PortableMode == true)
-            {
-                cdImageFileDialog.InitialDirectory = Application.StartupPath;
-            }
-            else if (string.IsNullOrWhiteSpace(UserDataAccessor.UserData.CDsDefaultDir) == false && Directory.Exists(UserDataAccessor.UserData.CDsDefaultDir))
-            {
-                cdImageFileDialog.InitialDirectory = UserDataAccessor.UserData.CDsDefaultDir;
-            }
-            else
-            {
-                cdImageFileDialog.InitialDirectory = SearchFolderDialogStartDirectory();
-            }
-
-            if (cdImageFileDialog.ShowDialog(this) == DialogResult.OK)
-            {
-                GameCDPathTextBox.Text = cdImageFileDialog.FileName;
-            }
+            ViewModel.BrowseForCDImageFile();
         }
 
         /// <summary>
@@ -338,15 +278,7 @@ namespace AmpShell.Views
         /// <param name="e"></param>
         private void GameDirectoryBrowseButton_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog cMountFolderBrowserDialog = new FolderBrowserDialog
-            {
-                ShowNewFolderButton = true,
-                Description = GameDirectoryLabel.Text
-            };
-            if (cMountFolderBrowserDialog.ShowDialog(this) == DialogResult.OK)
-            {
-                GameDirectoryTextbox.Text = cMountFolderBrowserDialog.SelectedPath;
-            }
+            ViewModel.BrowseForGameDirectory();
         }
 
         /// <summary>
@@ -383,24 +315,7 @@ namespace AmpShell.Views
         /// <param name="e"></param>
         private void GameSetupBrowseButton_Click(object sender, EventArgs e)
         {
-            OpenFileDialog setupExeFileDialog = new OpenFileDialog
-            {
-                Title = GameSetupLabel.Text,
-                Filter = "DOS executable files (*.bat;*.com;*.exe)|*.bat;*.com;*.exe;*.BAT;*.COM;*.EXE"
-            };
-            if (UserDataAccessor.UserData.PortableMode == true)
-            {
-                setupExeFileDialog.InitialDirectory = Application.StartupPath;
-            }
-            else
-            {
-                setupExeFileDialog.InitialDirectory = SearchFolderDialogStartDirectory();
-            }
-
-            if (setupExeFileDialog.ShowDialog(this) == DialogResult.OK)
-            {
-                GameSetupTextBox.Text = setupExeFileDialog.FileName;
-            }
+            ViewModel.BrowseForSetupExe();
         }
 
         /// <summary>
@@ -412,11 +327,7 @@ namespace AmpShell.Views
         /// <param name="e"></param>
         private void GameCDDirBrowseButton_Click(object sender, EventArgs e)
         {
-            FolderBrowserDialog cdDriveFlderBrowserDialog = new FolderBrowserDialog();
-            if (cdDriveFlderBrowserDialog.ShowDialog(this) == DialogResult.OK)
-            {
-                GameCDPathTextBox.Text = cdDriveFlderBrowserDialog.SelectedPath;
-            }
+            ViewModel.BrowseForCDDirectory();
         }
 
         private void QuitOnExitCheckBox_EnabledChanged(object sender, EventArgs e)
@@ -429,127 +340,17 @@ namespace AmpShell.Views
 
         private void GameIconPictureBox_MouseClick(object sender, MouseEventArgs e)
         {
-            try
-            {
-                OpenFileDialog iconFileDialog = new OpenFileDialog
-                {
-                    Filter = "Image files (*.bmp;*.exif;*.gif;*.ico;*.jp*;*.png;*.tif*)|*.bmp;*.BMP;*.exif;*.EXIF;*.gif;*.GIF;*.ico;*.ICO;*.jp*;*.JP*;*.png;*.PNG;*.tif*;*.TIF*"
-                };
-                if (UserDataAccessor.UserData.PortableMode == true)
-                {
-                    iconFileDialog.InitialDirectory = Application.StartupPath;
-                }
-                else if (string.IsNullOrWhiteSpace(GameIconPictureBox.ImageLocation) == false && Directory.Exists(Path.GetDirectoryName(GameIconPictureBox.ImageLocation)))
-                {
-                    iconFileDialog.InitialDirectory = Path.GetDirectoryName(GameIconPictureBox.ImageLocation);
-                }
-                else
-                {
-                    iconFileDialog.InitialDirectory = SearchFolderDialogStartDirectory();
-                }
-
-                if (iconFileDialog.ShowDialog(this) == DialogResult.OK)
-                {
-                    GameIconPictureBox.Image = Image.FromFile(iconFileDialog.FileName).GetThumbnailImage(64, 64, null, IntPtr.Zero);
-                    GameIconPictureBox.ImageLocation = iconFileDialog.FileName;
-                }
-            }
-            catch (OutOfMemoryException)
-            {
-                MessageBox.Show(this, "There was an error in the image file, or it's format is not supported. Please check the file.", "Changing the game's icon", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                if (string.IsNullOrWhiteSpace(ViewModel.Model.Icon))
-                {
-                    GameIconPictureBox.Image = Properties.Resources.Generic_Application1;
-                }
-                else
-                {
-                    GameIconPictureBox.Image = Image.FromFile(ViewModel.Model.Icon).GetThumbnailImage(64, 64, null, IntPtr.Zero);
-                }
-            }
+            ViewModel.BrowseForGameIcon();
         }
 
         private void ResetIconButton_Click(object sender, EventArgs e)
         {
-            GameIconPictureBox.Image = Properties.Resources.Generic_Application1;
-            GameIconPictureBox.ImageLocation = string.Empty;
+            ViewModel.RemoveGameIcon();
         }
 
         private void AlternateDOSBoxLocationBrowsSearchButton_Click(object sender, EventArgs e)
         {
-            OpenFileDialog alternateDOSBoxExeFileDialog = new OpenFileDialog();
-            if (UserDataAccessor.UserData.PortableMode == true)
-            {
-                alternateDOSBoxExeFileDialog.InitialDirectory = Application.StartupPath;
-            }
-            else if (string.IsNullOrWhiteSpace(AlternateDOSBoxLocationTextbox.Text) == false && Directory.Exists(Path.GetDirectoryName(AlternateDOSBoxLocationTextbox.Text)))
-            {
-                alternateDOSBoxExeFileDialog.InitialDirectory = Path.GetDirectoryName(AlternateDOSBoxLocationTextbox.Text);
-            }
-            else if (string.IsNullOrWhiteSpace(UserDataAccessor.UserData.DBPath) == false && Directory.Exists(Path.GetDirectoryName(UserDataAccessor.UserData.DBPath)))
-            {
-                alternateDOSBoxExeFileDialog.InitialDirectory = UserDataAccessor.UserData.DBPath;
-            }
-            else
-            {
-                alternateDOSBoxExeFileDialog.InitialDirectory = SearchFolderDialogStartDirectory();
-            }
-
-            alternateDOSBoxExeFileDialog.Title = AlternateDOSBoxLocationLabel.Text;
-            alternateDOSBoxExeFileDialog.Filter = "DOSBox executable file (*.exe)|*.exe;*.EXE";
-            if (alternateDOSBoxExeFileDialog.ShowDialog(this) == DialogResult.OK)
-            {
-                AlternateDOSBoxLocationTextbox.Text = alternateDOSBoxExeFileDialog.FileName;
-            }
-        }
-
-        private string SearchFolderDialogStartDirectory()
-        {
-            string initialDirectory = string.Empty;
-            if (string.IsNullOrWhiteSpace(ViewModel.Model.DOSEXEPath) == false && Directory.Exists(Path.GetDirectoryName(ViewModel.Model.DOSEXEPath)))
-            {
-                initialDirectory = Path.GetDirectoryName(ViewModel.Model.DOSEXEPath);
-            }
-            else if (string.IsNullOrWhiteSpace(ViewModel.Model.Directory) == false && Directory.Exists(ViewModel.Model.Directory))
-            {
-                initialDirectory = ViewModel.Model.Directory;
-            }
-            else if (string.IsNullOrWhiteSpace(ViewModel.Model.SetupEXEPath) == false && Directory.Exists(Path.GetDirectoryName(ViewModel.Model.SetupEXEPath)))
-            {
-                initialDirectory = Path.GetDirectoryName(ViewModel.Model.SetupEXEPath);
-            }
-            else if (string.IsNullOrWhiteSpace(ViewModel.Model.Icon) == false && File.Exists(ViewModel.Model.Icon))
-            {
-                initialDirectory = Path.GetDirectoryName(ViewModel.Model.Icon);
-            }
-            else if (string.IsNullOrWhiteSpace(ViewModel.Model.DBConfPath) == false && Directory.Exists(Path.GetDirectoryName(ViewModel.Model.DBConfPath)))
-            {
-                initialDirectory = Path.GetDirectoryName(ViewModel.Model.DBConfPath);
-            }
-            else if (string.IsNullOrWhiteSpace(UserDataAccessor.UserData.GamesDefaultDir) == false && Directory.Exists(UserDataAccessor.UserData.GamesDefaultDir))
-            {
-                initialDirectory = UserDataAccessor.UserData.GamesDefaultDir;
-            }
-
-            if (string.IsNullOrWhiteSpace(initialDirectory))
-            {
-                if (string.IsNullOrWhiteSpace(GameLocationTextbox.Text) == false && Directory.Exists(Path.GetDirectoryName(GameLocationTextbox.Text)))
-                {
-                    initialDirectory = Path.GetDirectoryName(GameLocationTextbox.Text);
-                }
-                else if (string.IsNullOrWhiteSpace(GameSetupTextBox.Text) == false && Directory.Exists(Path.GetDirectoryName(GameSetupTextBox.Text)))
-                {
-                    initialDirectory = Path.GetDirectoryName(GameSetupTextBox.Text);
-                }
-                else if (string.IsNullOrWhiteSpace(GameCustomConfigurationTextbox.Text) == false && Directory.Exists(Path.GetDirectoryName(GameCustomConfigurationTextbox.Text)))
-                {
-                    initialDirectory = Path.GetDirectoryName(GameCustomConfigurationTextbox.Text);
-                }
-                else if (string.IsNullOrWhiteSpace(GameIconPictureBox.ImageLocation) == false && Directory.Exists(Path.GetDirectoryName(GameIconPictureBox.ImageLocation)))
-                {
-                    initialDirectory = Path.GetDirectoryName(GameIconPictureBox.ImageLocation);
-                }
-            }
-            return initialDirectory;
+            ViewModel.BrowseForAlternateDOSBoxExecutable();
         }
     }
 }

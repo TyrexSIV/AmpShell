@@ -87,7 +87,7 @@ namespace AmpShell.DAL
             //saves the data inside Amp by serliazing it in AmpShell.xml
             if (!UserData.PortableMode)
             {
-                ObjectSerializer.Serialize(GetDataFilePath(), UserData, typeof(ModelWithChildren));
+                ObjectSerializer.SerializeToDisk(GetDataFilePath(), UserData, typeof(ModelWithChildren));
             }
             else
             {
@@ -109,13 +109,13 @@ namespace AmpShell.DAL
                 UserData.DBPath = UserData.DBPath.Replace(PathFinder.GetStartupPath(), "AppPath");
                 UserData.ConfigEditorPath = UserData.ConfigEditorPath.Replace(PathFinder.GetStartupPath(), "AppPath");
                 UserData.ConfigEditorAdditionalParameters = UserData.ConfigEditorAdditionalParameters.Replace(PathFinder.GetStartupPath(), "AppPath");
-                ObjectSerializer.Serialize(PathFinder.GetStartupPath() + "\\AmpShell.xml", UserData, typeof(ModelWithChildren));
+                ObjectSerializer.SerializeToDisk(PathFinder.GetStartupPath() + "\\AmpShell.xml", UserData, typeof(ModelWithChildren));
             }
         }
 
         public static void LoadUserSettings()
         {
-            UserData = (Preferences)ObjectSerializer.Deserialize(GetDataFilePath(), typeof(ModelWithChildren));
+            UserData = (Preferences)ObjectSerializer.DeserializeFromDisk(GetDataFilePath(), typeof(ModelWithChildren));
             foreach (Category concernedCategory in UserData.ListChildren)
             {
                 foreach (Game concernedGame in concernedCategory.ListChildren)
