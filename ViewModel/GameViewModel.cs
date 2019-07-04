@@ -20,7 +20,7 @@ namespace AmpShell.ViewModel
         public Image IconThumbnail
         {
             get { return _iconThumbnail; }
-            set { Set(ref _iconThumbnail, value); }
+            private set { Set(ref _iconThumbnail, value); }
         }
 
         public GameViewModel() : base()
