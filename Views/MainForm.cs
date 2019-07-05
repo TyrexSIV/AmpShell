@@ -173,6 +173,31 @@ namespace AmpShell.Views
         }
 
         /// <summary>
+        /// EventHandler for when the user has finished resizing the window.
+        /// </summary>
+        private void AmpShell_Resized(object sender, EventArgs e)
+        {
+            //change the data about the Window's dimensions (restored on next session).
+            if (UserDataAccessor.UserData.RememberWindowSize == true)
+            {
+                UserDataAccessor.UserData.Height = Height;
+                UserDataAccessor.UserData.Width = Width;
+            }
+        }
+
+        /// <summary>
+        /// EventHandler for when the window is moved
+        /// </summary>
+        private void AmpShell_LocationChanged(object sender, EventArgs e)
+        {
+            if (UserDataAccessor.UserData.RememberWindowPosition == true && WindowState != FormWindowState.Minimized)
+            {
+                UserDataAccessor.UserData.X = Location.X;
+                UserDataAccessor.UserData.Y = Location.Y;
+            }
+        }
+
+        /// <summary>
         /// ListView instance used mainly to retrieve the current ListView (in tabcontrol.SelectedTab["GamesListView"])
         /// </summary>
         private ListView SelectedListView
@@ -541,6 +566,43 @@ namespace AmpShell.Views
         private Category GetSelectedCategory(int hoveredTabIndex)
         {
             return UserDataAccessor.GetCategoryWithSignature((string)TabControl.TabPages[hoveredTabIndex].Tag);
+        }
+
+        /// <summary>
+        /// EventHandler for when the user has clicked on the GameAddButton
+        /// </summary>
+        private void GameAddButton_Click(object sender, EventArgs e)
+        {
+            var newGame = new Game();
+            newGame.Signature = UserDataAccessor.GetAUniqueSignature();
+
+            if (e is DragEventArgs dragArgs)
+            {
+                string[] files = (string[])dragArgs.Data.GetData(DataFormats.FileDrop);
+                var firstFile = files.FirstOrDefault();
+                if (string.IsNullOrWhiteSpace(firstFile) == false)
+                {
+                    if (Path.GetExtension(firstFile).ToUpper() == ".LNK")
+                    {
+                        firstFile = LinkTarget.ResolveShortcut(firstFile);
+                    }
+                    newGame.Name = Path.GetDirectoryName(firstFile);
+                    newGame.Directory = Path.GetDirectoryName(firstFile);
+                    if (File.Exists(firstFile) && (Path.GetExtension(firstFile).ToUpper() == ".COM" || Path.GetExtension(firstFile).ToUpper() == ".EXE" || Path.GetExtension(firstFile).ToUpper() == ".BAT"))
+                    {
+                        newGame.DOSEXEPath = firstFile;
+                    }
+                }
+            }
+
+            GameForm newGameForm = new GameForm(newGame);
+
+            if (newGameForm.ShowDialog(this) == DialogResult.OK)
+            {
+                Category concernedCategory = GetSelectedCategory();
+                concernedCategory.AddChild(newGameForm.ViewModel.Model);
+                RedrawAllUserData();
+            }
         }
 
         /// <summary>
@@ -927,59 +989,9 @@ namespace AmpShell.Views
         /// </summary>
         private void QuitToolStripMenuItem_Click(object sender, EventArgs e) { Application.Exit(); }
 
-        /// <summary>
-        /// EventHandler for when the user has clicked on the GameAddButton
-        /// </summary>
-        private void GameAddButton_Click(object sender, EventArgs e)
-        {
-            var newGame = new Game();
-            newGame.Signature = UserDataAccessor.GetAUniqueSignature();
-
-            if (e is DragEventArgs dragArgs)
-            {
-                string[] files = (string[])dragArgs.Data.GetData(DataFormats.FileDrop);
-                var firstFile = files.FirstOrDefault();
-                if (string.IsNullOrWhiteSpace(firstFile) == false)
-                {
-                    if (Path.GetExtension(firstFile).ToUpper() == ".LNK")
-                    {
-                        firstFile = LinkTarget.ResolveShortcut(firstFile);
-                    }
-                    newGame.Name = Path.GetDirectoryName(firstFile);
-                    newGame.Directory = Path.GetDirectoryName(firstFile);
-                    if (File.Exists(firstFile) && (Path.GetExtension(firstFile).ToUpper() == ".COM" || Path.GetExtension(firstFile).ToUpper() == ".EXE" || Path.GetExtension(firstFile).ToUpper() == ".BAT"))
-                    {
-                        newGame.DOSEXEPath = firstFile;
-                    }
-                }
-            }
-
-            GameForm newGameForm = new GameForm(newGame);
-
-            if (newGameForm.ShowDialog(this) == DialogResult.OK)
-            {
-                Category concernedCategory = GetSelectedCategory();
-                concernedCategory.AddChild(newGameForm.ViewModel.Model);
-                RedrawAllUserData();
-            }
-        }
-
         private void SelectCategory(string signature)
         {
             TabControl.SelectedTab = TabControl.TabPages.Cast<TabPage>().FirstOrDefault(x => (string)x.Tag == signature);
-        }
-
-        /// <summary>
-        /// EventHandler for when the user has finished resizing the window.
-        /// </summary>
-        private void AmpShell_Resized(object sender, EventArgs e)
-        {
-            //change the data about the Window's dimensions (restored on next session).
-            if (UserDataAccessor.UserData.RememberWindowSize == true)
-            {
-                UserDataAccessor.UserData.Height = Height;
-                UserDataAccessor.UserData.Width = Width;
-            }
         }
 
         /// <summary>
@@ -1150,18 +1162,6 @@ namespace AmpShell.Views
             UserDataAccessor.UserData.StatusBarVisible = statusStrip.Visible;
         }
 
-        /// <summary>
-        /// EventHandler for when the window is moved
-        /// </summary>
-        private void AmpShell_LocationChanged(object sender, EventArgs e)
-        {
-            if (UserDataAccessor.UserData.RememberWindowPosition == true && WindowState != FormWindowState.Minimized)
-            {
-                UserDataAccessor.UserData.X = Location.X;
-                UserDataAccessor.UserData.Y = Location.Y;
-            }
-        }
-
         private void CurrentListView_ColumnWidthChanged(object sender, EventArgs e)
         {
             var category = GetSelectedCategory();
@@ -1181,6 +1181,29 @@ namespace AmpShell.Views
             category.FullscreenColumnWidth = SelectedListView.Columns["FullscreenColumn"].Width;
             category.QuitOnExitColumnWidth = SelectedListView.Columns["QuitOnExitColumn"].Width;
         }
+
+        private void EditDefaultConfigurationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(UserDataAccessor.UserData.DBDefaultConfFilePath) == false && File.Exists(UserDataAccessor.UserData.DBDefaultConfFilePath) && string.IsNullOrWhiteSpace(UserDataAccessor.UserData.ConfigEditorPath) == false && UserDataAccessor.UserData.ConfigEditorPath != "No text editor (Notepad in Windows' directory, or TextEditor.exe in AmpShell's directory) found." && File.Exists(UserDataAccessor.UserData.ConfigEditorPath))
+            {
+                System.Diagnostics.Process.Start(UserDataAccessor.UserData.ConfigEditorPath, UserDataAccessor.UserData.DBDefaultConfFilePath);
+            }
+            else
+            {
+                MessageBox.Show("Default configuration or configuration editor missing. Please set them in the preferences.");
+            }
+        }
+
+        private void MakeConfigButton_Click(object sender, EventArgs e)
+        {
+            var selectedGame = GetSelectedGame();
+            if ((!File.Exists(selectedGame.Directory + "\\" + Path.GetFileName(UserDataAccessor.UserData.DBDefaultConfFilePath))) || (MessageBox.Show(this, "'" + selectedGame.Directory + "\\" + Path.GetFileName(UserDataAccessor.UserData.DBDefaultConfFilePath) + "'" + "already exists, do you want to overwrite it ?", MakeConfigButton.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes))
+            {
+                File.Copy(UserDataAccessor.UserData.DBDefaultConfFilePath, selectedGame.Directory + "\\" + Path.GetFileName(UserDataAccessor.UserData.DBDefaultConfFilePath), true);
+                selectedGame.DBConfPath = selectedGame.Directory + "\\" + Path.GetFileName(UserDataAccessor.UserData.DBDefaultConfFilePath);
+            }
+        }
+
 
         private void UpdateButtonsState()
         {
@@ -1271,42 +1294,6 @@ namespace AmpShell.Views
                     MakeConfigurationFileToolStripMenuItem.Enabled = true;
                 }
                 CurrentListView_ItemSelectionChanged(this, EventArgs.Empty);
-            }
-        }
-
-        private void DisplayHelpMessage(string toolTipText)
-        {
-            AdditionnalCommandsLabel.Text = string.Empty;
-            ExecutablePathLabel.Text = string.Empty;
-            CMountLabel.Text = string.Empty;
-            DMountLabel.Text = string.Empty;
-            CustomConfigurationLabel.Text = string.Empty;
-            QuitOnExitLabel.Text = string.Empty;
-            FullscreenLabel.Text = string.Empty;
-            NoConsoleLabel.Text = string.Empty;
-            SetupPathLabel.Text = string.Empty;
-            ExecutablePathLabel.Text = toolTipText;
-        }
-
-        private void EditDefaultConfigurationToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(UserDataAccessor.UserData.DBDefaultConfFilePath) == false && File.Exists(UserDataAccessor.UserData.DBDefaultConfFilePath) && string.IsNullOrWhiteSpace(UserDataAccessor.UserData.ConfigEditorPath) == false && UserDataAccessor.UserData.ConfigEditorPath != "No text editor (Notepad in Windows' directory, or TextEditor.exe in AmpShell's directory) found." && File.Exists(UserDataAccessor.UserData.ConfigEditorPath))
-            {
-                System.Diagnostics.Process.Start(UserDataAccessor.UserData.ConfigEditorPath, UserDataAccessor.UserData.DBDefaultConfFilePath);
-            }
-            else
-            {
-                MessageBox.Show("Default configuration or configuration editor missing. Please set them in the preferences.");
-            }
-        }
-
-        private void MakeConfigButton_Click(object sender, EventArgs e)
-        {
-            var selectedGame = GetSelectedGame();
-            if ((!File.Exists(selectedGame.Directory + "\\" + Path.GetFileName(UserDataAccessor.UserData.DBDefaultConfFilePath))) || (MessageBox.Show(this, "'" + selectedGame.Directory + "\\" + Path.GetFileName(UserDataAccessor.UserData.DBDefaultConfFilePath) + "'" + "already exists, do you want to overwrite it ?", MakeConfigButton.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes))
-            {
-                File.Copy(UserDataAccessor.UserData.DBDefaultConfFilePath, selectedGame.Directory + "\\" + Path.GetFileName(UserDataAccessor.UserData.DBDefaultConfFilePath), true);
-                selectedGame.DBConfPath = selectedGame.Directory + "\\" + Path.GetFileName(UserDataAccessor.UserData.DBDefaultConfFilePath);
             }
         }
 
@@ -1438,6 +1425,20 @@ namespace AmpShell.Views
         private void MakeConfigurationFileToolStripMenuItem_MouseEnter(object sender, EventArgs e)
         {
             DisplayHelpMessage(MakeConfigurationFileToolStripMenuItem.ToolTipText);
+        }
+
+        private void DisplayHelpMessage(string toolTipText)
+        {
+            AdditionnalCommandsLabel.Text = string.Empty;
+            ExecutablePathLabel.Text = string.Empty;
+            CMountLabel.Text = string.Empty;
+            DMountLabel.Text = string.Empty;
+            CustomConfigurationLabel.Text = string.Empty;
+            QuitOnExitLabel.Text = string.Empty;
+            FullscreenLabel.Text = string.Empty;
+            NoConsoleLabel.Text = string.Empty;
+            SetupPathLabel.Text = string.Empty;
+            ExecutablePathLabel.Text = toolTipText;
         }
     }
 }
