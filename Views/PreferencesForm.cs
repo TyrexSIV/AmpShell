@@ -296,7 +296,6 @@ namespace AmpShell.Views
             dosboxDefaultConfFileDialog.Filter = "DOSBox configuration files (*.conf)|*.conf|All files|*";
             if (dosboxDefaultConfFileDialog.ShowDialog(this) == DialogResult.OK)
             {
-                //retrieve the selected .conf file path in Amp.DBDefaultConfFilePath
                 UserDataAccessor.UserData.DBDefaultConfFilePath = dosboxDefaultConfFileDialog.FileName;
                 DOSBoxConfFileTextBox.Text = dosboxDefaultConfFileDialog.FileName;
             }
@@ -315,7 +314,6 @@ namespace AmpShell.Views
             dosBoxDefaultLangFileDialog.Filter = "DOSBox language files (*.lng)|*.lng|All files|*";
             if (dosBoxDefaultLangFileDialog.ShowDialog(this) == DialogResult.OK)
             {
-                //retrieve the selected .lng file path in Amp.DBDefaultLangFilePath
                 UserDataAccessor.UserData.DBDefaultLangFilePath = dosBoxDefaultLangFileDialog.FileName;
                 DOSBoxLangFileTextBox.Text = dosBoxDefaultLangFileDialog.FileName;
             }
