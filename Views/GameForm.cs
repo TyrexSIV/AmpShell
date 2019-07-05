@@ -35,25 +35,6 @@ namespace AmpShell.Views
             ViewModel = new GameViewModel(editedGame);
             Initialize();
 
-            GameNameTextbox.Text = ViewModel.Model.Name;
-            GameLocationTextbox.Text = ViewModel.Model.DOSEXEPath;
-            GameDirectoryTextbox.Text = ViewModel.Model.Directory;
-            GameCustomConfigurationTextbox.Text = ViewModel.Model.DBConfPath;
-            NoConfigCheckBox.Checked = ViewModel.Model.NoConfig;
-            GameCDPathTextBox.Text = ViewModel.Model.CDPath;
-            GameAdditionalCommandsTextBox.Text = ViewModel.Model.AdditionalCommands;
-            AlternateDOSBoxLocationTextbox.Text = ViewModel.Model.AlternateDOSBoxExePath;
-            NoConsoleCheckBox.Checked = ViewModel.Model.NoConsole;
-            QuitOnExitCheckBox.Checked = ViewModel.Model.QuitOnExit;
-            FullscreenCheckBox.Checked = ViewModel.Model.InFullScreen;
-            GameSetupTextBox.Text = ViewModel.Model.SetupEXEPath;
-            UseIOCTLRadioButton.Checked = ViewModel.Model.UseIOCTL;
-            IsAFloppyDiskRadioButton.Checked = ViewModel.Model.MountAsFloppy;
-            if (UseIOCTLRadioButton.Checked == false && IsAFloppyDiskRadioButton.Checked == false)
-            {
-                NoneRadioButton.Checked = true;
-            }
-
             ModifyViewForEditing();
         }
 
@@ -61,6 +42,24 @@ namespace AmpShell.Views
         {
             GameIconPictureBox.DataBindings.Add("ImageLocation", ViewModel.Model, "Icon");
             GameIconPictureBox.DataBindings.Add("Image", ViewModel, "IconThumbnail");
+            GameNameTextbox.DataBindings.Add("Text", ViewModel.Model, "Name");
+            GameLocationTextbox.DataBindings.Add("Text", ViewModel.Model, "DOSEXEPath");
+            GameDirectoryTextbox.DataBindings.Add("Text", ViewModel.Model, "Directory");
+            GameCustomConfigurationTextbox.DataBindings.Add("Text", ViewModel.Model, "DBConfPath");
+            GameCDPathTextBox.DataBindings.Add("Text", ViewModel.Model, "CDPath");
+            GameAdditionalCommandsTextBox.DataBindings.Add("Text", ViewModel.Model, "AdditionalCommands");
+            AlternateDOSBoxLocationTextbox.DataBindings.Add("Text", ViewModel.Model, "AlternateDOSBoxExePath");
+            GameSetupTextBox.DataBindings.Add("Text", ViewModel.Model, "SetupEXEPath");
+            NoConfigCheckBox.DataBindings.Add("Checked", ViewModel.Model, "NoConfig");
+            NoConsoleCheckBox.DataBindings.Add("Checked", ViewModel.Model, "NoConsole");
+            QuitOnExitCheckBox.DataBindings.Add("Checked", ViewModel.Model, "QuitOnExit");
+            FullscreenCheckBox.DataBindings.Add("Checked", ViewModel.Model, "InFullScreen");
+            UseIOCTLRadioButton.DataBindings.Add("Checked", ViewModel.Model, "UseIOCTL");
+            IsAFloppyDiskRadioButton.DataBindings.Add("Checked", ViewModel.Model, "MountAsFloppy");
+            if (UseIOCTLRadioButton.Checked == false && IsAFloppyDiskRadioButton.Checked == false)
+            {
+                NoneRadioButton.Checked = true;
+            }
         }
 
         private void ModifyViewForEditing()
@@ -99,18 +98,6 @@ namespace AmpShell.Views
                 return;
             }
             
-            ViewModel.Model.DOSEXEPath = GameLocationTextbox.Text;
-            ViewModel.Model.DBConfPath = GameCustomConfigurationTextbox.Text;
-            ViewModel.Model.NoConfig = NoConfigCheckBox.Checked;
-            ViewModel.Model.AdditionalCommands = GameAdditionalCommandsTextBox.Text;
-            ViewModel.Model.NoConsole = NoConsoleCheckBox.Checked;
-            ViewModel.Model.InFullScreen = FullscreenCheckBox.Checked;
-            ViewModel.Model.QuitOnExit = QuitOnExitCheckBox.Checked;
-            ViewModel.Model.Directory = GameDirectoryTextbox.Text;
-            ViewModel.Model.Name = GameNameTextbox.Text;
-            ViewModel.Model.CDPath = GameCDPathTextBox.Text;
-            ViewModel.Model.SetupEXEPath = GameSetupTextBox.Text;
-            ViewModel.Model.AlternateDOSBoxExePath = AlternateDOSBoxLocationTextbox.Text;
             if (string.IsNullOrWhiteSpace(GameIconPictureBox.ImageLocation) == false)
             {
                 ViewModel.Model.Icon = GameIconPictureBox.ImageLocation;
@@ -120,8 +107,6 @@ namespace AmpShell.Views
                 ViewModel.Model.Icon = string.Empty;
             }
 
-            ViewModel.Model.UseIOCTL = UseIOCTLRadioButton.Checked;
-            ViewModel.Model.MountAsFloppy = IsAFloppyDiskRadioButton.Checked;
             if (string.IsNullOrWhiteSpace(GameCDPathTextBox.Text) == false)
             {
                 if (File.Exists(GameCDPathTextBox.Text))
@@ -193,31 +178,26 @@ namespace AmpShell.Views
         /// <param name="e"></param>
         private void GameLocationTextbox_TextChanged(object sender, EventArgs e)
         {
-            //if a location for the game's executable has been entered
-            if (string.IsNullOrWhiteSpace(GameLocationTextbox.Text) == false)
+            GameDirectoryTextbox.Enabled = true;
+            GameDirectoryBrowseButton.Enabled = true;
+            GameDirectoryLabel.Enabled = true;
+
+            //if a location for the game's executable has not been entered
+            if (string.IsNullOrWhiteSpace(GameLocationTextbox.Text) == true)
             {
-                //then the directory mounted has C: TextBox, BrowseButton, and Labeled are disabled
-                //(because DOSBox already mounts the executable's directory path as C: )
-                GameDirectoryTextbox.Enabled = false;
-                GameDirectoryBrowseButton.Enabled = false;
-                GameDirectoryLabel.Enabled = false;
+                return;
             }
-            else
-            {
-                //if not, they are enabled
-                GameDirectoryTextbox.Enabled = true;
-                GameDirectoryBrowseButton.Enabled = true;
-                GameDirectoryLabel.Enabled = true;
-            }
+            //then the directory mounted has C: TextBox, BrowseButton, and Labeled are disabled
+            //(because DOSBox already mounts the executable's directory path as C: )
+            GameDirectoryTextbox.Enabled = false;
+            GameDirectoryBrowseButton.Enabled = false;
+            GameDirectoryLabel.Enabled = false;
+            
             //if the entered executable does exist
-            if (string.IsNullOrWhiteSpace(GameLocationTextbox.Text) == false)
+            if (string.IsNullOrWhiteSpace(GameLocationTextbox.Text) == false && Directory.Exists(Path.GetDirectoryName(GameLocationTextbox.Text)))
             {
-                //the directory mounted has C: is displayed : it is the game's executable full directory path
-                if (File.Exists(GameLocationTextbox.Text))
-                {
-                    //(even if the GameDirectory controls are not enabled : it's just to inform the user)
-                    GameDirectoryTextbox.Text = Path.GetDirectoryName(GameLocationTextbox.Text);
-                }
+                //(even if the GameDirectory controls are not enabled : it's just to inform the user)
+                GameDirectoryTextbox.Text = Path.GetDirectoryName(GameLocationTextbox.Text);
             }
         }
 
@@ -228,46 +208,32 @@ namespace AmpShell.Views
         /// <param name="e"></param>
         private void GameDirectoryTextbox_TextChanged(object sender, EventArgs e)
         {
+            //make the controls for the game's executable location available
+            GameLocationTextbox.Enabled = true;
+            GameLocationBrowseButton.Enabled = true;
+            GameLocationLabel.Enabled = true;
+
             //if the textBox is not empty
-            if (string.IsNullOrWhiteSpace(GameDirectoryTextbox.Text) == false)
+            if (string.IsNullOrWhiteSpace(GameDirectoryTextbox.Text) == true)
             {
-                //if the game location textbox is not empty
-                if (string.IsNullOrWhiteSpace(GameLocationTextbox.Text) == false)
-                {
-                    //and if the specified directory does not equals to the game executable's directory
-                    if (Path.GetDirectoryName(GameLocationTextbox.Text) != GameDirectoryTextbox.Text)
-                    {
-                        //then this textbox has been entered first by the user
-                        //so the controls for the game's executable location will be made empty and disabled
-                        //because DOSBox cannot mount a directory as C: and have an executable specified.
-                        //(it's one or the other)
-                        GameLocationTextbox.Text = string.Empty;
-                        GameLocationTextbox.Enabled = false;
-                        GameLocationBrowseButton.Enabled = false;
-                        GameLocationLabel.Enabled = false;
-                    }
-                    //if this textbox is empty
-                    else
-                    {
-                        //make the controls for the game's executable location available
-                        GameLocationTextbox.Enabled = true;
-                        GameLocationBrowseButton.Enabled = true;
-                        GameLocationLabel.Enabled = true;
-                    }
-                }
-                else
-                {
-                    GameLocationTextbox.Text = string.Empty;
-                    GameLocationTextbox.Enabled = false;
-                    GameLocationBrowseButton.Enabled = false;
-                    GameLocationLabel.Enabled = false;
-                }
+                return;
             }
-            else
+            //if the game location textbox is not empty
+            if (string.IsNullOrWhiteSpace(GameLocationTextbox.Text) == true)
             {
-                GameLocationTextbox.Enabled = true;
-                GameLocationBrowseButton.Enabled = true;
-                GameLocationLabel.Enabled = true;
+                return;
+            }
+            //and if the specified directory does not equals to the game executable's directory
+            if (Path.GetDirectoryName(GameLocationTextbox.Text) != GameDirectoryTextbox.Text)
+            {
+                //then this textbox has been entered first by the user
+                //so the controls for the game's executable location will be made empty and disabled
+                //because DOSBox cannot mount a directory as C: and have an executable specified.
+                //(it's one or the other)
+                GameLocationTextbox.Text = string.Empty;
+                GameLocationTextbox.Enabled = false;
+                GameLocationBrowseButton.Enabled = false;
+                GameLocationLabel.Enabled = false;
             }
         }
 
