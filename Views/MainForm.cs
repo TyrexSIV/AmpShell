@@ -639,15 +639,7 @@ namespace AmpShell.Views
         /// </summary>
         private void CurrentListView_ItemSelectionChanged(object sender, EventArgs e)
         {
-            AdditionnalCommandsLabel.Text = string.Empty;
-            ExecutablePathLabel.Text = string.Empty;
-            CMountLabel.Text = string.Empty;
-            SetupPathLabel.Text = string.Empty;
-            DMountLabel.Text = string.Empty;
-            CustomConfigurationLabel.Text = string.Empty;
-            QuitOnExitLabel.Text = string.Empty;
-            FullscreenLabel.Text = string.Empty;
-            NoConsoleLabel.Text = string.Empty;
+            EmptyHelpMessages();
             //several games can be selected at once, but it is only meant for drag&drop between categories
             //Besides, running more than one game (one DOSBox instance) at once can be CPU intensive...
             //if 1 game has been selected
@@ -796,45 +788,51 @@ namespace AmpShell.Views
             //if more than one game have been selected
             else if (SelectedListView.SelectedItems.Count > 1)
             {
-                //make all the game buttons disabled (except the ones for deleting games)
-                _editGameMenuItem.Enabled = false;
-                EditSelectedgameToolStripMenuItem.Enabled = false;
-                GameEditButton.Enabled = false;
-                RunGameToolStripMenuItem.Enabled = false;
-                RunGameSetupButton.Enabled = false;
-                RunGameSetupToolStripMenuItem.Enabled = false;
-                _runGameSetupMenuItem.Enabled = false;
-                _runGameMenuItem.Enabled = false;
-                RunGameButton.Enabled = false;
-                _editGameConfigurationMenuItem.Enabled = false;
-                GameEditConfigurationButton.Enabled = false;
-                EditConfigToolStripMenuItem.Enabled = false;
-                MakeConfigButton.Enabled = true;
-                MakeConfigurationFileToolStripMenuItem.Enabled = true;
-                _makeGameConfigurationMenuItem.Enabled = true;
+                DisableCreateRunAndEditGamesButtons();
             }
             //if no game has been selected
             else if (SelectedListView.SelectedItems.Count == 0)
             {
+                DisableCreateRunAndEditGamesButtons();
                 _deleteGameMenuItem.Enabled = false;
                 DeleteSelectedGameToolStripMenuItem.Enabled = false;
                 GameDeleteButton.Enabled = false;
-                _editGameMenuItem.Enabled = false;
-                EditSelectedgameToolStripMenuItem.Enabled = false;
-                GameEditButton.Enabled = false;
-                RunGameToolStripMenuItem.Enabled = false;
-                RunGameSetupButton.Enabled = false;
-                RunGameSetupToolStripMenuItem.Enabled = false;
-                _runGameSetupMenuItem.Enabled = false;
-                _runGameMenuItem.Enabled = false;
-                RunGameButton.Enabled = false;
-                _editGameConfigurationMenuItem.Enabled = false;
-                GameEditConfigurationButton.Enabled = false;
-                EditConfigToolStripMenuItem.Enabled = false;
-                MakeConfigButton.Enabled = false;
-                MakeConfigurationFileToolStripMenuItem.Enabled = false;
-                _makeGameConfigurationMenuItem.Enabled = false;
             }
+        }
+
+        /// <summary>
+        /// Makes all the game buttons disabled (except the ones for deleting games)
+        /// </summary>
+        private void DisableCreateRunAndEditGamesButtons()
+        {
+            _editGameMenuItem.Enabled = false;
+            EditSelectedgameToolStripMenuItem.Enabled = false;
+            GameEditButton.Enabled = false;
+            RunGameToolStripMenuItem.Enabled = false;
+            RunGameSetupButton.Enabled = false;
+            RunGameSetupToolStripMenuItem.Enabled = false;
+            _runGameSetupMenuItem.Enabled = false;
+            _runGameMenuItem.Enabled = false;
+            RunGameButton.Enabled = false;
+            _editGameConfigurationMenuItem.Enabled = false;
+            GameEditConfigurationButton.Enabled = false;
+            EditConfigToolStripMenuItem.Enabled = false;
+            MakeConfigButton.Enabled = false;
+            MakeConfigurationFileToolStripMenuItem.Enabled = false;
+            _makeGameConfigurationMenuItem.Enabled = false;
+        }
+
+        private void EmptyHelpMessages()
+        {
+            AdditionnalCommandsLabel.Text = string.Empty;
+            ExecutablePathLabel.Text = string.Empty;
+            CMountLabel.Text = string.Empty;
+            DMountLabel.Text = string.Empty;
+            CustomConfigurationLabel.Text = string.Empty;
+            QuitOnExitLabel.Text = string.Empty;
+            FullscreenLabel.Text = string.Empty;
+            NoConsoleLabel.Text = string.Empty;
+            SetupPathLabel.Text = string.Empty;
         }
 
         /// <summary>
@@ -1429,15 +1427,7 @@ namespace AmpShell.Views
 
         private void DisplayHelpMessage(string toolTipText)
         {
-            AdditionnalCommandsLabel.Text = string.Empty;
-            ExecutablePathLabel.Text = string.Empty;
-            CMountLabel.Text = string.Empty;
-            DMountLabel.Text = string.Empty;
-            CustomConfigurationLabel.Text = string.Empty;
-            QuitOnExitLabel.Text = string.Empty;
-            FullscreenLabel.Text = string.Empty;
-            NoConsoleLabel.Text = string.Empty;
-            SetupPathLabel.Text = string.Empty;
+
             ExecutablePathLabel.Text = toolTipText;
         }
     }
