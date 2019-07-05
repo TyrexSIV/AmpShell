@@ -304,6 +304,11 @@ namespace AmpShell.ViewModel
 
         public bool IsDataValid()
         {
+            if(string.IsNullOrWhiteSpace(Model.DOSEXEPath) == false && string.IsNullOrWhiteSpace(Model.Directory) == true)
+            {
+                Model.Directory = Path.GetDirectoryName(Model.DOSEXEPath);
+            }
+
             if (string.IsNullOrWhiteSpace(Model.Name) || string.IsNullOrWhiteSpace(Model.DOSEXEPath) || string.IsNullOrWhiteSpace(Model.Directory))
             {
                 return false;
