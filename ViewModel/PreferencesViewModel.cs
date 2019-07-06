@@ -8,6 +8,7 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.*/
 
+using AmpShell.AutoConfig;
 using AmpShell.DAL;
 using AmpShell.Model;
 using AmpShell.Notification;
@@ -27,10 +28,88 @@ namespace AmpShell.ViewModel
 
         private readonly Preferences _modelUndo;
 
+        private bool _portableModeAvailable = false;
+
+        public bool PortableModeAvailable
+        {
+            get => _portableModeAvailable;
+            set { Set(ref _portableModeAvailable, value); }
+        }
+
+        private string _portableModeStatus = "";
+
+        public string PortableModeStatus
+        {
+            get => _portableModeStatus;
+            set { Set(ref _portableModeStatus, value); }
+        }
+
         public PreferencesViewModel() : base()
         {
             Model = ObjectSerializer.CloneObject(UserDataAccessor.UserData);
             _modelUndo = UserDataAccessor.UserData;
+            CheckForPortableModeAvailability();
+        }
+
+        public void CheckForPortableModeAvailability()
+        {
+            if (FileFinder.HasWriteAccessToAssemblyLocationFolder() == false)
+            {
+                PortableModeAvailable = false;
+                Model.PortableMode = false;
+                PortableModeStatus = "Portable Mode : unavailable (AmpShell cannot write in the folder where it is located).";
+            }
+            else
+            {
+                PortableModeStatus = "Portable Mode : available (but disabled).";
+            }
+        }
+
+        public void EnablePortableMode()
+        {
+            Model.PortableMode = true;
+
+            if (File.Exists(Path.Combine(Application.StartupPath, "\\dosbox.exe")))
+            {
+                Model.DBPath = Path.Combine(Application.StartupPath, "\\dosbox.exe");
+            }
+            else
+            {
+                Model.DBPath = "dosbox.exe isn't is the same directory as AmpShell.exe!";
+            }
+
+            if (Directory.GetFiles((Application.StartupPath), "*.conf").Length > 0)
+            {
+                Model.DBDefaultConfFilePath = Directory.GetFiles((Application.StartupPath), "*.conf")[0];
+            }
+            else
+            {
+                Model.DBDefaultConfFilePath = "No configuration file (*.conf) found in AmpShell's directory.";
+            }
+
+            if (Directory.GetFiles(Application.StartupPath, "*.lng").Length > 0)
+            {
+                Model.DBDefaultLangFilePath = Directory.GetFiles(Application.StartupPath, "*.lng")[0];
+            }
+            else
+            {
+                Model.DBDefaultLangFilePath = "No language file (*.lng) found in AmpShell's directory.";
+            }
+
+            if (File.Exists(Path.Combine(Directory.GetParent(Environment.GetFolderPath(Environment.SpecialFolder.System)).FullName, "notepad.exe")))
+            {
+                Model.ConfigEditorPath = Path.Combine(Directory.GetParent(Environment.GetFolderPath(Environment.SpecialFolder.System)).FullName, "notepad.exe");
+            }
+            else if (File.Exists(Path.Combine(Application.StartupPath, "\\TextEditor.exe")))
+            {
+                Model.ConfigEditorPath = Path.Combine(Application.StartupPath, "\\TextEditor.exe");
+            }
+            else
+            {
+                Model.ConfigEditorPath = "No text editor (Notepad in Windows' directory, or TextEditor.exe in AmpShell's directory) found.";
+            }
+
+            PortableModeStatus = "Portable Mode : active (all files (or at least DOSBox, and all the games) must be in the same directory as AmpShell).";
         }
 
         public void BrowseForTextEditorPath()

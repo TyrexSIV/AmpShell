@@ -101,6 +101,7 @@ namespace AmpShell.Views
             this.ReScanDirButton = new System.Windows.Forms.Button();
             this.OKButton = new System.Windows.Forms.Button();
             this.FormCancelButton = new System.Windows.Forms.Button();
+            this.Name = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.PrefsTabControl.SuspendLayout();
             this.DOSBoxTabPage.SuspendLayout();
             this.GamesTabPage.SuspendLayout();
@@ -505,6 +506,9 @@ namespace AmpShell.Views
             // 
             // CategoriesListView
             // 
+            this.CategoriesListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.Name});
+            this.CategoriesListView.HideSelection = false;
             this.CategoriesListView.LabelWrap = false;
             this.CategoriesListView.Location = new System.Drawing.Point(4, 30);
             this.CategoriesListView.Name = "CategoriesListView";
@@ -748,7 +752,7 @@ namespace AmpShell.Views
             // PortableModeCheckBox
             // 
             this.PortableModeCheckBox.AutoSize = true;
-            this.PortableModeCheckBox.Location = new System.Drawing.Point(0, 205);
+            this.PortableModeCheckBox.Location = new System.Drawing.Point(4, 203);
             this.PortableModeCheckBox.Name = "PortableModeCheckBox";
             this.PortableModeCheckBox.Size = new System.Drawing.Size(95, 17);
             this.PortableModeCheckBox.TabIndex = 8;
@@ -814,7 +818,12 @@ namespace AmpShell.Views
             this.FormCancelButton.UseVisualStyleBackColor = true;
             this.FormCancelButton.Click += new System.EventHandler(this.Cancel_Click);
             // 
-            // Main_Prefs
+            // Name
+            // 
+            this.Name.Text = "Name";
+            this.Name.Width = 120;
+            // 
+            // PreferencesForm
             // 
             this.AcceptButton = this.OKButton;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -831,7 +840,7 @@ namespace AmpShell.Views
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
-            this.Name = "Main_Prefs";
+            this.Name = "PreferencesForm";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Preferences";
@@ -924,5 +933,6 @@ namespace AmpShell.Views
         private System.Windows.Forms.Button ReScanDirButton;
         private System.Windows.Forms.Label LargeViewModeSizeLabel;
         private System.Windows.Forms.ComboBox LargeViewModeSizeComboBox;
+        private System.Windows.Forms.ColumnHeader Name;
     }
 }
