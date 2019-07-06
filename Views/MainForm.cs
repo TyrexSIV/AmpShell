@@ -573,8 +573,10 @@ namespace AmpShell.Views
         /// </summary>
         private void GameAddButton_Click(object sender, EventArgs e)
         {
-            var newGame = new Game();
-            newGame.Signature = UserDataAccessor.GetAUniqueSignature();
+            var newGame = new Game
+            {
+                Signature = UserDataAccessor.GetAUniqueSignature()
+            };
 
             if (e is DragEventArgs dragArgs)
             {
