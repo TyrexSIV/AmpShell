@@ -18,6 +18,22 @@ namespace AmpShell.Model
     {
         public static readonly List<int> LargeViewModeSizes = new List<int> { 48, 64, 80, 96, 112, 128, 144, 160, 176, 192, 208, 224, 240, 256 };
 
+        private bool _exitOnGameLaunch = false;
+
+        public bool ExitOnGameLaunch
+        {
+            get => _exitOnGameLaunch;
+            set { Set(ref _exitOnGameLaunch, value); }
+        }
+
+        private bool _goToTaskBarOnGameLaunch = true;
+
+        public bool GoToTaskBarOnGameLaunch
+        {
+            get => _goToTaskBarOnGameLaunch;
+            set { Set(ref _goToTaskBarOnGameLaunch, value); }
+        }
+
         private bool _portableMode = false;
 
         public bool PortableMode

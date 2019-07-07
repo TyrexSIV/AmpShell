@@ -15,6 +15,7 @@ using AmpShell.Notification;
 using AmpShell.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -44,38 +45,150 @@ namespace AmpShell.ViewModel
             set { Set(ref _portableModeStatus, value); }
         }
 
+        public List<string> LargeViewModeAvailableSizes { get; } = new List<string>(new[]
+            {"48x48",
+            "64x64",
+            "80x80",
+            "96x96",
+            "112x112",
+            "128x128",
+            "144x144",
+            "160x160",
+            "176x176",
+            "192x192",
+            "208x208",
+            "224x224",
+            "240x240",
+            "256x256" });
+
+        private ObservableCollection<Category> _categories = new ObservableCollection<Category>();
+
+        public ObservableCollection<Category> Categories
+        {
+            get => _categories;
+            set { Set(ref _categories, value); }
+        }
+
+        private bool _isDefaultViewModeDetails = false;
+
+        public bool IsDefaultViewModeDetails
+        {
+            get => _isDefaultViewModeDetails;
+            set { Set(ref _isDefaultViewModeDetails, value); }
+        }
+
+        private bool _isDefaultViewModeList = false;
+
+        public bool IsDefaultViewModeList
+        {
+            get => _isDefaultViewModeList;
+            set { Set(ref _isDefaultViewModeList, value); }
+        }
+
+        private bool _isDefaultViewModeLargeIcons = false;
+
+        public bool IsDefaultViewModeLargeIcons
+        {
+            get => _isDefaultViewModeLargeIcons;
+            set { Set(ref _isDefaultViewModeLargeIcons, value); }
+        }
+
+        private bool _isDefaultViewModeSmallIcons = false;
+
+        public bool IsDefaultViewModeSmallIcons
+        {
+            get => _isDefaultViewModeSmallIcons;
+            set { Set(ref _isDefaultViewModeSmallIcons, value); }
+        }
+
+        private bool _isDefaultViewModeTiles = false;
+
+        public bool IsDefaultViewModeTiles
+        {
+            get => _isDefaultViewModeTiles;
+            set { Set(ref _isDefaultViewModeTiles, value); }
+        }
+
         public PreferencesViewModel() : base()
         {
             Model = ObjectSerializer.CloneObject(UserDataAccessor.UserData);
             _modelUndo = UserDataAccessor.UserData;
+            Categories = new ObservableCollection<Category>(UserDataAccessor.GetAllCategories());
             CheckForPortableModeAvailability();
+
+
+            if (UserDataAccessor.UserData.CategoriesDefaultViewMode == View.Details)
+            {
+                IsDefaultViewModeDetails = true;
+            }
+
+            if (UserDataAccessor.UserData.CategoriesDefaultViewMode == View.LargeIcon)
+            {
+                IsDefaultViewModeLargeIcons = true;
+            }
+
+            if (UserDataAccessor.UserData.CategoriesDefaultViewMode == View.List)
+            {
+                IsDefaultViewModeList = true;
+            }
+
+            if (UserDataAccessor.UserData.CategoriesDefaultViewMode == View.SmallIcon)
+            {
+                IsDefaultViewModeSmallIcons = true;
+            }
+
+            if (UserDataAccessor.UserData.CategoriesDefaultViewMode == View.Tile)
+            {
+                IsDefaultViewModeTiles = true;
+            }
         }
 
-        public void CheckForPortableModeAvailability()
+        public void MoveCategoryTo(int startIndex, int newIndex)
+        {
+            Categories.Move(startIndex, newIndex);
+        }
+
+        public void SortCategoriesByName()
+        {
+            Categories.OrderBy(x => x.Title);
+        }
+
+        private void CheckForPortableModeAvailability()
         {
             if (FileFinder.HasWriteAccessToAssemblyLocationFolder() == false)
             {
                 PortableModeAvailable = false;
-                Model.PortableMode = false;
                 PortableModeStatus = "Portable Mode : unavailable (AmpShell cannot write in the folder where it is located).";
             }
             else
             {
+                PortableModeAvailable = true;
                 PortableModeStatus = "Portable Mode : available (but disabled).";
             }
         }
 
+        public void DisablePortableMode()
+        {
+            Model.DBPath = _modelUndo.DBPath;
+            Model.DBDefaultConfFilePath = _modelUndo.DBDefaultConfFilePath;
+            Model.DBDefaultLangFilePath = _modelUndo.DBDefaultLangFilePath;
+            Model.ConfigEditorPath = _modelUndo.ConfigEditorPath;
+        }
+
         public void EnablePortableMode()
         {
-            Model.PortableMode = true;
+            ScanForPortableModeTools();
+        }
 
+        public void ScanForPortableModeTools()
+        {
             if (File.Exists(Path.Combine(Application.StartupPath, "\\dosbox.exe")))
             {
                 Model.DBPath = Path.Combine(Application.StartupPath, "\\dosbox.exe");
             }
             else
             {
-                Model.DBPath = "dosbox.exe isn't is the same directory as AmpShell.exe!";
+                Model.DBPath = "dosbox.exe isn't in the same directory as AmpShell.exe!";
             }
 
             if (Directory.GetFiles((Application.StartupPath), "*.conf").Length > 0)
@@ -203,6 +316,31 @@ namespace AmpShell.ViewModel
             if (cdImagesFolderBrowserDialog.ShowDialog() == DialogResult.OK)
             {
                 Model.CDsDefaultDir = cdImagesFolderBrowserDialog.SelectedPath;
+            }
+        }
+
+        public void ApplyModifications()
+        {
+            UserDataAccessor.SetCategoriesOrder(Categories);
+            if(IsDefaultViewModeDetails)
+            {
+                UserDataAccessor.UserData.CategoriesDefaultViewMode = View.Details; 
+            }
+            if(IsDefaultViewModeLargeIcons)
+            {
+                UserDataAccessor.UserData.CategoriesDefaultViewMode = View.LargeIcon;
+            }
+            if(IsDefaultViewModeSmallIcons)
+            {
+                UserDataAccessor.UserData.CategoriesDefaultViewMode = View.SmallIcon;
+            }
+            if(IsDefaultViewModeList)
+            {
+                UserDataAccessor.UserData.CategoriesDefaultViewMode = View.List;
+            }
+            if(IsDefaultViewModeTiles)
+            {
+                UserDataAccessor.UserData.CategoriesDefaultViewMode = View.Tile;
             }
         }
 

@@ -13,6 +13,8 @@ using AmpShell.Model;
 using AmpShell.Serialization;
 
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 
@@ -65,6 +67,11 @@ namespace AmpShell.DAL
             }
             while (IsItAUniqueSignature(newSignature) == false);
             return newSignature;
+        }
+
+        public static List<Category> GetAllCategories()
+        {
+            return UserDataAccessor.UserData.ListChildren.Cast<Category>().ToList();
         }
 
         internal static Category GetCategoryWithSignature(string signature)
@@ -210,6 +217,15 @@ namespace AmpShell.DAL
                 }
             }
             return path;
+        }
+
+        internal static void SetCategoriesOrder(ObservableCollection<Category> categories)
+        {
+            var currentCategories = GetAllCategories();
+            foreach (Category category in categories)
+            {
+                UserData.MoveChildToPosition(category, currentCategories.IndexOf(currentCategories.FirstOrDefault(x => x.Signature == category.Signature)));
+            }
         }
     }
 }

@@ -63,17 +63,17 @@ namespace AmpShell.Views
             this.BrowseGamesDirButton = new System.Windows.Forms.Button();
             this.BrowseCDImageDirButton = new System.Windows.Forms.Button();
             this.CategoriesTabPage = new System.Windows.Forms.TabPage();
-            this.LargeViewModeSizeLabel = new System.Windows.Forms.Label();
-            this.LargeViewModeSizeComboBox = new System.Windows.Forms.ComboBox();
-            this.AllOfThemCheckBox = new System.Windows.Forms.CheckBox();
-            this.LargeIconsRadioButton = new System.Windows.Forms.RadioButton();
+            this.DefaultViewGroupBox = new System.Windows.Forms.GroupBox();
             this.SmallIconsRadioButton = new System.Windows.Forms.RadioButton();
+            this.LargeIconsRadioButton = new System.Windows.Forms.RadioButton();
             this.TilesIconsRadioButton = new System.Windows.Forms.RadioButton();
+            this.AllOfThemCheckBox = new System.Windows.Forms.CheckBox();
             this.ListsIconsRadioButton = new System.Windows.Forms.RadioButton();
             this.DetailsIconsRadioButton = new System.Windows.Forms.RadioButton();
-            this.IconsViewLabel = new System.Windows.Forms.Label();
-            this.CategoriesListView = new System.Windows.Forms.ListView();
-            this.NameColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.LargeViewModeSizeLabel = new System.Windows.Forms.Label();
+            this.LargeViewModeSizeComboBox = new System.Windows.Forms.ComboBox();
+            this.CategoriesListView = new BrightIdeasSoftware.FastDataListView();
+            this.CategoriesNameColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.SortByNameButton = new System.Windows.Forms.Button();
             this.MoveLastButton = new System.Windows.Forms.Button();
             this.MoveNextButton = new System.Windows.Forms.Button();
@@ -86,6 +86,9 @@ namespace AmpShell.Views
             this.ConfigEditorPathLabel = new System.Windows.Forms.Label();
             this.BrowseForEditorButton = new System.Windows.Forms.Button();
             this.BehaviorTabPage = new System.Windows.Forms.TabPage();
+            this.DoGroupBox = new System.Windows.Forms.GroupBox();
+            this.PutAmpShellInTaskBarOnLaunchCheckBox = new System.Windows.Forms.CheckBox();
+            this.ExitOnGameLaunchCheckBox = new System.Windows.Forms.CheckBox();
             this.PromptGroupBox = new System.Windows.Forms.GroupBox();
             this.CategoyDeletePromptCheckBox = new System.Windows.Forms.CheckBox();
             this.GameDeletePromptCheckBox = new System.Windows.Forms.CheckBox();
@@ -96,22 +99,27 @@ namespace AmpShell.Views
             this.ShowMenuBarCheckBox = new System.Windows.Forms.CheckBox();
             this.ShowDetailsBarCheckBox = new System.Windows.Forms.CheckBox();
             this.ShowToolBarCheckBox = new System.Windows.Forms.CheckBox();
-            this.PortableModeCheckBox = new System.Windows.Forms.CheckBox();
+            this.NameColumn = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.PrefsStatusStrip = new System.Windows.Forms.StatusStrip();
-            this.StatusStripLabel = new System.Windows.Forms.Label();
-            this.ReScanDirButton = new System.Windows.Forms.Button();
             this.OKButton = new System.Windows.Forms.Button();
             this.FormCancelButton = new System.Windows.Forms.Button();
+            this.PortableModeGroupBox = new System.Windows.Forms.GroupBox();
+            this.ReScanDirButton = new System.Windows.Forms.Button();
+            this.PortableModeCheckBox = new System.Windows.Forms.CheckBox();
             this.PrefsTabControl.SuspendLayout();
             this.DOSBoxTabPage.SuspendLayout();
             this.GamesTabPage.SuspendLayout();
             this.OtherOptionsGroupBox.SuspendLayout();
             this.CategoriesTabPage.SuspendLayout();
+            this.DefaultViewGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.CategoriesListView)).BeginInit();
             this.ConfigEditorTabPage.SuspendLayout();
             this.BehaviorTabPage.SuspendLayout();
+            this.DoGroupBox.SuspendLayout();
             this.PromptGroupBox.SuspendLayout();
             this.RememberGroupBox.SuspendLayout();
             this.ShowGroupBox.SuspendLayout();
+            this.PortableModeGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // PrefsTabControl
@@ -124,7 +132,7 @@ namespace AmpShell.Views
             this.PrefsTabControl.Location = new System.Drawing.Point(0, 0);
             this.PrefsTabControl.Name = "PrefsTabControl";
             this.PrefsTabControl.SelectedIndex = 0;
-            this.PrefsTabControl.Size = new System.Drawing.Size(636, 197);
+            this.PrefsTabControl.Size = new System.Drawing.Size(636, 226);
             this.PrefsTabControl.TabIndex = 1;
             // 
             // DOSBoxTabPage
@@ -142,7 +150,7 @@ namespace AmpShell.Views
             this.DOSBoxTabPage.Location = new System.Drawing.Point(4, 22);
             this.DOSBoxTabPage.Name = "DOSBoxTabPage";
             this.DOSBoxTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.DOSBoxTabPage.Size = new System.Drawing.Size(628, 171);
+            this.DOSBoxTabPage.Size = new System.Drawing.Size(628, 200);
             this.DOSBoxTabPage.TabIndex = 2;
             this.DOSBoxTabPage.Text = "DOSBox";
             this.DOSBoxTabPage.UseVisualStyleBackColor = true;
@@ -246,7 +254,7 @@ namespace AmpShell.Views
             this.GamesTabPage.Controls.Add(this.BrowseCDImageDirButton);
             this.GamesTabPage.Location = new System.Drawing.Point(4, 22);
             this.GamesTabPage.Name = "GamesTabPage";
-            this.GamesTabPage.Size = new System.Drawing.Size(628, 171);
+            this.GamesTabPage.Size = new System.Drawing.Size(628, 200);
             this.GamesTabPage.TabIndex = 3;
             this.GamesTabPage.Text = "Games";
             this.GamesTabPage.UseVisualStyleBackColor = true;
@@ -371,15 +379,9 @@ namespace AmpShell.Views
             // CategoriesTabPage
             // 
             this.CategoriesTabPage.BackColor = System.Drawing.Color.Transparent;
+            this.CategoriesTabPage.Controls.Add(this.DefaultViewGroupBox);
             this.CategoriesTabPage.Controls.Add(this.LargeViewModeSizeLabel);
             this.CategoriesTabPage.Controls.Add(this.LargeViewModeSizeComboBox);
-            this.CategoriesTabPage.Controls.Add(this.AllOfThemCheckBox);
-            this.CategoriesTabPage.Controls.Add(this.LargeIconsRadioButton);
-            this.CategoriesTabPage.Controls.Add(this.SmallIconsRadioButton);
-            this.CategoriesTabPage.Controls.Add(this.TilesIconsRadioButton);
-            this.CategoriesTabPage.Controls.Add(this.ListsIconsRadioButton);
-            this.CategoriesTabPage.Controls.Add(this.DetailsIconsRadioButton);
-            this.CategoriesTabPage.Controls.Add(this.IconsViewLabel);
             this.CategoriesTabPage.Controls.Add(this.CategoriesListView);
             this.CategoriesTabPage.Controls.Add(this.SortByNameButton);
             this.CategoriesTabPage.Controls.Add(this.MoveLastButton);
@@ -388,10 +390,90 @@ namespace AmpShell.Views
             this.CategoriesTabPage.Controls.Add(this.MoveFirstButton);
             this.CategoriesTabPage.Location = new System.Drawing.Point(4, 22);
             this.CategoriesTabPage.Name = "CategoriesTabPage";
-            this.CategoriesTabPage.Size = new System.Drawing.Size(628, 171);
+            this.CategoriesTabPage.Size = new System.Drawing.Size(628, 200);
             this.CategoriesTabPage.TabIndex = 4;
             this.CategoriesTabPage.Text = "Categories";
             this.CategoriesTabPage.UseVisualStyleBackColor = true;
+            // 
+            // DefaultViewGroupBox
+            // 
+            this.DefaultViewGroupBox.Controls.Add(this.SmallIconsRadioButton);
+            this.DefaultViewGroupBox.Controls.Add(this.LargeIconsRadioButton);
+            this.DefaultViewGroupBox.Controls.Add(this.TilesIconsRadioButton);
+            this.DefaultViewGroupBox.Controls.Add(this.AllOfThemCheckBox);
+            this.DefaultViewGroupBox.Controls.Add(this.ListsIconsRadioButton);
+            this.DefaultViewGroupBox.Controls.Add(this.DetailsIconsRadioButton);
+            this.DefaultViewGroupBox.Location = new System.Drawing.Point(264, 148);
+            this.DefaultViewGroupBox.Name = "DefaultViewGroupBox";
+            this.DefaultViewGroupBox.Size = new System.Drawing.Size(354, 44);
+            this.DefaultViewGroupBox.TabIndex = 33;
+            this.DefaultViewGroupBox.TabStop = false;
+            this.DefaultViewGroupBox.Text = "Default View :";
+            // 
+            // SmallIconsRadioButton
+            // 
+            this.SmallIconsRadioButton.AutoSize = true;
+            this.SmallIconsRadioButton.Location = new System.Drawing.Point(6, 19);
+            this.SmallIconsRadioButton.Name = "SmallIconsRadioButton";
+            this.SmallIconsRadioButton.Size = new System.Drawing.Size(50, 17);
+            this.SmallIconsRadioButton.TabIndex = 32;
+            this.SmallIconsRadioButton.TabStop = true;
+            this.SmallIconsRadioButton.Text = "Small";
+            this.SmallIconsRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // LargeIconsRadioButton
+            // 
+            this.LargeIconsRadioButton.AutoSize = true;
+            this.LargeIconsRadioButton.Location = new System.Drawing.Point(-38, 42);
+            this.LargeIconsRadioButton.Name = "LargeIconsRadioButton";
+            this.LargeIconsRadioButton.Size = new System.Drawing.Size(52, 17);
+            this.LargeIconsRadioButton.TabIndex = 31;
+            this.LargeIconsRadioButton.TabStop = true;
+            this.LargeIconsRadioButton.Text = "Large";
+            this.LargeIconsRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // TilesIconsRadioButton
+            // 
+            this.TilesIconsRadioButton.AutoSize = true;
+            this.TilesIconsRadioButton.Location = new System.Drawing.Point(63, 19);
+            this.TilesIconsRadioButton.Name = "TilesIconsRadioButton";
+            this.TilesIconsRadioButton.Size = new System.Drawing.Size(47, 17);
+            this.TilesIconsRadioButton.TabIndex = 33;
+            this.TilesIconsRadioButton.TabStop = true;
+            this.TilesIconsRadioButton.Text = "Tiles";
+            this.TilesIconsRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // AllOfThemCheckBox
+            // 
+            this.AllOfThemCheckBox.AutoSize = true;
+            this.AllOfThemCheckBox.Location = new System.Drawing.Point(262, 19);
+            this.AllOfThemCheckBox.Name = "AllOfThemCheckBox";
+            this.AllOfThemCheckBox.Size = new System.Drawing.Size(75, 17);
+            this.AllOfThemCheckBox.TabIndex = 31;
+            this.AllOfThemCheckBox.Text = "All of them";
+            this.AllOfThemCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // ListsIconsRadioButton
+            // 
+            this.ListsIconsRadioButton.AutoSize = true;
+            this.ListsIconsRadioButton.Location = new System.Drawing.Point(116, 19);
+            this.ListsIconsRadioButton.Name = "ListsIconsRadioButton";
+            this.ListsIconsRadioButton.Size = new System.Drawing.Size(46, 17);
+            this.ListsIconsRadioButton.TabIndex = 34;
+            this.ListsIconsRadioButton.TabStop = true;
+            this.ListsIconsRadioButton.Text = "Lists";
+            this.ListsIconsRadioButton.UseVisualStyleBackColor = true;
+            // 
+            // DetailsIconsRadioButton
+            // 
+            this.DetailsIconsRadioButton.AutoSize = true;
+            this.DetailsIconsRadioButton.Location = new System.Drawing.Point(168, 19);
+            this.DetailsIconsRadioButton.Name = "DetailsIconsRadioButton";
+            this.DetailsIconsRadioButton.Size = new System.Drawing.Size(57, 17);
+            this.DetailsIconsRadioButton.TabIndex = 35;
+            this.DetailsIconsRadioButton.TabStop = true;
+            this.DetailsIconsRadioButton.Text = "Details";
+            this.DetailsIconsRadioButton.UseVisualStyleBackColor = true;
             // 
             // LargeViewModeSizeLabel
             // 
@@ -425,102 +507,37 @@ namespace AmpShell.Views
             this.LargeViewModeSizeComboBox.Size = new System.Drawing.Size(121, 21);
             this.LargeViewModeSizeComboBox.TabIndex = 32;
             // 
-            // AllOfThemCheckBox
-            // 
-            this.AllOfThemCheckBox.AutoSize = true;
-            this.AllOfThemCheckBox.Location = new System.Drawing.Point(544, 150);
-            this.AllOfThemCheckBox.Name = "AllOfThemCheckBox";
-            this.AllOfThemCheckBox.Size = new System.Drawing.Size(75, 17);
-            this.AllOfThemCheckBox.TabIndex = 31;
-            this.AllOfThemCheckBox.Text = "All of them";
-            this.AllOfThemCheckBox.UseVisualStyleBackColor = true;
-            // 
-            // LargeIconsRadioButton
-            // 
-            this.LargeIconsRadioButton.AutoSize = true;
-            this.LargeIconsRadioButton.Location = new System.Drawing.Point(262, 150);
-            this.LargeIconsRadioButton.Name = "LargeIconsRadioButton";
-            this.LargeIconsRadioButton.Size = new System.Drawing.Size(52, 17);
-            this.LargeIconsRadioButton.TabIndex = 26;
-            this.LargeIconsRadioButton.TabStop = true;
-            this.LargeIconsRadioButton.Text = "Large";
-            this.LargeIconsRadioButton.UseVisualStyleBackColor = true;
-            this.LargeIconsRadioButton.MouseClick += new System.Windows.Forms.MouseEventHandler(this.LargeIconsRadioButton_MouseClick);
-            // 
-            // SmallIconsRadioButton
-            // 
-            this.SmallIconsRadioButton.AutoSize = true;
-            this.SmallIconsRadioButton.Location = new System.Drawing.Point(320, 150);
-            this.SmallIconsRadioButton.Name = "SmallIconsRadioButton";
-            this.SmallIconsRadioButton.Size = new System.Drawing.Size(50, 17);
-            this.SmallIconsRadioButton.TabIndex = 27;
-            this.SmallIconsRadioButton.TabStop = true;
-            this.SmallIconsRadioButton.Text = "Small";
-            this.SmallIconsRadioButton.UseVisualStyleBackColor = true;
-            this.SmallIconsRadioButton.MouseClick += new System.Windows.Forms.MouseEventHandler(this.SmallIconsRadioButton_MouseClick);
-            // 
-            // TilesIconsRadioButton
-            // 
-            this.TilesIconsRadioButton.AutoSize = true;
-            this.TilesIconsRadioButton.Location = new System.Drawing.Point(376, 150);
-            this.TilesIconsRadioButton.Name = "TilesIconsRadioButton";
-            this.TilesIconsRadioButton.Size = new System.Drawing.Size(47, 17);
-            this.TilesIconsRadioButton.TabIndex = 28;
-            this.TilesIconsRadioButton.TabStop = true;
-            this.TilesIconsRadioButton.Text = "Tiles";
-            this.TilesIconsRadioButton.UseVisualStyleBackColor = true;
-            this.TilesIconsRadioButton.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TilesIconsRadioButton_MouseClick);
-            // 
-            // ListsIconsRadioButton
-            // 
-            this.ListsIconsRadioButton.AutoSize = true;
-            this.ListsIconsRadioButton.Location = new System.Drawing.Point(429, 150);
-            this.ListsIconsRadioButton.Name = "ListsIconsRadioButton";
-            this.ListsIconsRadioButton.Size = new System.Drawing.Size(46, 17);
-            this.ListsIconsRadioButton.TabIndex = 29;
-            this.ListsIconsRadioButton.TabStop = true;
-            this.ListsIconsRadioButton.Text = "Lists";
-            this.ListsIconsRadioButton.UseVisualStyleBackColor = true;
-            this.ListsIconsRadioButton.MouseClick += new System.Windows.Forms.MouseEventHandler(this.ListsIconsRadioButton_MouseClick);
-            // 
-            // DetailsIconsRadioButton
-            // 
-            this.DetailsIconsRadioButton.AutoSize = true;
-            this.DetailsIconsRadioButton.Location = new System.Drawing.Point(481, 150);
-            this.DetailsIconsRadioButton.Name = "DetailsIconsRadioButton";
-            this.DetailsIconsRadioButton.Size = new System.Drawing.Size(57, 17);
-            this.DetailsIconsRadioButton.TabIndex = 30;
-            this.DetailsIconsRadioButton.TabStop = true;
-            this.DetailsIconsRadioButton.Text = "Details";
-            this.DetailsIconsRadioButton.UseVisualStyleBackColor = true;
-            this.DetailsIconsRadioButton.MouseClick += new System.Windows.Forms.MouseEventHandler(this.DetailsIconsRadioButton_MouseClick);
-            // 
-            // IconsViewLabel
-            // 
-            this.IconsViewLabel.AutoSize = true;
-            this.IconsViewLabel.Location = new System.Drawing.Point(184, 150);
-            this.IconsViewLabel.Name = "IconsViewLabel";
-            this.IconsViewLabel.Size = new System.Drawing.Size(72, 13);
-            this.IconsViewLabel.TabIndex = 0;
-            this.IconsViewLabel.Text = "Default view :";
-            // 
             // CategoriesListView
             // 
+            this.CategoriesListView.AllColumns.Add(this.CategoriesNameColumn);
+            this.CategoriesListView.AutoGenerateColumns = false;
+            this.CategoriesListView.CellEditUseWholeCell = false;
             this.CategoriesListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.NameColumn});
+            this.CategoriesNameColumn});
+            this.CategoriesListView.DataSource = null;
             this.CategoriesListView.HideSelection = false;
             this.CategoriesListView.LabelWrap = false;
             this.CategoriesListView.Location = new System.Drawing.Point(4, 30);
             this.CategoriesListView.Name = "CategoriesListView";
+            this.CategoriesListView.ShowGroups = false;
             this.CategoriesListView.Size = new System.Drawing.Size(621, 112);
             this.CategoriesListView.TabIndex = 19;
             this.CategoriesListView.UseCompatibleStateImageBehavior = false;
             this.CategoriesListView.View = System.Windows.Forms.View.List;
+            this.CategoriesListView.VirtualMode = true;
             // 
-            // NameColumn
+            // CategoriesNameColumn
             // 
-            this.NameColumn.Text = "Name";
-            this.NameColumn.Width = 120;
+            this.CategoriesNameColumn.AspectName = "Title";
+            this.CategoriesNameColumn.Groupable = false;
+            this.CategoriesNameColumn.Hideable = false;
+            this.CategoriesNameColumn.IsEditable = false;
+            this.CategoriesNameColumn.IsTileViewColumn = true;
+            this.CategoriesNameColumn.MinimumWidth = 628;
+            this.CategoriesNameColumn.Searchable = false;
+            this.CategoriesNameColumn.Text = "Name";
+            this.CategoriesNameColumn.UseFiltering = false;
+            this.CategoriesNameColumn.Width = 628;
             // 
             // SortByNameButton
             // 
@@ -586,7 +603,7 @@ namespace AmpShell.Views
             this.ConfigEditorTabPage.Location = new System.Drawing.Point(4, 22);
             this.ConfigEditorTabPage.Name = "ConfigEditorTabPage";
             this.ConfigEditorTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.ConfigEditorTabPage.Size = new System.Drawing.Size(628, 171);
+            this.ConfigEditorTabPage.Size = new System.Drawing.Size(628, 200);
             this.ConfigEditorTabPage.TabIndex = 0;
             this.ConfigEditorTabPage.Text = "Config Editor";
             this.ConfigEditorTabPage.UseVisualStyleBackColor = true;
@@ -639,16 +656,48 @@ namespace AmpShell.Views
             // BehaviorTabPage
             // 
             this.BehaviorTabPage.BackColor = System.Drawing.Color.Transparent;
+            this.BehaviorTabPage.Controls.Add(this.DoGroupBox);
             this.BehaviorTabPage.Controls.Add(this.PromptGroupBox);
             this.BehaviorTabPage.Controls.Add(this.RememberGroupBox);
             this.BehaviorTabPage.Controls.Add(this.ShowGroupBox);
             this.BehaviorTabPage.Location = new System.Drawing.Point(4, 22);
             this.BehaviorTabPage.Name = "BehaviorTabPage";
             this.BehaviorTabPage.Padding = new System.Windows.Forms.Padding(3);
-            this.BehaviorTabPage.Size = new System.Drawing.Size(628, 171);
+            this.BehaviorTabPage.Size = new System.Drawing.Size(628, 200);
             this.BehaviorTabPage.TabIndex = 1;
             this.BehaviorTabPage.Text = "Behavior";
             this.BehaviorTabPage.UseVisualStyleBackColor = true;
+            // 
+            // DoGroupBox
+            // 
+            this.DoGroupBox.Controls.Add(this.PutAmpShellInTaskBarOnLaunchCheckBox);
+            this.DoGroupBox.Controls.Add(this.ExitOnGameLaunchCheckBox);
+            this.DoGroupBox.Location = new System.Drawing.Point(214, 84);
+            this.DoGroupBox.Name = "DoGroupBox";
+            this.DoGroupBox.Size = new System.Drawing.Size(200, 81);
+            this.DoGroupBox.TabIndex = 1;
+            this.DoGroupBox.TabStop = false;
+            this.DoGroupBox.Text = "When a game is launched...";
+            // 
+            // PutAmpShellInTaskBarOnLaunchCheckBox
+            // 
+            this.PutAmpShellInTaskBarOnLaunchCheckBox.AutoSize = true;
+            this.PutAmpShellInTaskBarOnLaunchCheckBox.Location = new System.Drawing.Point(6, 42);
+            this.PutAmpShellInTaskBarOnLaunchCheckBox.Name = "PutAmpShellInTaskBarOnLaunchCheckBox";
+            this.PutAmpShellInTaskBarOnLaunchCheckBox.Size = new System.Drawing.Size(156, 17);
+            this.PutAmpShellInTaskBarOnLaunchCheckBox.TabIndex = 1;
+            this.PutAmpShellInTaskBarOnLaunchCheckBox.Text = "Put AmpShell in the taskbar";
+            this.PutAmpShellInTaskBarOnLaunchCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // ExitOnGameLaunchCheckBox
+            // 
+            this.ExitOnGameLaunchCheckBox.AutoSize = true;
+            this.ExitOnGameLaunchCheckBox.Location = new System.Drawing.Point(6, 19);
+            this.ExitOnGameLaunchCheckBox.Name = "ExitOnGameLaunchCheckBox";
+            this.ExitOnGameLaunchCheckBox.Size = new System.Drawing.Size(90, 17);
+            this.ExitOnGameLaunchCheckBox.TabIndex = 0;
+            this.ExitOnGameLaunchCheckBox.Text = "Exit AmpShell";
+            this.ExitOnGameLaunchCheckBox.UseVisualStyleBackColor = true;
             // 
             // PromptGroupBox
             // 
@@ -754,53 +803,27 @@ namespace AmpShell.Views
             this.ShowToolBarCheckBox.Text = "Tool bar";
             this.ShowToolBarCheckBox.UseVisualStyleBackColor = true;
             // 
-            // PortableModeCheckBox
+            // NameColumn
             // 
-            this.PortableModeCheckBox.AutoSize = true;
-            this.PortableModeCheckBox.Location = new System.Drawing.Point(4, 203);
-            this.PortableModeCheckBox.Name = "PortableModeCheckBox";
-            this.PortableModeCheckBox.Size = new System.Drawing.Size(95, 17);
-            this.PortableModeCheckBox.TabIndex = 8;
-            this.PortableModeCheckBox.Text = "Portable Mode";
-            this.PortableModeCheckBox.UseVisualStyleBackColor = true;
-            this.PortableModeCheckBox.CheckedChanged += new System.EventHandler(this.PortableModeCheckBox_CheckedChanged);
+            this.NameColumn.DisplayIndex = 0;
+            this.NameColumn.Text = "Name";
+            this.NameColumn.Width = 120;
             // 
             // PrefsStatusStrip
             // 
-            this.PrefsStatusStrip.Location = new System.Drawing.Point(0, 225);
+            this.PrefsStatusStrip.AutoSize = false;
+            this.PrefsStatusStrip.Location = new System.Drawing.Point(0, 286);
             this.PrefsStatusStrip.Name = "PrefsStatusStrip";
             this.PrefsStatusStrip.Size = new System.Drawing.Size(634, 22);
             this.PrefsStatusStrip.TabIndex = 15;
             this.PrefsStatusStrip.Text = "Portable Mode : inactive";
-            // 
-            // StatusStripLabel
-            // 
-            this.StatusStripLabel.AutoSize = true;
-            this.StatusStripLabel.Location = new System.Drawing.Point(0, 233);
-            this.StatusStripLabel.Name = "StatusStripLabel";
-            this.StatusStripLabel.Size = new System.Drawing.Size(0, 13);
-            this.StatusStripLabel.TabIndex = 16;
-            // 
-            // ReScanDirButton
-            // 
-            this.ReScanDirButton.Enabled = false;
-            this.ReScanDirButton.Image = global::AmpShell.Properties.Resources.autoList;
-            this.ReScanDirButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.ReScanDirButton.Location = new System.Drawing.Point(101, 199);
-            this.ReScanDirButton.Name = "ReScanDirButton";
-            this.ReScanDirButton.Size = new System.Drawing.Size(165, 23);
-            this.ReScanDirButton.TabIndex = 9;
-            this.ReScanDirButton.Text = "Re-scan AmpShell\'s directory";
-            this.ReScanDirButton.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.ReScanDirButton.UseVisualStyleBackColor = true;
-            this.ReScanDirButton.Click += new System.EventHandler(this.ReScanDirButton_Click);
             // 
             // OKButton
             // 
             this.OKButton.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.OKButton.Image = global::AmpShell.Properties.Resources.saveHS;
             this.OKButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.OKButton.Location = new System.Drawing.Point(449, 203);
+            this.OKButton.Location = new System.Drawing.Point(444, 255);
             this.OKButton.Name = "OKButton";
             this.OKButton.Size = new System.Drawing.Size(102, 23);
             this.OKButton.TabIndex = 43;
@@ -814,7 +837,7 @@ namespace AmpShell.Views
             this.FormCancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.FormCancelButton.Image = global::AmpShell.Properties.Resources.DeleteHS;
             this.FormCancelButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.FormCancelButton.Location = new System.Drawing.Point(554, 203);
+            this.FormCancelButton.Location = new System.Drawing.Point(552, 255);
             this.FormCancelButton.Name = "FormCancelButton";
             this.FormCancelButton.Size = new System.Drawing.Size(80, 23);
             this.FormCancelButton.TabIndex = 44;
@@ -823,16 +846,50 @@ namespace AmpShell.Views
             this.FormCancelButton.UseVisualStyleBackColor = true;
             this.FormCancelButton.Click += new System.EventHandler(this.Cancel_Click);
             // 
+            // PortableModeGroupBox
+            // 
+            this.PortableModeGroupBox.Controls.Add(this.ReScanDirButton);
+            this.PortableModeGroupBox.Controls.Add(this.PortableModeCheckBox);
+            this.PortableModeGroupBox.Location = new System.Drawing.Point(4, 232);
+            this.PortableModeGroupBox.Name = "PortableModeGroupBox";
+            this.PortableModeGroupBox.Size = new System.Drawing.Size(250, 51);
+            this.PortableModeGroupBox.TabIndex = 9;
+            this.PortableModeGroupBox.TabStop = false;
+            this.PortableModeGroupBox.Text = "Portable Mode :";
+            // 
+            // ReScanDirButton
+            // 
+            this.ReScanDirButton.Enabled = false;
+            this.ReScanDirButton.Image = global::AmpShell.Properties.Resources.autoList;
+            this.ReScanDirButton.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.ReScanDirButton.Location = new System.Drawing.Point(77, 19);
+            this.ReScanDirButton.Name = "ReScanDirButton";
+            this.ReScanDirButton.Size = new System.Drawing.Size(165, 23);
+            this.ReScanDirButton.TabIndex = 11;
+            this.ReScanDirButton.Text = "Re-scan AmpShell\'s directory";
+            this.ReScanDirButton.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.ReScanDirButton.UseVisualStyleBackColor = true;
+            this.ReScanDirButton.Click += new System.EventHandler(this.ReScanDirButton_Click);
+            // 
+            // PortableModeCheckBox
+            // 
+            this.PortableModeCheckBox.AutoSize = true;
+            this.PortableModeCheckBox.Location = new System.Drawing.Point(6, 23);
+            this.PortableModeCheckBox.Name = "PortableModeCheckBox";
+            this.PortableModeCheckBox.Size = new System.Drawing.Size(65, 17);
+            this.PortableModeCheckBox.TabIndex = 10;
+            this.PortableModeCheckBox.Text = "Enabled";
+            this.PortableModeCheckBox.UseVisualStyleBackColor = true;
+            this.PortableModeCheckBox.CheckedChanged += new System.EventHandler(this.PortableModeCheckBox_CheckedChanged);
+            // 
             // PreferencesForm
             // 
             this.AcceptButton = this.OKButton;
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.CancelButton = this.FormCancelButton;
-            this.ClientSize = new System.Drawing.Size(634, 247);
-            this.Controls.Add(this.ReScanDirButton);
-            this.Controls.Add(this.StatusStripLabel);
+            this.ClientSize = new System.Drawing.Size(634, 308);
+            this.Controls.Add(this.PortableModeGroupBox);
             this.Controls.Add(this.PrefsStatusStrip);
-            this.Controls.Add(this.PortableModeCheckBox);
             this.Controls.Add(this.PrefsTabControl);
             this.Controls.Add(this.OKButton);
             this.Controls.Add(this.FormCancelButton);
@@ -844,7 +901,6 @@ namespace AmpShell.Views
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Preferences";
-            this.Load += new System.EventHandler(this.Main_Prefs_Load);
             this.PrefsTabControl.ResumeLayout(false);
             this.DOSBoxTabPage.ResumeLayout(false);
             this.DOSBoxTabPage.PerformLayout();
@@ -854,17 +910,23 @@ namespace AmpShell.Views
             this.OtherOptionsGroupBox.PerformLayout();
             this.CategoriesTabPage.ResumeLayout(false);
             this.CategoriesTabPage.PerformLayout();
+            this.DefaultViewGroupBox.ResumeLayout(false);
+            this.DefaultViewGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.CategoriesListView)).EndInit();
             this.ConfigEditorTabPage.ResumeLayout(false);
             this.ConfigEditorTabPage.PerformLayout();
             this.BehaviorTabPage.ResumeLayout(false);
+            this.DoGroupBox.ResumeLayout(false);
+            this.DoGroupBox.PerformLayout();
             this.PromptGroupBox.ResumeLayout(false);
             this.PromptGroupBox.PerformLayout();
             this.RememberGroupBox.ResumeLayout(false);
             this.RememberGroupBox.PerformLayout();
             this.ShowGroupBox.ResumeLayout(false);
             this.ShowGroupBox.PerformLayout();
+            this.PortableModeGroupBox.ResumeLayout(false);
+            this.PortableModeGroupBox.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -911,7 +973,7 @@ namespace AmpShell.Views
         private System.Windows.Forms.TextBox GamesDirTextBox;
         private System.Windows.Forms.Button BrowseGamesDirButton;
         private System.Windows.Forms.Label GamesDirLabel;
-        private System.Windows.Forms.ListView CategoriesListView;
+        private BrightIdeasSoftware.FastDataListView CategoriesListView;
         private System.Windows.Forms.GroupBox ShowGroupBox;
         private System.Windows.Forms.CheckBox ShowMenuBarCheckBox;
         private System.Windows.Forms.CheckBox ShowDetailsBarCheckBox;
@@ -920,19 +982,23 @@ namespace AmpShell.Views
         private System.Windows.Forms.GroupBox PromptGroupBox;
         private System.Windows.Forms.CheckBox CategoyDeletePromptCheckBox;
         private System.Windows.Forms.CheckBox GameDeletePromptCheckBox;
-        private System.Windows.Forms.Label IconsViewLabel;
-        private System.Windows.Forms.RadioButton LargeIconsRadioButton;
+        private System.Windows.Forms.CheckBox AllOfThemCheckBox;
+        private System.Windows.Forms.StatusStrip PrefsStatusStrip;
+        private System.Windows.Forms.Label LargeViewModeSizeLabel;
+        private System.Windows.Forms.ComboBox LargeViewModeSizeComboBox;
+        private System.Windows.Forms.GroupBox DefaultViewGroupBox;
         private System.Windows.Forms.RadioButton SmallIconsRadioButton;
+        private System.Windows.Forms.RadioButton LargeIconsRadioButton;
         private System.Windows.Forms.RadioButton TilesIconsRadioButton;
         private System.Windows.Forms.RadioButton ListsIconsRadioButton;
         private System.Windows.Forms.RadioButton DetailsIconsRadioButton;
-        private System.Windows.Forms.CheckBox AllOfThemCheckBox;
-        private System.Windows.Forms.CheckBox PortableModeCheckBox;
-        private System.Windows.Forms.StatusStrip PrefsStatusStrip;
-        private System.Windows.Forms.Label StatusStripLabel;
+        private System.Windows.Forms.GroupBox PortableModeGroupBox;
         private System.Windows.Forms.Button ReScanDirButton;
-        private System.Windows.Forms.Label LargeViewModeSizeLabel;
-        private System.Windows.Forms.ComboBox LargeViewModeSizeComboBox;
-        private System.Windows.Forms.ColumnHeader NameColumn;
+        private System.Windows.Forms.CheckBox PortableModeCheckBox;
+        private System.Windows.Forms.GroupBox DoGroupBox;
+        private System.Windows.Forms.CheckBox PutAmpShellInTaskBarOnLaunchCheckBox;
+        private System.Windows.Forms.CheckBox ExitOnGameLaunchCheckBox;
+        private BrightIdeasSoftware.OLVColumn NameColumn;
+        private BrightIdeasSoftware.OLVColumn CategoriesNameColumn;
     }
 }

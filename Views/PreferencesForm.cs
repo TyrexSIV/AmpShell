@@ -8,13 +8,10 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.*/
 
-using AmpShell.DAL;
 using AmpShell.Model;
 using AmpShell.ViewModel;
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace AmpShell.Views
@@ -31,80 +28,67 @@ namespace AmpShell.Views
 
         private void Initialize()
         {
-            EditorBinaryPathTextBox.DataBindings.Add("Text", _viewModel.Model, "ConfigEditorPath");
-            DOSBoxPathTextBox.DataBindings.Add("Text", _viewModel.Model, "DBPath");
-            DOSBoxConfFileTextBox.DataBindings.Add("Text", _viewModel.Model, "DBDefaultConfFilePath");
-            DOSBoxLangFileTextBox.DataBindings.Add("Text", _viewModel.Model, "DBDefaultLangFilePath");
-            GamesDirTextBox.DataBindings.Add("Text", _viewModel.Model, "GamesDefaultDir");
-            CDImageDirTextBox.DataBindings.Add("Text", _viewModel.Model, "CDsDefaultDir");
-            LargeViewModeSizeComboBox.DataBindings.Add("SelectedItem", _viewModel.Model, "LargeViewModeSize");
-            CategoyDeletePromptCheckBox.DataBindings.Add("Checked", _viewModel.Model, "CategoryDeletePrompt");
-            GameDeletePromptCheckBox.DataBindings.Add("Checked", _viewModel.Model, "GameDeletePrompt");
-            WindowPositionCheckBox.DataBindings.Add("Checked", _viewModel.Model, "RememberWindowPosition");
-            WindowSizeCheckBox.DataBindings.Add("Checked", _viewModel.Model, "RememberWindowSize");
-            ShowMenuBarCheckBox.DataBindings.Add("Checked", _viewModel.Model, "MenuBarVisible");
-            ShowToolBarCheckBox.DataBindings.Add("Checked", _viewModel.Model, "ToolBarVisible");
-            ShowDetailsBarCheckBox.DataBindings.Add("Checked", _viewModel.Model, "StatusBarVisible");
-            QuitOnExitCheckBox.DataBindings.Add("Checked", _viewModel.Model, "GamesQuitOnExit");
-            NoConsoleCheckBox.DataBindings.Add("Checked", _viewModel.Model, "GamesNoConsole");
-            FullscreenCheckBox.DataBindings.Add("Checked", _viewModel.Model, "GamesInFullScreen");
-            GameAdditionalCommandsTextBox.DataBindings.Add("Text", _viewModel.Model, "GamesAdditionalCommands");
-            DOSBoxPathTextBox.DataBindings.Add("Text", _viewModel.Model, "DBPath");
-            DOSBoxConfFileTextBox.DataBindings.Add("Text", _viewModel.Model, "DBDefaultConfFilePath");
-            DOSBoxLangFileTextBox.DataBindings.Add("Text", _viewModel.Model, "DBDefaultLangFilePath");
-            EditorBinaryPathTextBox.DataBindings.Add("Text", _viewModel.Model, "ConfigEditorPath");
-            AdditionnalParametersTextBox.DataBindings.Add("Text", _viewModel.Model, "ConfigEditorPath");
-            CDImageDirTextBox.DataBindings.Add("Text", _viewModel.Model, "CDsDefaultDir");
-            GamesDirTextBox.DataBindings.Add("Text", _viewModel.Model, "GamesDefaultDir");
-            PortableModeCheckBox.DataBindings.Add("Checked", _viewModel.Model, "PortableMode");
-            PortableModeCheckBox.DataBindings.Add("Enabled", _viewModel, "PortableModeAvailable");
-            AllOfThemCheckBox.DataBindings.Add("Checked", _viewModel.Model, "DefaultIconViewOverride");
-            ReScanDirButton.DataBindings.Add("Enabled", PortableModeCheckBox, "Checked");
+            EditorBinaryPathTextBox.DataBindings.Add("Text", _viewModel.Model, "ConfigEditorPath", false, DataSourceUpdateMode.OnPropertyChanged);
+            DOSBoxPathTextBox.DataBindings.Add("Text", _viewModel.Model, "DBPath", false, DataSourceUpdateMode.OnPropertyChanged);
+            DOSBoxConfFileTextBox.DataBindings.Add("Text", _viewModel.Model, "DBDefaultConfFilePath", false, DataSourceUpdateMode.OnPropertyChanged);
+            DOSBoxLangFileTextBox.DataBindings.Add("Text", _viewModel.Model, "DBDefaultLangFilePath", false, DataSourceUpdateMode.OnPropertyChanged);
+            GamesDirTextBox.DataBindings.Add("Text", _viewModel.Model, "GamesDefaultDir", false, DataSourceUpdateMode.OnPropertyChanged);
+            CDImageDirTextBox.DataBindings.Add("Text", _viewModel.Model, "CDsDefaultDir", false, DataSourceUpdateMode.OnPropertyChanged);
+            CategoyDeletePromptCheckBox.DataBindings.Add("Checked", _viewModel.Model, "CategoryDeletePrompt", false, DataSourceUpdateMode.OnPropertyChanged);
+            GameDeletePromptCheckBox.DataBindings.Add("Checked", _viewModel.Model, "GameDeletePrompt", false, DataSourceUpdateMode.OnPropertyChanged);
+            WindowPositionCheckBox.DataBindings.Add("Checked", _viewModel.Model, "RememberWindowPosition", false, DataSourceUpdateMode.OnPropertyChanged);
+            WindowSizeCheckBox.DataBindings.Add("Checked", _viewModel.Model, "RememberWindowSize", false, DataSourceUpdateMode.OnPropertyChanged);
+            ShowMenuBarCheckBox.DataBindings.Add("Checked", _viewModel.Model, "MenuBarVisible", false, DataSourceUpdateMode.OnPropertyChanged);
+            ShowToolBarCheckBox.DataBindings.Add("Checked", _viewModel.Model, "ToolBarVisible", false, DataSourceUpdateMode.OnPropertyChanged);
+            ShowDetailsBarCheckBox.DataBindings.Add("Checked", _viewModel.Model, "StatusBarVisible", false, DataSourceUpdateMode.OnPropertyChanged);
+            ExitOnGameLaunchCheckBox.DataBindings.Add("Checked", _viewModel.Model, "ExitOnGameLaunch", false, DataSourceUpdateMode.OnPropertyChanged);
+            PutAmpShellInTaskBarOnLaunchCheckBox.DataBindings.Add("Checked", _viewModel.Model, "GoToTaskBarOnGameLaunch", false, DataSourceUpdateMode.OnPropertyChanged);
+            QuitOnExitCheckBox.DataBindings.Add("Checked", _viewModel.Model, "GamesQuitOnExit", false, DataSourceUpdateMode.OnPropertyChanged);
+            NoConsoleCheckBox.DataBindings.Add("Checked", _viewModel.Model, "GamesNoConsole", false, DataSourceUpdateMode.OnPropertyChanged);
+            FullscreenCheckBox.DataBindings.Add("Checked", _viewModel.Model, "GamesInFullScreen", false, DataSourceUpdateMode.OnPropertyChanged);
+            GameAdditionalCommandsTextBox.DataBindings.Add("Text", _viewModel.Model, "GamesAdditionalCommands", false, DataSourceUpdateMode.OnPropertyChanged);
+            AdditionnalParametersTextBox.DataBindings.Add("Text", _viewModel.Model, "ConfigEditorPath", false, DataSourceUpdateMode.OnPropertyChanged);
+            PortableModeCheckBox.DataBindings.Add("Checked", _viewModel.Model, "PortableMode", false, DataSourceUpdateMode.OnPropertyChanged);
+            PortableModeCheckBox.DataBindings.Add("Enabled", _viewModel, "PortableModeAvailable", false, DataSourceUpdateMode.OnPropertyChanged);
+            DetailsIconsRadioButton.DataBindings.Add("Checked", _viewModel, "IsDefaultViewModeDetails", false, DataSourceUpdateMode.OnPropertyChanged);
+            SmallIconsRadioButton.DataBindings.Add("Checked", _viewModel, "IsDefaultViewModeSmallIcons", false, DataSourceUpdateMode.OnPropertyChanged);
+            LargeIconsRadioButton.DataBindings.Add("Checked", _viewModel, "IsDefaultViewModeLargeIcons", false, DataSourceUpdateMode.OnPropertyChanged);
+            ListsIconsRadioButton.DataBindings.Add("Checked", _viewModel, "IsDefaultViewModeList", false, DataSourceUpdateMode.OnPropertyChanged);
+            TilesIconsRadioButton.DataBindings.Add("Checked", _viewModel, "IsDefaultViewModeTiles", false, DataSourceUpdateMode.OnPropertyChanged);
+            AllOfThemCheckBox.DataBindings.Add("Checked", _viewModel.Model, "DefaultIconViewOverride", false, DataSourceUpdateMode.OnPropertyChanged);
+            ReScanDirButton.DataBindings.Add("Enabled", _viewModel, "PortableModeAvailable", false, DataSourceUpdateMode.OnPropertyChanged);
+            PrefsStatusStrip.DataBindings.Add("Text", _viewModel, "PortableModeStatus", false, DataSourceUpdateMode.OnPropertyChanged);
 
-            Binding isPortableModeDisabledBinding = new Binding("Enabled", _viewModel.Model, "PortableMode");
-            isPortableModeDisabledBinding.Format += IsPortableModeDisabledBinding_Format;
-            isPortableModeDisabledBinding.Parse += IsPortableModeDisabledBinding_Format;
+            DOSBoxPathBrowseButton.DataBindings.Add(GetPortableModeBinding());
+            DOSBoxConfFileTextBox.DataBindings.Add(GetPortableModeBinding());
+            DOSBoxConfFileBrowseButton.DataBindings.Add(GetPortableModeBinding());
+            DOSBoxLangFileTextBox.DataBindings.Add(GetPortableModeBinding());
+            DOSBoxLangFileBrowseButton.DataBindings.Add(GetPortableModeBinding());
+            DOSBoxPathTextBox.DataBindings.Add(GetPortableModeBinding());
+            GamesDirTextBox.DataBindings.Add(GetPortableModeBinding());
+            BrowseGamesDirButton.DataBindings.Add(GetPortableModeBinding());
+            CDImageDirTextBox.DataBindings.Add(GetPortableModeBinding());
+            BrowseCDImageDirButton.DataBindings.Add(GetPortableModeBinding());
+            EditorBinaryPathTextBox.DataBindings.Add(GetPortableModeBinding());
+            BrowseForEditorButton.DataBindings.Add(GetPortableModeBinding());
 
-            DOSBoxPathBrowseButton.DataBindings.Add(isPortableModeDisabledBinding);
-            DOSBoxConfFileTextBox.DataBindings.Add(isPortableModeDisabledBinding);
-            DOSBoxConfFileBrowseButton.DataBindings.Add(isPortableModeDisabledBinding);
-            DOSBoxLangFileTextBox.DataBindings.Add(isPortableModeDisabledBinding);
-            DOSBoxLangFileBrowseButton.DataBindings.Add(isPortableModeDisabledBinding);
-            DOSBoxPathTextBox.DataBindings.Add(isPortableModeDisabledBinding);
-            GamesDirTextBox.DataBindings.Add(isPortableModeDisabledBinding);
-            BrowseGamesDirButton.DataBindings.Add(isPortableModeDisabledBinding);
-            CDImageDirTextBox.DataBindings.Add(isPortableModeDisabledBinding);
-            BrowseCDImageDirButton.DataBindings.Add(isPortableModeDisabledBinding);
-            EditorBinaryPathTextBox.DataBindings.Add(isPortableModeDisabledBinding);
-            BrowseForEditorButton.DataBindings.Add(isPortableModeDisabledBinding);
+            var categoriesBindingSource = new BindingSource(_viewModel, "Categories");
+            CategoriesListView.DataSource = categoriesBindingSource;
 
-            if (UserDataAccessor.UserData.CategoriesDefaultViewMode == View.Details)
-            {
-                DetailsIconsRadioButton.Checked = true;
-            }
+            LargeViewModeSizeComboBox.DataSource = new BindingSource(_viewModel, "LargeViewModeAvailableSizes");
+            LargeViewModeSizeComboBox.DataBindings.Add("SelectedItem", _viewModel.Model, "LargeViewModeSize", false, DataSourceUpdateMode.OnPropertyChanged);
 
-            if (UserDataAccessor.UserData.CategoriesDefaultViewMode == View.LargeIcon)
-            {
-                LargeIconsRadioButton.Checked = true;
-            }
-
-            if (UserDataAccessor.UserData.CategoriesDefaultViewMode == View.List)
-            {
-                ListsIconsRadioButton.Checked = true;
-            }
-
-            if (UserDataAccessor.UserData.CategoriesDefaultViewMode == View.SmallIcon)
-            {
-                SmallIconsRadioButton.Checked = true;
-            }
-
-            if (UserDataAccessor.UserData.CategoriesDefaultViewMode == View.Tile)
-            {
-                TilesIconsRadioButton.Checked = true;
-            }
         }
 
-        private void IsPortableModeDisabledBinding_Format(object sender, ConvertEventArgs e)
+        private Binding GetPortableModeBinding()
+        {
+            var isPortableModeDisabledBinding = new Binding("Enabled", _viewModel.Model, "PortableMode", true, DataSourceUpdateMode.OnPropertyChanged);
+            isPortableModeDisabledBinding.Format += IsPortableModeDisabledBinding_Parse;
+            isPortableModeDisabledBinding.Parse += IsPortableModeDisabledBinding_Parse;
+            return isPortableModeDisabledBinding;
+        }
+
+        private void IsPortableModeDisabledBinding_Parse(object sender, ConvertEventArgs e)
         {
             e.Value = !(bool)e.Value;
         }
@@ -113,7 +97,6 @@ namespace AmpShell.Views
         {
             _viewModel.BrowseForTextEditorPath();
         }
-
 
         private void DOSBoxPathBrowseButton_Click(object sender, EventArgs e)
         {
@@ -142,53 +125,11 @@ namespace AmpShell.Views
 
         private void OK_Click(object sender, EventArgs e)
         {
-            if (LargeIconsRadioButton.Checked == true)
-            {
-                UserDataAccessor.UserData.CategoriesDefaultViewMode = View.LargeIcon;
-            }
-
-            if (SmallIconsRadioButton.Checked == true)
-            {
-                UserDataAccessor.UserData.CategoriesDefaultViewMode = View.SmallIcon;
-            }
-
-            if (ListsIconsRadioButton.Checked == true)
-            {
-                UserDataAccessor.UserData.CategoriesDefaultViewMode = View.List;
-            }
-
-            if (TilesIconsRadioButton.Checked == true)
-            {
-                UserDataAccessor.UserData.CategoriesDefaultViewMode = View.Tile;
-            }
-
-            if (DetailsIconsRadioButton.Checked == true)
-            {
-                UserDataAccessor.UserData.CategoriesDefaultViewMode = View.Details;
-            }
-
-            SyncCategoriesOrderWithTabOrder();
-
-            if(_viewModel.IsDataValid())
+            if(_viewModel.IsDataValid() == false)
             {
                 MessageBox.Show("Location of DOSBox's executable unknown. You will not be able to run games!", "Select DOSBox's executable", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             Close();
-        }
-
-        private void SyncCategoriesOrderWithTabOrder()
-        {
-            if (CategoriesListView.Items.Count < 2)
-            {
-                return;
-            }
-
-            List<ListViewItem> tabs = CategoriesListView.Items.Cast<ListViewItem>().ToList();
-
-            foreach (Category ConcernedCategory in UserDataAccessor.UserData.ListChildren)
-            {
-                UserDataAccessor.UserData.MoveChildToPosition(ConcernedCategory, tabs.IndexOf(tabs.FirstOrDefault(x => Convert.ToString(x.Tag) == ConcernedCategory.Signature)));
-            }
         }
 
         private void Cancel_Click(object sender, EventArgs e)
@@ -197,81 +138,17 @@ namespace AmpShell.Views
             Close();
         }
 
-        private void Main_Prefs_Load(object sender, EventArgs e)
-        {
-            //TODO : Binding with format/parse
-            foreach (Category categoryToDisplay in UserDataAccessor.UserData.ListChildren)
-            {
-                ListViewItem ItemToAdd = new ListViewItem(categoryToDisplay.Title)
-                {
-                    Tag = categoryToDisplay.Signature
-                };
-                CategoriesListView.Items.Add(ItemToAdd);
-            }
-        }
-
         private void MoveFirstButton_Click(object sender, EventArgs e)
         {
-            CategoriesListViewItemMoveTo(0);
+            _viewModel.MoveCategoryTo(CategoriesListView.FocusedItem.Index, 0);
         }
 
-        private void SortByNameButton_Click(object sender, EventArgs e)
-        {
-            CategoriesListView.Sorting = SortOrder.Ascending;
-            CategoriesListView.Sort();
-            CategoriesListView.Sorting = SortOrder.None;
-        }
-
-        private void MoveLastButton_Click(object sender, EventArgs e)
-        {
-            CategoriesListViewItemMoveTo(CategoriesListView.Items.Count - 1);
-        }
-
-        private void LargeIconsRadioButton_MouseClick(object sender, MouseEventArgs e)
-        {
-            SmallIconsRadioButton.Checked = false;
-            TilesIconsRadioButton.Checked = false;
-            ListsIconsRadioButton.Checked = false;
-            DetailsIconsRadioButton.Checked = false;
-        }
-
-        private void SmallIconsRadioButton_MouseClick(object sender, MouseEventArgs e)
-        {
-            LargeIconsRadioButton.Checked = false;
-            TilesIconsRadioButton.Checked = false;
-            ListsIconsRadioButton.Checked = false;
-            DetailsIconsRadioButton.Checked = false;
-        }
-
-        private void TilesIconsRadioButton_MouseClick(object sender, MouseEventArgs e)
-        {
-            SmallIconsRadioButton.Checked = false;
-            LargeIconsRadioButton.Checked = false;
-            ListsIconsRadioButton.Checked = false;
-            DetailsIconsRadioButton.Checked = false;
-        }
-
-        private void ListsIconsRadioButton_MouseClick(object sender, MouseEventArgs e)
-        {
-            SmallIconsRadioButton.Checked = false;
-            LargeIconsRadioButton.Checked = false;
-            TilesIconsRadioButton.Checked = false;
-            DetailsIconsRadioButton.Checked = false;
-        }
-
-        private void DetailsIconsRadioButton_MouseClick(object sender, MouseEventArgs e)
-        {
-            SmallIconsRadioButton.Checked = false;
-            LargeIconsRadioButton.Checked = false;
-            ListsIconsRadioButton.Checked = false;
-            TilesIconsRadioButton.Checked = false;
-        }
 
         private void MoveBackButton_Click(object sender, EventArgs e)
         {
             if (CategoriesListView.FocusedItem.Index > 0)
             {
-                CategoriesListViewItemMoveTo(CategoriesListView.FocusedItem.Index - 1);
+                _viewModel.MoveCategoryTo(CategoriesListView.FocusedItem.Index, CategoriesListView.FocusedItem.Index - 1);
             }
         }
 
@@ -279,20 +156,18 @@ namespace AmpShell.Views
         {
             if (CategoriesListView.FocusedItem.Index < CategoriesListView.Items.Count)
             {
-                CategoriesListViewItemMoveTo(CategoriesListView.FocusedItem.Index + 1);
+                _viewModel.MoveCategoryTo(CategoriesListView.FocusedItem.Index, CategoriesListView.FocusedItem.Index + 1);
             }
         }
 
-        private void CategoriesListViewItemMoveTo(int index)
+        private void MoveLastButton_Click(object sender, EventArgs e)
         {
-            ListViewItem listViewItemCopy = new ListViewItem
-            {
-                Text = CategoriesListView.FocusedItem.Text,
-                Tag = CategoriesListView.FocusedItem.Tag
-            };
-            CategoriesListView.Items.RemoveAt(CategoriesListView.FocusedItem.Index);
-            CategoriesListView.Items.Insert(index, listViewItemCopy);
-            CategoriesListView.FocusedItem = CategoriesListView.Items[(string)listViewItemCopy.Tag];
+            _viewModel.MoveCategoryTo(CategoriesListView.FocusedItem.Index, CategoriesListView.Items.Count - 1);
+        }
+
+        private void SortByNameButton_Click(object sender, EventArgs e)
+        {
+            _viewModel.SortCategoriesByName();
         }
 
         private void PortableModeCheckBox_CheckedChanged(object sender, EventArgs e)
@@ -301,11 +176,15 @@ namespace AmpShell.Views
             {
                 _viewModel.EnablePortableMode();
             }
+            else
+            {
+                _viewModel.DisablePortableMode();
+            }
         }
 
         private void ReScanDirButton_Click(object sender, EventArgs e)
         {
-            _viewModel.EnablePortableMode();
+            _viewModel.ScanForPortableModeTools();
         }
     }
 }

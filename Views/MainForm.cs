@@ -862,7 +862,15 @@ namespace AmpShell.Views
             try
             {
                 var dosboxProcess = DOSBoxController.StartDOSBox(dosboxPath, DOSBoxController.BuildArgs(selectedGame, runSetup, dosboxPath, confFile, langFile), selectedGame.DBConfPath);
-                if (dosboxProcess != null)
+                if (dosboxProcess == null)
+                {
+                    throw new NullReferenceException("The DOSBox process could not be found after launching a game !");
+                }
+                if(UserDataAccessor.UserData.ExitOnGameLaunch && !runSetup)
+                {
+                    Application.Exit();
+                }
+                if(UserDataAccessor.UserData.GoToTaskBarOnGameLaunch)
                 {
                     this.WindowState = FormWindowState.Minimized;
                     dosboxProcess.Exited += OnDOSBoxExit;
@@ -871,6 +879,10 @@ namespace AmpShell.Views
             catch (FileNotFoundException)
             {
                 MessageBox.Show("DOSBox cannot be run (was it deleted ?) !", "Game Launch", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            catch (NullReferenceException e)
+            {
+                MessageBox.Show(e.Message);
             }
         }
 
