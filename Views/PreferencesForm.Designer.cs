@@ -73,6 +73,7 @@ namespace AmpShell.Views
             this.DetailsIconsRadioButton = new System.Windows.Forms.RadioButton();
             this.IconsViewLabel = new System.Windows.Forms.Label();
             this.CategoriesListView = new System.Windows.Forms.ListView();
+            this.NameColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SortByNameButton = new System.Windows.Forms.Button();
             this.MoveLastButton = new System.Windows.Forms.Button();
             this.MoveNextButton = new System.Windows.Forms.Button();
@@ -101,7 +102,6 @@ namespace AmpShell.Views
             this.ReScanDirButton = new System.Windows.Forms.Button();
             this.OKButton = new System.Windows.Forms.Button();
             this.FormCancelButton = new System.Windows.Forms.Button();
-            this.Name = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.PrefsTabControl.SuspendLayout();
             this.DOSBoxTabPage.SuspendLayout();
             this.GamesTabPage.SuspendLayout();
@@ -507,7 +507,7 @@ namespace AmpShell.Views
             // CategoriesListView
             // 
             this.CategoriesListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.Name});
+            this.NameColumn});
             this.CategoriesListView.HideSelection = false;
             this.CategoriesListView.LabelWrap = false;
             this.CategoriesListView.Location = new System.Drawing.Point(4, 30);
@@ -516,6 +516,11 @@ namespace AmpShell.Views
             this.CategoriesListView.TabIndex = 19;
             this.CategoriesListView.UseCompatibleStateImageBehavior = false;
             this.CategoriesListView.View = System.Windows.Forms.View.List;
+            // 
+            // NameColumn
+            // 
+            this.NameColumn.Text = "Name";
+            this.NameColumn.Width = 120;
             // 
             // SortByNameButton
             // 
@@ -818,11 +823,6 @@ namespace AmpShell.Views
             this.FormCancelButton.UseVisualStyleBackColor = true;
             this.FormCancelButton.Click += new System.EventHandler(this.Cancel_Click);
             // 
-            // Name
-            // 
-            this.Name.Text = "Name";
-            this.Name.Width = 120;
-            // 
             // PreferencesForm
             // 
             this.AcceptButton = this.OKButton;
@@ -933,6 +933,6 @@ namespace AmpShell.Views
         private System.Windows.Forms.Button ReScanDirButton;
         private System.Windows.Forms.Label LargeViewModeSizeLabel;
         private System.Windows.Forms.ComboBox LargeViewModeSizeComboBox;
-        private System.Windows.Forms.ColumnHeader Name;
+        private System.Windows.Forms.ColumnHeader NameColumn;
     }
 }
