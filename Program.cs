@@ -1,31 +1,35 @@
-﻿/*AmpShell : .NET front-end for DOSBox
- * Copyright (C) 2009, 2019 Maximilien Noal
- *This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- * You should have received a copy of the GNU General Public License along with this program.
- * If not, see <http://www.gnu.org/licenses/>.*/
-
+﻿using System;
+using Avalonia;
+using Avalonia.Logging.Serilog;
+using AmpShell.ViewModels;
 using AmpShell.Views;
-
-using System;
-using System.Windows.Forms;
 
 namespace AmpShell
 {
-    internal static class Program
+    class Program
     {
-        /// <summary>
-        /// Application entry point
-        /// </summary>
-        [STAThread]
-        private static void Main()
+        // Initialization code. Don't use any Avalonia, third-party APIs or any
+        // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
+        // yet and stuff might break.
+        public static void Main(string[] args) => BuildAvaloniaApp().Start(AppMain, args);
+
+        // Avalonia configuration, don't remove; also used by visual designer.
+        public static AppBuilder BuildAvaloniaApp()
+            => AppBuilder.Configure<App>()
+                .UsePlatformDetect()
+                .LogToDebug()
+                .UseReactiveUI();
+
+        // Your application's entry point. Here you can initialize your MVVM framework, DI
+        // container, etc.
+        private static void AppMain(Application app, string[] args)
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            var window = new MainWindow
+            {
+                DataContext = new MainWindowViewModel(),
+            };
+
+            app.Run(window);
         }
     }
 }

@@ -9,15 +9,17 @@
  * If not, see <http://www.gnu.org/licenses/>.*/
 
 using AmpShell.Notification;
-
+using System;
 using System.Xml.Serialization;
 
-namespace AmpShell.Model
+namespace AmpShell.Models
 {
     public class Game : PropertyChangedNotifier
     {
         [XmlAttribute("Signature")]
         public string Signature { get; set; }
+
+        public int Id => Convert.ToInt32(Id);
 
         private string _name;
 

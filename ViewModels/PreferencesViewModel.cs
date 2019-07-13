@@ -10,18 +10,20 @@
 
 using AmpShell.AutoConfig;
 using AmpShell.DAL;
-using AmpShell.Model;
+using AmpShell.Enums;
+using AmpShell.Models;
 using AmpShell.Notification;
 using AmpShell.Serialization;
+using Avalonia;
+using Avalonia.Controls;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Windows.Forms;
 
-namespace AmpShell.ViewModel
+namespace AmpShell.ViewModels
 {
     public class PreferencesViewModel : PropertyChangedNotifier
     {
@@ -117,27 +119,27 @@ namespace AmpShell.ViewModel
             CheckForPortableModeAvailability();
 
 
-            if (UserDataAccessor.UserData.CategoriesDefaultViewMode == View.Details)
+            if (UserDataAccessor.UserData.CategoriesDefaultViewMode == ViewMode.Details)
             {
                 IsDefaultViewModeDetails = true;
             }
 
-            if (UserDataAccessor.UserData.CategoriesDefaultViewMode == View.LargeIcon)
+            if (UserDataAccessor.UserData.CategoriesDefaultViewMode == ViewMode.LargeIcon)
             {
                 IsDefaultViewModeLargeIcons = true;
             }
 
-            if (UserDataAccessor.UserData.CategoriesDefaultViewMode == View.List)
+            if (UserDataAccessor.UserData.CategoriesDefaultViewMode == ViewMode.List)
             {
                 IsDefaultViewModeList = true;
             }
 
-            if (UserDataAccessor.UserData.CategoriesDefaultViewMode == View.SmallIcon)
+            if (UserDataAccessor.UserData.CategoriesDefaultViewMode == ViewMode.SmallIcon)
             {
                 IsDefaultViewModeSmallIcons = true;
             }
 
-            if (UserDataAccessor.UserData.CategoriesDefaultViewMode == View.Tile)
+            if (UserDataAccessor.UserData.CategoriesDefaultViewMode == ViewMode.Tile)
             {
                 IsDefaultViewModeTiles = true;
             }
@@ -182,27 +184,27 @@ namespace AmpShell.ViewModel
 
         public void ScanForPortableModeTools()
         {
-            if (File.Exists(Path.Combine(Application.StartupPath, "\\dosbox.exe")))
+            if (File.Exists(Path.Combine(PathFinder.GetStartupPath(), "\\dosbox.exe")))
             {
-                Model.DBPath = Path.Combine(Application.StartupPath, "\\dosbox.exe");
+                Model.DBPath = Path.Combine(PathFinder.GetStartupPath(), "\\dosbox.exe");
             }
             else
             {
                 Model.DBPath = "dosbox.exe isn't in the same directory as AmpShell.exe!";
             }
 
-            if (Directory.GetFiles((Application.StartupPath), "*.conf").Length > 0)
+            if (Directory.GetFiles((PathFinder.GetStartupPath()), "*.conf").Length > 0)
             {
-                Model.DBDefaultConfFilePath = Directory.GetFiles((Application.StartupPath), "*.conf")[0];
+                Model.DBDefaultConfFilePath = Directory.GetFiles((PathFinder.GetStartupPath()), "*.conf")[0];
             }
             else
             {
                 Model.DBDefaultConfFilePath = "No configuration file (*.conf) found in AmpShell's directory.";
             }
 
-            if (Directory.GetFiles(Application.StartupPath, "*.lng").Length > 0)
+            if (Directory.GetFiles(PathFinder.GetStartupPath(), "*.lng").Length > 0)
             {
-                Model.DBDefaultLangFilePath = Directory.GetFiles(Application.StartupPath, "*.lng")[0];
+                Model.DBDefaultLangFilePath = Directory.GetFiles(PathFinder.GetStartupPath(), "*.lng")[0];
             }
             else
             {
@@ -213,9 +215,9 @@ namespace AmpShell.ViewModel
             {
                 Model.ConfigEditorPath = Path.Combine(Directory.GetParent(Environment.GetFolderPath(Environment.SpecialFolder.System)).FullName, "notepad.exe");
             }
-            else if (File.Exists(Path.Combine(Application.StartupPath, "\\TextEditor.exe")))
+            else if (File.Exists(Path.Combine(PathFinder.GetStartupPath(), "\\TextEditor.exe")))
             {
-                Model.ConfigEditorPath = Path.Combine(Application.StartupPath, "\\TextEditor.exe");
+                Model.ConfigEditorPath = Path.Combine(PathFinder.GetStartupPath(), "\\TextEditor.exe");
             }
             else
             {
@@ -227,96 +229,99 @@ namespace AmpShell.ViewModel
 
         public void BrowseForTextEditorPath()
         {
-            OpenFileDialog textEdtiorFileDialog = new OpenFileDialog();
+            OpenFileDialog textEdtiorOpenFileDialog = new OpenFileDialog()
+            {
+                Title = "Browsing for a text file editor...",
+                AllowMultiple = false
+            };
+            
             if (string.IsNullOrWhiteSpace(Model.ConfigEditorPath) == false)
             {
                 if (Directory.Exists(Path.GetDirectoryName(Model.ConfigEditorPath).ToString()))
                 {
-                    textEdtiorFileDialog.InitialDirectory = Path.GetDirectoryName(Model.ConfigEditorPath).ToString();
+                    textEdtiorOpenFileDialog.InitialDirectory = Path.GetDirectoryName(Model.ConfigEditorPath).ToString();
                 }
                 else
                 {
-                    textEdtiorFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+                    textEdtiorOpenFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
                 }
             }
-            if (textEdtiorFileDialog.ShowDialog() == DialogResult.OK)
+
+            string filePath = textEdtiorOpenFileDialog.ShowAsync(null).Result.FirstOrDefault();
+            if(string.IsNullOrWhiteSpace(filePath) == false)
             {
-                Model.ConfigEditorPath = textEdtiorFileDialog.FileName;
+                Model.ConfigEditorPath = filePath;
             }
         }
 
         public void BrowseForDOSBoxPath()
         {
-            OpenFileDialog dosBoxExePathFileDialog = new OpenFileDialog
-            {
-                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
-                Title = "Browsing for DOSBox' executable file...",
-                Filter = "DOSBox executable (dosbox*)|dosbox*|All files|*"
-            };
-            if (dosBoxExePathFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                //retrieve the selected dosbox.exe path into Amp.DBPath
-                UserDataAccessor.UserData.DBPath = dosBoxExePathFileDialog.FileName;
-                Model.DBPath = dosBoxExePathFileDialog.FileName;
-            }
-            else if (string.IsNullOrWhiteSpace(UserDataAccessor.UserData.DBPath))
-            {
-                MessageBox.Show("Location of DOSBox's executable unknown. You will not be able to run games!", "Select DOSBox's executable", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
+            //OpenFileDialog dosBoxExePathOpenFileDialog = new OpenFileDialog
+            //{
+            //    InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
+            //    Title = "Browsing for DOSBox' executable file..."
+            //};
+            //if (dosBoxExePathOpenFileDialog.ShowDialog() == DialogResult.OK)
+            //{
+            //    //retrieve the selected dosbox.exe path into Amp.DBPath
+            //    UserDataAccessor.UserData.DBPath = dosBoxExePathOpenFileDialog.FileName;
+            //    Model.DBPath = dosBoxExePathOpenFileDialog.FileName;
+            //}
+            //else if (string.IsNullOrWhiteSpace(UserDataAccessor.UserData.DBPath))
+            //{
+            //    MessageBox.Show("Location of DOSBox's executable unknown. You will not be able to run games!", "Select DOSBox's executable", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            //}
         }
 
         public void BrowseForDefaultDOSBoxConfigFile()
         {
-            OpenFileDialog dosboxDefaultConfFileDialog = new OpenFileDialog();
-            if (string.IsNullOrWhiteSpace(UserDataAccessor.UserData.DBDefaultConfFilePath) == false
-                && Directory.Exists(Path.GetDirectoryName(UserDataAccessor.UserData.DBDefaultConfFilePath)))
-            {
-                dosboxDefaultConfFileDialog.InitialDirectory = Path.GetDirectoryName(UserDataAccessor.UserData.DBDefaultConfFilePath);
-            }
+            //OpenFileDialog dosboxDefaultConfOpenFileDialog = new OpenFileDialog();
+            //if (string.IsNullOrWhiteSpace(UserDataAccessor.UserData.DBDefaultConfFilePath) == false
+            //    && Directory.Exists(Path.GetDirectoryName(UserDataAccessor.UserData.DBDefaultConfFilePath)))
+            //{
+            //    dosboxDefaultConfOpenFileDialog.InitialDirectory = Path.GetDirectoryName(UserDataAccessor.UserData.DBDefaultConfFilePath);
+            //}
 
-            dosboxDefaultConfFileDialog.Title = "Browsing for the default DOSBox config file...";
-            dosboxDefaultConfFileDialog.Filter = "DOSBox configuration files (*.conf)|*.conf|All files|*";
-            if (dosboxDefaultConfFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                UserDataAccessor.UserData.DBDefaultConfFilePath = dosboxDefaultConfFileDialog.FileName;
-                Model.DBDefaultConfFilePath = dosboxDefaultConfFileDialog.FileName;
-            }
+            //dosboxDefaultConfOpenFileDialog.Title = "Browsing for the default DOSBox config file...";
+            //dosboxDefaultConfOpenFileDialog.Filter = "DOSBox configuration files (*.conf)|*.conf|All files|*";
+            //if (dosboxDefaultConfOpenFileDialog.ShowDialog() == DialogResult.OK)
+            //{
+            //    UserDataAccessor.UserData.DBDefaultConfFilePath = dosboxDefaultConfOpenFileDialog.FileName;
+            //    Model.DBDefaultConfFilePath = dosboxDefaultConfOpenFileDialog.FileName;
+            //}
         }
 
         public void BrowseForDefaultDOSBoxLanguageFile()
         {
-            OpenFileDialog dosBoxDefaultLangFileDialog = new OpenFileDialog();
-            if (string.IsNullOrWhiteSpace(UserDataAccessor.UserData.DBDefaultLangFilePath) == false
-                && Directory.Exists(Path.GetDirectoryName(UserDataAccessor.UserData.DBDefaultLangFilePath)))
-            {
-                dosBoxDefaultLangFileDialog.InitialDirectory = Path.GetDirectoryName(UserDataAccessor.UserData.DBDefaultLangFilePath);
-            }
+            //OpenFileDialog dosBoxDefaultLangOpenFileDialog = new OpenFileDialog();
+            //if (string.IsNullOrWhiteSpace(UserDataAccessor.UserData.DBDefaultLangFilePath) == false
+            //    && Directory.Exists(Path.GetDirectoryName(UserDataAccessor.UserData.DBDefaultLangFilePath)))
+            //{
+            //    dosBoxDefaultLangOpenFileDialog.InitialDirectory = Path.GetDirectoryName(UserDataAccessor.UserData.DBDefaultLangFilePath);
+            //}
 
-            dosBoxDefaultLangFileDialog.Title = "Browsing for the default DOSBox language file...";
-            dosBoxDefaultLangFileDialog.Filter = "DOSBox language files (*.lng)|*.lng|All files|*";
-            if (dosBoxDefaultLangFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                UserDataAccessor.UserData.DBDefaultLangFilePath = dosBoxDefaultLangFileDialog.FileName;
-                Model.DBDefaultLangFilePath = dosBoxDefaultLangFileDialog.FileName;
-            }
+            //dosBoxDefaultLangOpenFileDialog.Title = "Browsing for the default DOSBox language file...";
+            //dosBoxDefaultLangOpenFileDialog.Filter = "DOSBox language files (*.lng)|*.lng|All files|*";
+            //if (dosBoxDefaultLangOpenFileDialog.ShowDialog() == DialogResult.OK)
+            //{
+            //    UserDataAccessor.UserData.DBDefaultLangFilePath = dosBoxDefaultLangOpenFileDialog.FileName;
+            //    Model.DBDefaultLangFilePath = dosBoxDefaultLangOpenFileDialog.FileName;
+            //}
         }
 
         public void BrowseForDefaultGamesDirectory()
         {
-            FolderBrowserDialog gamesFolderBrowserDialog = new FolderBrowserDialog();
-            if (gamesFolderBrowserDialog.ShowDialog() == DialogResult.OK)
-            {
-                Model.GamesDefaultDir = gamesFolderBrowserDialog.SelectedPath;
-            }
+            //OpenFolderDialog gamesFolderBrowserDialog = new OpenFolderDialog();
+            //if (gamesFolderBrowserDialog.ShowDialog() == DialogResult.OK)
+            //{
+            //    Model.GamesDefaultDir = gamesFolderBrowserDialog.SelectedPath;
+            //}
         }
 
         public void BrowseForDefaultCDImagesDirectory()
         {
-            FolderBrowserDialog cdImagesFolderBrowserDialog = new FolderBrowserDialog();
-            if (cdImagesFolderBrowserDialog.ShowDialog() == DialogResult.OK)
-            {
-                Model.CDsDefaultDir = cdImagesFolderBrowserDialog.SelectedPath;
-            }
+            OpenFolderDialog cdImagesFolderBrowserDialog = new OpenFolderDialog();
+            Model.CDsDefaultDir = cdImagesFolderBrowserDialog.ShowAsync(Application.Current.MainWindow).Result;
         }
 
         public void ApplyModifications()
@@ -324,23 +329,23 @@ namespace AmpShell.ViewModel
             UserDataAccessor.SetCategoriesOrder(Categories);
             if(IsDefaultViewModeDetails)
             {
-                UserDataAccessor.UserData.CategoriesDefaultViewMode = View.Details; 
+                UserDataAccessor.UserData.CategoriesDefaultViewMode = ViewMode.Details; 
             }
             if(IsDefaultViewModeLargeIcons)
             {
-                UserDataAccessor.UserData.CategoriesDefaultViewMode = View.LargeIcon;
+                UserDataAccessor.UserData.CategoriesDefaultViewMode = ViewMode.LargeIcon;
             }
             if(IsDefaultViewModeSmallIcons)
             {
-                UserDataAccessor.UserData.CategoriesDefaultViewMode = View.SmallIcon;
+                UserDataAccessor.UserData.CategoriesDefaultViewMode = ViewMode.SmallIcon;
             }
             if(IsDefaultViewModeList)
             {
-                UserDataAccessor.UserData.CategoriesDefaultViewMode = View.List;
+                UserDataAccessor.UserData.CategoriesDefaultViewMode = ViewMode.List;
             }
             if(IsDefaultViewModeTiles)
             {
-                UserDataAccessor.UserData.CategoriesDefaultViewMode = View.Tile;
+                UserDataAccessor.UserData.CategoriesDefaultViewMode = ViewMode.Tile;
             }
         }
 

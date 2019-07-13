@@ -13,7 +13,7 @@ using AmpShell.Notification;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace AmpShell.Model
+namespace AmpShell.Models
 {
     /// <summary>
     /// Root node for the xml file

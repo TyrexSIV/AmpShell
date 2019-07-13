@@ -9,12 +9,11 @@
  * If not, see <http://www.gnu.org/licenses/>.*/
 
 using AmpShell.DAL;
-using AmpShell.Model;
-
+using AmpShell.Models;
+using Avalonia.Controls;
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Windows.Forms;
 
 namespace AmpShell.DOSBox
 {
@@ -23,41 +22,6 @@ namespace AmpShell.DOSBox
     /// </summary>
     public static class DOSBoxController
     {
-        public static void AskForDOSBox()
-        {
-            //if DOSBoxPath is still empty, say to the user that dosbox's executable cannot be found
-            if (string.IsNullOrWhiteSpace(UserDataAccessor.UserData.DBPath))
-            {
-                switch (MessageBox.Show("AmpShell cannot find DOSBox, do you want to indicate DOSBox's executable location now ? Choose 'Cancel' to quit.", "Cannot find DOSBox", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
-                {
-                    case DialogResult.Cancel:
-                        Environment.Exit(0);
-                        break;
-
-                    case DialogResult.Yes:
-                        OpenFileDialog dosboxExeFileDialog = new OpenFileDialog
-                        {
-                            InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
-                            Title = "Please indicate DOSBox's executable location...",
-                            Filter = "DOSBox executable (dosbox*)|dosbox*"
-                        };
-                        if (dosboxExeFileDialog.ShowDialog() == DialogResult.OK)
-                        {
-                            UserDataAccessor.UserData.DBPath = dosboxExeFileDialog.FileName;
-                        }
-                        else
-                        {
-                            Environment.Exit(0);
-                        }
-                        break;
-
-                    case DialogResult.No:
-                        UserDataAccessor.UserData.DBPath = string.Empty;
-                        break;
-                }
-            }
-        }
-
         /// <summary>
         /// Starts DOSBox, and returns whether it was successful.
         /// </summary>

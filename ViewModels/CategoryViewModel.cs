@@ -9,24 +9,24 @@
  * If not, see <http://www.gnu.org/licenses/>.*/
 
 using AmpShell.DAL;
-using AmpShell.Model;
+using AmpShell.Models;
 using AmpShell.Notification;
 
-namespace AmpShell.ViewModel
+namespace AmpShell.ViewModels
 {
     public class CategoryViewModel : PropertyChangedNotifier
     {
         private string _name = "";
-        private readonly string _editedCategorySignature;
+        private readonly int  _categoryId;
 
         public CategoryViewModel()
         {
         }
 
-        public CategoryViewModel(string editedCategorySignature)
+        public CategoryViewModel(int categoryId)
         {
-            this._editedCategorySignature = editedCategorySignature;
-            this.Name = UserDataAccessor.GetCategoryWithSignature(_editedCategorySignature).Title;
+            this._categoryId = categoryId;
+            this.Name = UserDataAccessor.GetCategory(categoryId).Title;
         }
 
         public string Name
@@ -37,15 +37,14 @@ namespace AmpShell.ViewModel
 
         public void CreateCategory()
         {
-            if (string.IsNullOrWhiteSpace(_editedCategorySignature))
+            Category category;
+            if(_categoryId == 0)
             {
-                var category = new Category(Name, UserDataAccessor.GetAUniqueSignature());
-                UserDataAccessor.UserData.AddChild(category);
+                UserDataAccessor.CreateCategory();
             }
-            else
-            {
-                UserDataAccessor.GetCategoryWithSignature(_editedCategorySignature).Title = Name;
-            }
+            category = UserDataAccessor.GetCategory(_categoryId);
+            category.Title = Name;
+            UserDataAccessor.UpdateCategory(category);
         }
 
         public bool IsDataValid()

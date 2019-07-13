@@ -8,10 +8,11 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.*/
 
+using AmpShell.Enums;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace AmpShell.Model
+namespace AmpShell.Models
 {
     [XmlType(TypeName = "Window")]
     public class Preferences : ModelWithChildren
@@ -54,12 +55,12 @@ namespace AmpShell.Model
 
         public int Y { get; set; }
 
-        private System.Windows.Forms.View _categoriesDefaultViewMode = System.Windows.Forms.View.LargeIcon;
+        private ViewMode _categoriesDefaultViewMode = ViewMode.LargeIcon;
 
-        public System.Windows.Forms.View CategoriesDefaultViewMode
+        public ViewMode CategoriesDefaultViewMode
         {
             get => _categoriesDefaultViewMode;
-            set { Set<System.Windows.Forms.View>(ref _categoriesDefaultViewMode, value); }
+            set { Set(ref _categoriesDefaultViewMode, value); }
         }
 
         private bool _rememberWindowPosition = true;

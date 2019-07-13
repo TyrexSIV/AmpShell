@@ -8,10 +8,11 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.*/
 
-using System.Windows.Forms;
+using AmpShell.Enums;
+using System;
 using System.Xml.Serialization;
 
-namespace AmpShell.Model
+namespace AmpShell.Models
 {
     public class Category : ModelWithChildren
     {
@@ -30,6 +31,9 @@ namespace AmpShell.Model
 
         [XmlAttribute("Signature")]
         public string Signature { get; set; }
+
+        public int Id => Convert.ToInt32(Signature);
+
 
         private int _nameColumnWidth = 150;
 
@@ -119,12 +123,12 @@ namespace AmpShell.Model
             set { Set<int>(ref _quitOnExitColumnWidth, value); }
         }
 
-        private View _viewMode = View.LargeIcon;
+        private ViewMode _viewMode = ViewMode.LargeIcon;
 
-        public View ViewMode
+        public ViewMode ViewMode
         {
             get => _viewMode;
-            set { Set<View>(ref _viewMode, value); }
+            set { Set<ViewMode>(ref _viewMode, value); }
         }
     }
 }

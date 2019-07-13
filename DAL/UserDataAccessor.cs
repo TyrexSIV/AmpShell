@@ -9,7 +9,7 @@
  * If not, see <http://www.gnu.org/licenses/>.*/
 
 using AmpShell.AutoConfig;
-using AmpShell.Model;
+using AmpShell.Models;
 using AmpShell.Serialization;
 
 using System;
@@ -24,49 +24,43 @@ namespace AmpShell.DAL
     {
         static UserDataAccessor()
         {
-            UserData = new Preferences();
-        }
-        /// <summary>
-        /// Used when a new Category or Game is created : it's signature must be unique
-        /// so AmpShell can recognize it instantly
-        /// </summary>
-        /// <param name="signatureToTest">A Category's or Game's signature</param>
-        /// <returns>Whether the signature equals none of the other ones, or not</returns>
-        public static bool IsItAUniqueSignature(string signatureToTest)
-        {
-            foreach (Category otherCat in UserData.ListChildren)
-            {
-                if (otherCat.Signature != signatureToTest)
-                {
-                    if (otherCat.ListChildren.Length != 0)
-                    {
-                        foreach (Game otherGame in otherCat.ListChildren)
-                        {
-                            if (otherGame.Signature == signatureToTest)
-                            {
-                                return false;
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            return true;
+            LoadUserData();
         }
 
-        public static string GetAUniqueSignature()
+        public static Category CreateCategory()
         {
-            string newSignature;
-            do
+            var category = new Category
             {
-                Random randNumber = new Random();
-                newSignature = randNumber.Next(1048576).ToString();
+                Signature = GetAUniqueSignature()
+            };
+            UserData.AddChild(category);
+            SaveUserData();
+            return category;
+        }
+
+        public static Category GetCategory(int id)
+        {
+            return UserData.ListChildren.Cast<Category>().FirstOrDefault(x => x.Id == id);
+        }
+
+        public static void UpdateCategory(Category updatedCategory)
+        {
+            var selectedCategory = GetCategory(updatedCategory.Id);
+            if (selectedCategory != null)
+            {
+                UserData.RemoveChild(selectedCategory);
+                int index = UserData.ListChildren.Cast<Category>().ToList().IndexOf(selectedCategory);
+                UserData.AddChild(updatedCategory);
+                UserData.MoveChildToPosition(updatedCategory, index);
+                SaveUserData();
             }
-            while (IsItAUniqueSignature(newSignature) == false);
-            return newSignature;
+        }
+
+        public static void DeleteCategory(int id)
+        {
+            var selectedCategory = GetCategory(id);
+            UserData.RemoveChild(UserData.ListChildren.Cast<Category>().FirstOrDefault(x => x.Id == id));
+            SaveUserData();
         }
 
         public static List<Category> GetAllCategories()
@@ -74,24 +68,65 @@ namespace AmpShell.DAL
             return UserDataAccessor.UserData.ListChildren.Cast<Category>().ToList();
         }
 
-        internal static Category GetCategoryWithSignature(string signature)
+        public static Game CreateGame(int categoryId)
         {
-            return UserDataAccessor.UserData.ListChildren.Cast<Category>().FirstOrDefault(x => x.Signature == signature);
+            var selectedCategory = GetCategory(categoryId);
+            var game = new Game()
+            {
+                Signature = GetAUniqueSignature()
+            };
+            if (selectedCategory != null)
+            {
+                selectedCategory.AddChild(game);
+                SaveUserData();
+            }
+            return game;
         }
 
-        internal static Game GetGameWithSignature(string signature)
+        public static Game GetGame(int id)
         {
-            return UserDataAccessor.UserData.ListChildren.Cast<Category>().SelectMany(x => x.ListChildren.Cast<Game>()).FirstOrDefault(x => x.Signature == signature);
+            return UserData.ListChildren.Cast<Category>().SelectMany(x => x.ListChildren.Cast<Game>()).FirstOrDefault(x => x.Id == id);
+        }
+
+        public static void UpdateGame(Game updatedGame)
+        {
+            var selectedGame = GetGame(updatedGame.Id);
+            var category = GetParentCategory(selectedGame.Id);
+            int index = category.ListChildren.Cast<Game>().ToList().IndexOf(selectedGame);
+            category.RemoveChild(selectedGame);
+            category.AddChild(updatedGame);
+            category.MoveChildToPosition(updatedGame, index);
+            SaveUserData();
+        }
+
+        public static void DeleteGame(int gameId)
+        {
+            var selectedGame = GetGame(gameId);
+            if (selectedGame == null)
+            {
+                return;
+            }
+            Category parentCategory = GetParentCategory(gameId);
+            if (parentCategory == null)
+            {
+                return;
+            }
+            parentCategory.RemoveChild(selectedGame);
+            SaveUserData();
+        }
+
+        private static Category GetParentCategory(int gameId)
+        {
+            return GetAllCategories().FirstOrDefault(x => x.ListChildren.Cast<Game>().Any(y => y.Id == gameId));
         }
 
         /// <summary>
-        /// Object to load and save user data through XML (de)serialization
+        /// Object to load and save user data through XML (de)serialization. Root Object.
         /// </summary>
         public static Preferences UserData { get; private set; }
 
-        public static void SaveUserSettings()
+        private static void SaveUserData()
         {
-            //saves the data inside Amp by serliazing it in AmpShell.xml
             if (!UserData.PortableMode)
             {
                 ObjectSerializer.SerializeToDisk(GetDataFilePath(), UserData, typeof(ModelWithChildren));
@@ -120,7 +155,7 @@ namespace AmpShell.DAL
             }
         }
 
-        public static void LoadUserSettings()
+        private static void LoadUserData()
         {
             UserData = (Preferences)ObjectSerializer.DeserializeFromDisk(GetDataFilePath(), typeof(ModelWithChildren));
             foreach (Category concernedCategory in UserData.ListChildren)
@@ -178,6 +213,15 @@ namespace AmpShell.DAL
             }
         }
 
+        public static void SetCategoriesOrder(ObservableCollection<Category> categories)
+        {
+            var currentCategories = GetAllCategories();
+            foreach (Category category in categories)
+            {
+                UserData.MoveChildToPosition(category, currentCategories.IndexOf(currentCategories.FirstOrDefault(x => x.Signature == category.Signature)));
+            }
+        }
+
         /// <summary>
         /// Returns the path to the user data file (AmpShell.xml)
         /// </summary>
@@ -219,13 +263,47 @@ namespace AmpShell.DAL
             return path;
         }
 
-        internal static void SetCategoriesOrder(ObservableCollection<Category> categories)
+        private static string GetAUniqueSignature()
         {
-            var currentCategories = GetAllCategories();
-            foreach (Category category in categories)
+            string newSignature;
+            do
             {
-                UserData.MoveChildToPosition(category, currentCategories.IndexOf(currentCategories.FirstOrDefault(x => x.Signature == category.Signature)));
+                Random randNumber = new Random();
+                newSignature = randNumber.Next(1048576).ToString();
             }
+            while (IsItAUniqueSignature(newSignature) == false);
+            return newSignature;
+        }
+
+        /// <summary>
+        /// Used when a new Category or Game is created : it's signature must be unique
+        /// so AmpShell can recognize it instantly
+        /// </summary>
+        /// <param name="signatureToTest">A Category's or Game's signature</param>
+        /// <returns>Whether the signature equals none of the other ones, or not</returns>
+        private static bool IsItAUniqueSignature(string signatureToTest)
+        {
+            foreach (Category otherCat in UserData.ListChildren)
+            {
+                if (otherCat.Signature != signatureToTest)
+                {
+                    if (otherCat.ListChildren.Length != 0)
+                    {
+                        foreach (Game otherGame in otherCat.ListChildren)
+                        {
+                            if (otherGame.Signature == signatureToTest)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }
