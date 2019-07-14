@@ -25,7 +25,7 @@ namespace AmpShell.DAL
     {
         static UserDataAccessor()
         {
-            LoadUserData();
+            UserData = LoadUserDataAsync().Result;
         }
 
         public static Category CreateCategory()
@@ -159,62 +159,67 @@ namespace AmpShell.DAL
             });
         }
 
-        private static void LoadUserData()
+        private static async Task<Preferences> LoadUserDataAsync()
         {
-            UserData = (Preferences)ObjectSerializer.DeserializeFromFileAsync(GetDataFilePath(), typeof(ModelWithChildren)).Result;
-            foreach (Category concernedCategory in UserData.ListChildren)
+            object userDataObject = await ObjectSerializer.DeserializeFromFileAsync(GetDataFilePath(), typeof(ModelWithChildren));
+            var userData = (Preferences)userDataObject;
+            await Task.Run(() =>
             {
-                foreach (Game concernedGame in concernedCategory.ListChildren)
+                foreach (Category concernedCategory in userData.ListChildren)
                 {
-                    concernedGame.DOSEXEPath = concernedGame.DOSEXEPath.Replace("AppPath", PathFinder.GetStartupPath());
-                    concernedGame.DBConfPath = concernedGame.DBConfPath.Replace("AppPath", PathFinder.GetStartupPath());
-                    concernedGame.AdditionalCommands = concernedGame.AdditionalCommands.Replace("AppPath", PathFinder.GetStartupPath());
-                    concernedGame.Directory = concernedGame.Directory.Replace("AppPath", PathFinder.GetStartupPath());
-                    concernedGame.CDPath = concernedGame.CDPath.Replace("AppPath", PathFinder.GetStartupPath());
-                    concernedGame.SetupEXEPath = concernedGame.SetupEXEPath.Replace("AppPath", PathFinder.GetStartupPath());
-                    concernedGame.Icon = concernedGame.Icon.Replace("AppPath", PathFinder.GetStartupPath());
+                    foreach (Game concernedGame in concernedCategory.ListChildren)
+                    {
+                        concernedGame.DOSEXEPath = concernedGame.DOSEXEPath.Replace("AppPath", PathFinder.GetStartupPath());
+                        concernedGame.DBConfPath = concernedGame.DBConfPath.Replace("AppPath", PathFinder.GetStartupPath());
+                        concernedGame.AdditionalCommands = concernedGame.AdditionalCommands.Replace("AppPath", PathFinder.GetStartupPath());
+                        concernedGame.Directory = concernedGame.Directory.Replace("AppPath", PathFinder.GetStartupPath());
+                        concernedGame.CDPath = concernedGame.CDPath.Replace("AppPath", PathFinder.GetStartupPath());
+                        concernedGame.SetupEXEPath = concernedGame.SetupEXEPath.Replace("AppPath", PathFinder.GetStartupPath());
+                        concernedGame.Icon = concernedGame.Icon.Replace("AppPath", PathFinder.GetStartupPath());
+                    }
                 }
-            }
-            UserData.DBDefaultConfFilePath = UserData.DBDefaultConfFilePath.Replace("AppPath", PathFinder.GetStartupPath());
-            UserData.DBDefaultLangFilePath = UserData.DBDefaultLangFilePath.Replace("AppPath", PathFinder.GetStartupPath());
-            UserData.DBPath = UserData.DBPath.Replace("AppPath", PathFinder.GetStartupPath());
-            UserData.ConfigEditorPath = UserData.ConfigEditorPath.Replace("AppPath", PathFinder.GetStartupPath());
-            UserData.ConfigEditorAdditionalParameters = UserData.ConfigEditorAdditionalParameters.Replace("AppPath", PathFinder.GetStartupPath());
+                userData.DBDefaultConfFilePath = UserData.DBDefaultConfFilePath.Replace("AppPath", PathFinder.GetStartupPath());
+                userData.DBDefaultLangFilePath = UserData.DBDefaultLangFilePath.Replace("AppPath", PathFinder.GetStartupPath());
+                userData.DBPath = UserData.DBPath.Replace("AppPath", PathFinder.GetStartupPath());
+                userData.ConfigEditorPath = UserData.ConfigEditorPath.Replace("AppPath", PathFinder.GetStartupPath());
+                userData.ConfigEditorAdditionalParameters = UserData.ConfigEditorAdditionalParameters.Replace("AppPath", PathFinder.GetStartupPath());
 
-            if (string.IsNullOrWhiteSpace(UserData.DBPath))
-            {
-                UserData.DBPath = FileFinder.SearchDOSBox(GetDataFilePath(), UserData.PortableMode);
-            }
-            else if (File.Exists(UserData.DBPath) == false)
-            {
-                UserData.DBPath = FileFinder.SearchDOSBox(GetDataFilePath(), UserData.PortableMode);
-            }
-            if (string.IsNullOrWhiteSpace(UserData.ConfigEditorPath))
-            {
-                UserData.ConfigEditorPath = FileFinder.SearchCommonTextEditor();
-            }
-            else if (File.Exists(UserData.ConfigEditorPath) == false)
-            {
-                UserData.ConfigEditorPath = FileFinder.SearchCommonTextEditor();
-            }
+                if (string.IsNullOrWhiteSpace(userData.DBPath))
+                {
+                    userData.DBPath = FileFinder.SearchDOSBox(GetDataFilePath(), UserData.PortableMode);
+                }
+                else if (File.Exists(userData.DBPath) == false)
+                {
+                    userData.DBPath = FileFinder.SearchDOSBox(GetDataFilePath(), UserData.PortableMode);
+                }
+                if (string.IsNullOrWhiteSpace(userData.ConfigEditorPath))
+                {
+                    userData.ConfigEditorPath = FileFinder.SearchCommonTextEditor();
+                }
+                else if (File.Exists(userData.ConfigEditorPath) == false)
+                {
+                    userData.ConfigEditorPath = FileFinder.SearchCommonTextEditor();
+                }
 
-            if (string.IsNullOrWhiteSpace(UserData.DBDefaultConfFilePath))
-            {
-                UserData.DBDefaultConfFilePath = FileFinder.SearchDOSBoxConf(GetDataFilePath(), UserData.DBPath);
-            }
-            else if (File.Exists(UserData.DBDefaultConfFilePath) == false)
-            {
-                UserData.DBDefaultConfFilePath = FileFinder.SearchDOSBoxConf(GetDataFilePath(), UserData.DBPath);
-            }
+                if (string.IsNullOrWhiteSpace(userData.DBDefaultConfFilePath))
+                {
+                    userData.DBDefaultConfFilePath = FileFinder.SearchDOSBoxConf(GetDataFilePath(), userData.DBPath);
+                }
+                else if (File.Exists(UserData.DBDefaultConfFilePath) == false)
+                {
+                    userData.DBDefaultConfFilePath = FileFinder.SearchDOSBoxConf(GetDataFilePath(), userData.DBPath);
+                }
 
-            if (string.IsNullOrWhiteSpace(UserData.DBDefaultLangFilePath) == false)
-            {
-                UserData.DBDefaultLangFilePath = FileFinder.SearchDOSBoxLanguageFile(UserData.DBPath);
-            }
-            else if (File.Exists(UserData.DBDefaultLangFilePath) == false)
-            {
-                UserData.DBDefaultLangFilePath = FileFinder.SearchDOSBoxLanguageFile(UserData.DBPath);
-            }
+                if (string.IsNullOrWhiteSpace(userData.DBDefaultLangFilePath) == false)
+                {
+                    userData.DBDefaultLangFilePath = FileFinder.SearchDOSBoxLanguageFile(userData.DBPath);
+                }
+                else if (File.Exists(UserData.DBDefaultLangFilePath) == false)
+                {
+                    userData.DBDefaultLangFilePath = FileFinder.SearchDOSBoxLanguageFile(userData.DBPath);
+                }
+            });
+            return userData;
         }
 
         public static void SetCategoriesOrder(ObservableCollection<Category> categories)
