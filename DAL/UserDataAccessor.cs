@@ -28,15 +28,11 @@ namespace AmpShell.DAL
             UserData = LoadUserDataAsync().Result;
         }
 
-        public static Category CreateCategory()
+        public static void CreateCategory(Category category)
         {
-            var category = new Category
-            {
-                Signature = GetAUniqueSignature()
-            };
+            category.Signature = GetAUniqueSignature();
             UserData.AddChild(category);
             _ = SaveUserDataAsync();
-            return category;
         }
 
         public static Category GetCategory(int id)

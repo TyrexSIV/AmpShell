@@ -12,23 +12,38 @@ using AmpShell.DAL;
 using AmpShell.Models;
 
 using Avalonia.Diagnostics.ViewModels;
+using ReactiveUI;
 
 namespace AmpShell.ViewModels
 {
     public class CategoryViewModel : ViewModelBase
     {
-        private string _name = "";
-        private readonly int _categoryId;
+        public Category Model { get; private set; }
 
         public CategoryViewModel()
         {
+            Model = new Category();
+            InitializeCommands();
         }
 
-        public CategoryViewModel(int categoryId)
+        public CategoryViewModel(Category model)
         {
-            this._categoryId = categoryId;
-            this.Name = UserDataAccessor.GetCategory(categoryId).Title;
+            this.Model = model;
+            InitializeCommands();
         }
+
+        private void InitializeCommands()
+        {
+            this.CreateCategory = ReactiveCommand.Create(this.CreateCategory_Execute, this.WhenAnyValue(x => x.CreateCategory_CanExecute()));
+            this.EditCategory = ReactiveCommand.Create(this.EditCategory_Execute, this.WhenAnyValue(x => x.IsDataValid()));
+
+        }
+
+        public ReactiveCommand EditCategory { get; private set; }
+
+        public ReactiveCommand CreateCategory { get; private set; }
+
+        private string _name = "";
 
         public string Name
         {
@@ -36,19 +51,22 @@ namespace AmpShell.ViewModels
             set => this.RaiseAndSetIfChanged(ref _name, value);
         }
 
-        public void CreateCategory()
+        private void CreateCategory_Execute()
         {
-            Category category;
-            if (_categoryId == 0)
-            {
-                UserDataAccessor.CreateCategory();
-            }
-            category = UserDataAccessor.GetCategory(_categoryId);
-            category.Title = Name;
-            UserDataAccessor.UpdateCategory(category);
+            UserDataAccessor.CreateCategory(this.Model);
         }
 
-        public bool IsDataValid()
+        private bool CreateCategory_CanExecute()
+        {
+            return Model.Id == 0 && IsDataValid();
+        }
+
+        private void EditCategory_Execute()
+        {
+            UserDataAccessor.UpdateCategory(this.Model);
+        }
+
+        private bool IsDataValid()
         {
             return string.IsNullOrWhiteSpace(Name) == false;
         }
