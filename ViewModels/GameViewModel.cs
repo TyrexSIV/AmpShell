@@ -11,27 +11,20 @@
 using AmpShell.AutoConfig;
 using AmpShell.DAL;
 using AmpShell.Models;
-using AmpShell.Notification;
 using AmpShell.Serialization;
+
 using Avalonia.Controls;
-using System;
+using Avalonia.Diagnostics.ViewModels;
+
 using System.IO;
 
 namespace AmpShell.ViewModels
 {
-    public class GameViewModel : PropertyChangedNotifier
+    public class GameViewModel : ViewModelBase
     {
         public Game Model { get; private set; }
 
         private readonly Game _modelUndo;
-
-        private Image _iconThumbnail;
-
-        public Image IconThumbnail
-        {
-            get { return _iconThumbnail; }
-            private set { Set(ref _iconThumbnail, value); }
-        }
 
         public GameViewModel() : base()
         {
@@ -42,41 +35,12 @@ namespace AmpShell.ViewModels
                 QuitOnExit = UserDataAccessor.UserData.GamesQuitOnExit,
                 AdditionalCommands = UserDataAccessor.UserData.GamesAdditionalCommands
             };
-            Initialize();
         }
 
         public GameViewModel(Game model)
         {
             Model = model;
             _modelUndo = ObjectSerializer.CloneObject(model);
-            Initialize();
-        }
-
-        private void Initialize()
-        {
-            UpdateIconThumbnail(Model.Icon);
-        }
-
-        private void UpdateIconThumbnail(string imageFile)
-        {
-            if (string.IsNullOrWhiteSpace(imageFile))
-            {
-                IconThumbnail = null;
-                return;
-            }
-            if (File.Exists(imageFile))
-            {
-                try
-                {
-                    //IconThumbnail = Avalonia.Media.ImageBrush.
-                    
-                }
-                catch (OutOfMemoryException)
-                {
-                    //new MessageBox.Show("There was an error in the image file, or it's format is not supported. Please check the file.", "Changing the game's icon", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-            Model.Icon = imageFile;
         }
 
         public void BrowseForGameIcon()
@@ -104,7 +68,6 @@ namespace AmpShell.ViewModels
 
         public void RemoveGameIcon()
         {
-            IconThumbnail = null;
             Model.Icon = string.Empty;
         }
 
@@ -259,7 +222,6 @@ namespace AmpShell.ViewModels
             //}
         }
 
-
         private string SearchFolderDialogStartDirectory()
         {
             string initialDirectory = string.Empty;
@@ -312,7 +274,7 @@ namespace AmpShell.ViewModels
 
         public bool IsDataValid()
         {
-            if(string.IsNullOrWhiteSpace(Model.DOSEXEPath) == false && string.IsNullOrWhiteSpace(Model.Directory) == true)
+            if (string.IsNullOrWhiteSpace(Model.DOSEXEPath) == false && string.IsNullOrWhiteSpace(Model.Directory) == true)
             {
                 Model.Directory = Path.GetDirectoryName(Model.DOSEXEPath);
             }

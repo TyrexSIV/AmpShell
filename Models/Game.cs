@@ -8,13 +8,14 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.*/
 
-using AmpShell.Notification;
+using Avalonia.Diagnostics.ViewModels;
+
 using System;
 using System.Xml.Serialization;
 
 namespace AmpShell.Models
 {
-    public class Game : PropertyChangedNotifier
+    public class Game : ViewModelBase
     {
         [XmlAttribute("Signature")]
         public string Signature { get; set; }
@@ -26,7 +27,7 @@ namespace AmpShell.Models
         public string Name
         {
             get => _name;
-            set { Set<string>(ref _name, value); }
+            set => this.RaiseAndSetIfChanged(ref _name, value);
         }
 
         private string _directory;
@@ -37,7 +38,7 @@ namespace AmpShell.Models
         public string Directory
         {
             get => _directory;
-            set { Set<string>(ref _directory, value); }
+            set => this.RaiseAndSetIfChanged(ref _directory, value);
         }
 
         private string _cdPath;
@@ -48,7 +49,7 @@ namespace AmpShell.Models
         public string CDPath
         {
             get => _cdPath;
-            set { Set<string>(ref _cdPath, value); }
+            set => this.RaiseAndSetIfChanged(ref _cdPath, value);
         }
 
         private string _setupEEXEPath;
@@ -59,7 +60,7 @@ namespace AmpShell.Models
         public string SetupEXEPath
         {
             get => _setupEEXEPath;
-            set { Set<string>(ref _setupEEXEPath, value); }
+            set => this.RaiseAndSetIfChanged(ref _setupEEXEPath, value);
         }
 
         private string _dbConfPath;
@@ -70,7 +71,7 @@ namespace AmpShell.Models
         public string DBConfPath
         {
             get => _dbConfPath;
-            set { Set<string>(ref _dbConfPath, value); }
+            set => this.RaiseAndSetIfChanged(ref _dbConfPath, value);
         }
 
         private string _additionalCommands;
@@ -81,7 +82,7 @@ namespace AmpShell.Models
         public string AdditionalCommands
         {
             get => _additionalCommands;
-            set { Set<string>(ref _additionalCommands, value); }
+            set => this.RaiseAndSetIfChanged(ref _additionalCommands, value);
         }
 
         private bool _useIOCTL;
@@ -92,7 +93,7 @@ namespace AmpShell.Models
         public bool UseIOCTL
         {
             get => _useIOCTL;
-            set { Set<bool>(ref _useIOCTL, value); }
+            set => this.RaiseAndSetIfChanged(ref _useIOCTL, value);
         }
 
         private bool _mountAsFloppy;
@@ -103,7 +104,7 @@ namespace AmpShell.Models
         public bool MountAsFloppy
         {
             get => _mountAsFloppy;
-            set { Set<bool>(ref _mountAsFloppy, value); }
+            set => this.RaiseAndSetIfChanged(ref _mountAsFloppy, value);
         }
 
         private bool _noConfig;
@@ -115,7 +116,7 @@ namespace AmpShell.Models
         public bool NoConfig
         {
             get => _noConfig;
-            set { Set<bool>(ref _noConfig, value); }
+            set => this.RaiseAndSetIfChanged(ref _noConfig, value);
         }
 
         private bool _inFullScreen;
@@ -123,7 +124,7 @@ namespace AmpShell.Models
         public bool InFullScreen
         {
             get => _inFullScreen;
-            set { Set<bool>(ref _inFullScreen, value); }
+            set => this.RaiseAndSetIfChanged(ref _inFullScreen, value);
         }
 
         private bool _noConsole;
@@ -134,7 +135,7 @@ namespace AmpShell.Models
         public bool NoConsole
         {
             get => _noConsole;
-            set { Set<bool>(ref _noConsole, value); }
+            set => this.RaiseAndSetIfChanged(ref _noConsole, value);
         }
 
         private bool _quitOnExit;
@@ -145,7 +146,7 @@ namespace AmpShell.Models
         public bool QuitOnExit
         {
             get => _quitOnExit;
-            set { Set<bool>(ref _quitOnExit, value); }
+            set => this.RaiseAndSetIfChanged(ref _quitOnExit, value);
         }
 
         private string _dosExePath;
@@ -156,7 +157,7 @@ namespace AmpShell.Models
         public string DOSEXEPath
         {
             get => _dosExePath;
-            set { Set<string>(ref _dosExePath, value); }
+            set => this.RaiseAndSetIfChanged(ref _dosExePath, value);
         }
 
         private bool _cdIsAnImage;
@@ -167,7 +168,7 @@ namespace AmpShell.Models
         public bool CDIsAnImage
         {
             get => _cdIsAnImage;
-            set { Set<bool>(ref _cdIsAnImage, value); }
+            set => this.RaiseAndSetIfChanged(ref _cdIsAnImage, value);
         }
 
         private string _icon;
@@ -175,7 +176,7 @@ namespace AmpShell.Models
         public string Icon
         {
             get => _icon;
-            set { Set<string>(ref _icon, value); }
+            set => this.RaiseAndSetIfChanged(ref _icon, value);
         }
 
         private string _alternateDOSBoxExePath;
@@ -186,7 +187,7 @@ namespace AmpShell.Models
         public string AlternateDOSBoxExePath
         {
             get => _alternateDOSBoxExePath;
-            set { Set<string>(ref _alternateDOSBoxExePath, value); }
+            set => this.RaiseAndSetIfChanged(ref _alternateDOSBoxExePath, value);
         }
     }
 }

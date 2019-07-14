@@ -1,6 +1,7 @@
 ﻿using Avalonia;
 using Avalonia.Logging.Serilog;
 using Avalonia.Markup.Xaml;
+
 using Serilog;
 
 namespace AmpShell

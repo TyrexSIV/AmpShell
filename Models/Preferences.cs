@@ -9,6 +9,7 @@
  * If not, see <http://www.gnu.org/licenses/>.*/
 
 using AmpShell.Enums;
+
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
@@ -24,7 +25,7 @@ namespace AmpShell.Models
         public bool ExitOnGameLaunch
         {
             get => _exitOnGameLaunch;
-            set { Set(ref _exitOnGameLaunch, value); }
+            set => this.RaiseAndSetIfChanged(ref _exitOnGameLaunch, value);
         }
 
         private bool _goToTaskBarOnGameLaunch = true;
@@ -32,7 +33,7 @@ namespace AmpShell.Models
         public bool GoToTaskBarOnGameLaunch
         {
             get => _goToTaskBarOnGameLaunch;
-            set { Set(ref _goToTaskBarOnGameLaunch, value); }
+            set => this.RaiseAndSetIfChanged(ref _goToTaskBarOnGameLaunch, value);
         }
 
         private bool _portableMode = false;
@@ -40,7 +41,7 @@ namespace AmpShell.Models
         public bool PortableMode
         {
             get => _portableMode;
-            set { Set<bool>(ref _portableMode, value); }
+            set => this.RaiseAndSetIfChanged(ref _portableMode, value);
         }
 
         private bool _defaultIconViewOverride = false;
@@ -48,7 +49,7 @@ namespace AmpShell.Models
         public bool DefaultIconViewOverride
         {
             get => _defaultIconViewOverride;
-            set { Set<bool>(ref _defaultIconViewOverride, value); }
+            set => this.RaiseAndSetIfChanged(ref _defaultIconViewOverride, value);
         }
 
         public int X { get; set; }
@@ -60,7 +61,7 @@ namespace AmpShell.Models
         public ViewMode CategoriesDefaultViewMode
         {
             get => _categoriesDefaultViewMode;
-            set { Set(ref _categoriesDefaultViewMode, value); }
+            set => this.RaiseAndSetIfChanged(ref _categoriesDefaultViewMode, value);
         }
 
         private bool _rememberWindowPosition = true;
@@ -68,7 +69,7 @@ namespace AmpShell.Models
         public bool RememberWindowPosition
         {
             get => _rememberWindowPosition;
-            set { Set<bool>(ref _rememberWindowPosition, value); }
+            set => this.RaiseAndSetIfChanged(ref _rememberWindowPosition, value);
         }
 
         private bool _rememberWindowSize = true;
@@ -76,7 +77,7 @@ namespace AmpShell.Models
         public bool RememberWindowSize
         {
             get => _rememberWindowSize;
-            set { Set<bool>(ref _rememberWindowSize, value); }
+            set => this.RaiseAndSetIfChanged(ref _rememberWindowSize, value);
         }
 
         private bool _gameDeletePrompt = true;
@@ -84,7 +85,7 @@ namespace AmpShell.Models
         public bool GameDeletePrompt
         {
             get => _gameDeletePrompt;
-            set { Set<bool>(ref _gameDeletePrompt, value); }
+            set => this.RaiseAndSetIfChanged(ref _gameDeletePrompt, value);
         }
 
         private bool _categoryDeletePrompt = true;
@@ -92,7 +93,7 @@ namespace AmpShell.Models
         public bool CategoryDeletePrompt
         {
             get => _categoryDeletePrompt;
-            set { Set<bool>(ref _categoryDeletePrompt, value); }
+            set => this.RaiseAndSetIfChanged(ref _categoryDeletePrompt, value);
         }
 
         private bool _gamesNoConsole = true;
@@ -100,7 +101,7 @@ namespace AmpShell.Models
         public bool GamesNoConsole
         {
             get => _gamesNoConsole;
-            set { Set<bool>(ref _gamesNoConsole, value); }
+            set => this.RaiseAndSetIfChanged(ref _gamesNoConsole, value);
         }
 
         private bool _gamesInFullScreen = true;
@@ -108,7 +109,7 @@ namespace AmpShell.Models
         public bool GamesInFullScreen
         {
             get => _gamesInFullScreen;
-            set { Set<bool>(ref _gamesInFullScreen, value); }
+            set => this.RaiseAndSetIfChanged(ref _gamesInFullScreen, value);
         }
 
         private bool _gamesQuitOnExit = true;
@@ -116,7 +117,7 @@ namespace AmpShell.Models
         public bool GamesQuitOnExit
         {
             get => _gamesQuitOnExit;
-            set { Set<bool>(ref _gamesQuitOnExit, value); }
+            set => this.RaiseAndSetIfChanged(ref _gamesQuitOnExit, value);
         }
 
         private string _gamesAdditionnalCommands;
@@ -124,7 +125,7 @@ namespace AmpShell.Models
         public string GamesAdditionalCommands
         {
             get => _gamesAdditionnalCommands;
-            set { Set<string>(ref _gamesAdditionnalCommands, value); }
+            set => this.RaiseAndSetIfChanged(ref _gamesAdditionnalCommands, value);
         }
 
         private string _gamesDefaultDir;
@@ -132,7 +133,7 @@ namespace AmpShell.Models
         public string GamesDefaultDir
         {
             get => _gamesDefaultDir;
-            set { Set<string>(ref _gamesDefaultDir, value); }
+            set => this.RaiseAndSetIfChanged(ref _gamesDefaultDir, value);
         }
 
         private string _cdsDefaultDir;
@@ -140,7 +141,7 @@ namespace AmpShell.Models
         public string CDsDefaultDir
         {
             get => _cdsDefaultDir;
-            set { Set<string>(ref _cdsDefaultDir, value); }
+            set => this.RaiseAndSetIfChanged(ref _cdsDefaultDir, value);
         }
 
         private string _configEditorPath;
@@ -148,7 +149,7 @@ namespace AmpShell.Models
         public string ConfigEditorPath
         {
             get => _configEditorPath;
-            set { Set<string>(ref _configEditorPath, value); }
+            set => this.RaiseAndSetIfChanged(ref _configEditorPath, value);
         }
 
         private string _configEditorAdditionalParameters;
@@ -156,7 +157,7 @@ namespace AmpShell.Models
         public string ConfigEditorAdditionalParameters
         {
             get => _configEditorAdditionalParameters;
-            set { Set<string>(ref _configEditorAdditionalParameters, value); }
+            set => this.RaiseAndSetIfChanged(ref _configEditorAdditionalParameters, value);
         }
 
         private bool _fullScreen;
@@ -164,7 +165,7 @@ namespace AmpShell.Models
         public bool Fullscreen
         {
             get => _fullScreen;
-            set { Set<bool>(ref _fullScreen, value); }
+            set => this.RaiseAndSetIfChanged(ref _fullScreen, value);
         }
 
         private bool _menuBarVisible = true;
@@ -172,7 +173,7 @@ namespace AmpShell.Models
         public bool MenuBarVisible
         {
             get => _menuBarVisible;
-            set { Set<bool>(ref _menuBarVisible, value); }
+            set => this.RaiseAndSetIfChanged(ref _menuBarVisible, value);
         }
 
         private bool _toolBarVisible = true;
@@ -180,7 +181,7 @@ namespace AmpShell.Models
         public bool ToolBarVisible
         {
             get => _toolBarVisible;
-            set { Set<bool>(ref _toolBarVisible, value); }
+            set => this.RaiseAndSetIfChanged(ref _toolBarVisible, value);
         }
 
         private bool _statusBarVisble = true;
@@ -188,7 +189,7 @@ namespace AmpShell.Models
         public bool StatusBarVisible
         {
             get => _statusBarVisble;
-            set { Set<bool>(ref _statusBarVisble, value); }
+            set => this.RaiseAndSetIfChanged(ref _statusBarVisble, value);
         }
 
         private string _dbPath;
@@ -196,7 +197,7 @@ namespace AmpShell.Models
         public string DBPath
         {
             get => _dbPath;
-            set { Set<string>(ref _dbPath, value); }
+            set => this.RaiseAndSetIfChanged(ref _dbPath, value);
         }
 
         private string _dbDefaultConfFilePath;
@@ -204,7 +205,7 @@ namespace AmpShell.Models
         public string DBDefaultConfFilePath
         {
             get => _dbDefaultConfFilePath;
-            set { Set<string>(ref _dbDefaultConfFilePath, value); }
+            set => this.RaiseAndSetIfChanged(ref _dbDefaultConfFilePath, value);
         }
 
         private string _dbDefaultLangFilePath;
@@ -212,7 +213,7 @@ namespace AmpShell.Models
         public string DBDefaultLangFilePath
         {
             get => _dbDefaultLangFilePath;
-            set { Set<string>(ref _dbDefaultLangFilePath, value); }
+            set => this.RaiseAndSetIfChanged(ref _dbDefaultLangFilePath, value);
         }
 
         private int _width = 640;
@@ -220,7 +221,7 @@ namespace AmpShell.Models
         public int Width
         {
             get => _width;
-            set { Set<int>(ref _width, value); }
+            set => this.RaiseAndSetIfChanged(ref _width, value);
         }
 
         private int _height = 400;
@@ -228,7 +229,7 @@ namespace AmpShell.Models
         public int Height
         {
             get => _height;
-            set { Set<int>(ref _height, value); }
+            set => this.RaiseAndSetIfChanged(ref _height, value);
         }
 
         private int _largeViewModeSize = 48;
@@ -236,7 +237,7 @@ namespace AmpShell.Models
         public int LargeViewModeSize
         {
             get => _largeViewModeSize;
-            set { Set<int>(ref _largeViewModeSize, value); }
+            set => this.RaiseAndSetIfChanged(ref _largeViewModeSize, value);
         }
     }
 }

@@ -10,14 +10,15 @@
 
 using AmpShell.DAL;
 using AmpShell.Models;
-using AmpShell.Notification;
+
+using Avalonia.Diagnostics.ViewModels;
 
 namespace AmpShell.ViewModels
 {
-    public class CategoryViewModel : PropertyChangedNotifier
+    public class CategoryViewModel : ViewModelBase
     {
         private string _name = "";
-        private readonly int  _categoryId;
+        private readonly int _categoryId;
 
         public CategoryViewModel()
         {
@@ -32,13 +33,13 @@ namespace AmpShell.ViewModels
         public string Name
         {
             get => _name;
-            set { Set<string>(ref _name, value); }
+            set => this.RaiseAndSetIfChanged(ref _name, value);
         }
 
         public void CreateCategory()
         {
             Category category;
-            if(_categoryId == 0)
+            if (_categoryId == 0)
             {
                 UserDataAccessor.CreateCategory();
             }

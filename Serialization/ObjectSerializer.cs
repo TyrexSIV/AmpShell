@@ -9,6 +9,7 @@
  * If not, see <http://www.gnu.org/licenses/>.*/
 
 using Avalonia.Logging;
+
 using System;
 using System.IO;
 using System.Text;
@@ -46,7 +47,7 @@ namespace AmpShell.Serialization
             }
             catch (Exception e)
             {
-                Logger.Fatal("Serialization", e, "Serialization to file failed", new object[]{ e });
+                Logger.Fatal("Serialization", e, "Serialization to file failed", new object[] { e });
                 return false;
             }
             return true;
@@ -78,8 +79,6 @@ namespace AmpShell.Serialization
 
             return sbTR.ToString();
         }
-
-
 
         public static T CloneObject<T>(T objClone) where T : new()
         {

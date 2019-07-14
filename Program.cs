@@ -1,12 +1,12 @@
-﻿using System;
+﻿using AmpShell.ViewModels;
+using AmpShell.Views;
+
 using Avalonia;
 using Avalonia.Logging.Serilog;
-using AmpShell.ViewModels;
-using AmpShell.Views;
 
 namespace AmpShell
 {
-    class Program
+    internal class Program
     {
         // Initialization code. Don't use any Avalonia, third-party APIs or any
         // SynchronizationContext-reliant code before AppMain is called: things aren't initialized

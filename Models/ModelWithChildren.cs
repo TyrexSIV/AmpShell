@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.*/
 
-using AmpShell.Notification;
+using Avalonia.Diagnostics.ViewModels;
 
 using System.Collections.Generic;
 using System.Xml.Serialization;
@@ -19,7 +19,7 @@ namespace AmpShell.Models
     /// Root node for the xml file
     /// </summary>
     [XmlRoot("AmpShell")]
-    public class ModelWithChildren : PropertyChangedNotifier
+    public class ModelWithChildren : ViewModelBase
     {
         /// <summary>
         /// List that will build up the tree of categories and games through the AddChild and RemoveChild and ListChildren methods

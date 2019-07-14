@@ -8,10 +8,8 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.*/
 
-using AmpShell.DAL;
 using AmpShell.Models;
-using Avalonia.Controls;
-using System;
+
 using System.Diagnostics;
 using System.IO;
 

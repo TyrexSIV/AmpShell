@@ -12,20 +12,21 @@ using AmpShell.AutoConfig;
 using AmpShell.DAL;
 using AmpShell.Enums;
 using AmpShell.Models;
-using AmpShell.Notification;
 using AmpShell.Serialization;
+
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Diagnostics.ViewModels;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace AmpShell.ViewModels
 {
-    public class PreferencesViewModel : PropertyChangedNotifier
+    public class PreferencesViewModel : ViewModelBase
     {
         public Preferences Model { get; private set; }
 
@@ -36,7 +37,7 @@ namespace AmpShell.ViewModels
         public bool PortableModeAvailable
         {
             get => _portableModeAvailable;
-            set { Set(ref _portableModeAvailable, value); }
+            set => this.RaiseAndSetIfChanged(ref _portableModeAvailable, value);
         }
 
         private string _portableModeStatus = "";
@@ -44,7 +45,7 @@ namespace AmpShell.ViewModels
         public string PortableModeStatus
         {
             get => _portableModeStatus;
-            set { Set(ref _portableModeStatus, value); }
+            set => this.RaiseAndSetIfChanged(ref _portableModeStatus, value);
         }
 
         public List<string> LargeViewModeAvailableSizes { get; } = new List<string>(new[]
@@ -68,7 +69,7 @@ namespace AmpShell.ViewModels
         public ObservableCollection<Category> Categories
         {
             get => _categories;
-            set { Set(ref _categories, value); }
+            set => this.RaiseAndSetIfChanged(ref _categories, value);
         }
 
         private bool _isDefaultViewModeDetails = false;
@@ -76,7 +77,7 @@ namespace AmpShell.ViewModels
         public bool IsDefaultViewModeDetails
         {
             get => _isDefaultViewModeDetails;
-            set { Set(ref _isDefaultViewModeDetails, value); }
+            set => this.RaiseAndSetIfChanged(ref _isDefaultViewModeDetails, value);
         }
 
         private bool _isDefaultViewModeList = false;
@@ -84,7 +85,7 @@ namespace AmpShell.ViewModels
         public bool IsDefaultViewModeList
         {
             get => _isDefaultViewModeList;
-            set { Set(ref _isDefaultViewModeList, value); }
+            set => this.RaiseAndSetIfChanged(ref _isDefaultViewModeList, value);
         }
 
         private bool _isDefaultViewModeLargeIcons = false;
@@ -92,7 +93,7 @@ namespace AmpShell.ViewModels
         public bool IsDefaultViewModeLargeIcons
         {
             get => _isDefaultViewModeLargeIcons;
-            set { Set(ref _isDefaultViewModeLargeIcons, value); }
+            set => this.RaiseAndSetIfChanged(ref _isDefaultViewModeLargeIcons, value);
         }
 
         private bool _isDefaultViewModeSmallIcons = false;
@@ -100,7 +101,7 @@ namespace AmpShell.ViewModels
         public bool IsDefaultViewModeSmallIcons
         {
             get => _isDefaultViewModeSmallIcons;
-            set { Set(ref _isDefaultViewModeSmallIcons, value); }
+            set => this.RaiseAndSetIfChanged(ref _isDefaultViewModeSmallIcons, value);
         }
 
         private bool _isDefaultViewModeTiles = false;
@@ -108,7 +109,7 @@ namespace AmpShell.ViewModels
         public bool IsDefaultViewModeTiles
         {
             get => _isDefaultViewModeTiles;
-            set { Set(ref _isDefaultViewModeTiles, value); }
+            set => this.RaiseAndSetIfChanged(ref _isDefaultViewModeTiles, value);
         }
 
         public PreferencesViewModel() : base()
@@ -117,7 +118,6 @@ namespace AmpShell.ViewModels
             _modelUndo = UserDataAccessor.UserData;
             Categories = new ObservableCollection<Category>(UserDataAccessor.GetAllCategories());
             CheckForPortableModeAvailability();
-
 
             if (UserDataAccessor.UserData.CategoriesDefaultViewMode == ViewMode.Details)
             {
@@ -234,7 +234,7 @@ namespace AmpShell.ViewModels
                 Title = "Browsing for a text file editor...",
                 AllowMultiple = false
             };
-            
+
             if (string.IsNullOrWhiteSpace(Model.ConfigEditorPath) == false)
             {
                 if (Directory.Exists(Path.GetDirectoryName(Model.ConfigEditorPath).ToString()))
@@ -248,7 +248,7 @@ namespace AmpShell.ViewModels
             }
 
             string filePath = textEdtiorOpenFileDialog.ShowAsync(null).Result.FirstOrDefault();
-            if(string.IsNullOrWhiteSpace(filePath) == false)
+            if (string.IsNullOrWhiteSpace(filePath) == false)
             {
                 Model.ConfigEditorPath = filePath;
             }
@@ -327,23 +327,23 @@ namespace AmpShell.ViewModels
         public void ApplyModifications()
         {
             UserDataAccessor.SetCategoriesOrder(Categories);
-            if(IsDefaultViewModeDetails)
+            if (IsDefaultViewModeDetails)
             {
-                UserDataAccessor.UserData.CategoriesDefaultViewMode = ViewMode.Details; 
+                UserDataAccessor.UserData.CategoriesDefaultViewMode = ViewMode.Details;
             }
-            if(IsDefaultViewModeLargeIcons)
+            if (IsDefaultViewModeLargeIcons)
             {
                 UserDataAccessor.UserData.CategoriesDefaultViewMode = ViewMode.LargeIcon;
             }
-            if(IsDefaultViewModeSmallIcons)
+            if (IsDefaultViewModeSmallIcons)
             {
                 UserDataAccessor.UserData.CategoriesDefaultViewMode = ViewMode.SmallIcon;
             }
-            if(IsDefaultViewModeList)
+            if (IsDefaultViewModeList)
             {
                 UserDataAccessor.UserData.CategoriesDefaultViewMode = ViewMode.List;
             }
-            if(IsDefaultViewModeTiles)
+            if (IsDefaultViewModeTiles)
             {
                 UserDataAccessor.UserData.CategoriesDefaultViewMode = ViewMode.Tile;
             }

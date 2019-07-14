@@ -9,6 +9,7 @@
  * If not, see <http://www.gnu.org/licenses/>.*/
 
 using AmpShell.Enums;
+
 using System;
 using System.Xml.Serialization;
 
@@ -34,13 +35,12 @@ namespace AmpShell.Models
 
         public int Id => Convert.ToInt32(Signature);
 
-
         private int _nameColumnWidth = 150;
 
         public int NameColumnWidth
         {
             get => _nameColumnWidth;
-            set { Set<int>(ref _nameColumnWidth, value); }
+            set => this.RaiseAndSetIfChanged(ref _nameColumnWidth, value);
         }
 
         private int _executableColumnWith = 150;
@@ -48,7 +48,7 @@ namespace AmpShell.Models
         public int ExecutableColumnWidth
         {
             get => _executableColumnWith;
-            set { Set<int>(ref _executableColumnWith, value); }
+            set => base.RaiseAndSetIfChanged(ref _executableColumnWith, value);
         }
 
         private int _cMountColumnWidth = 150;
@@ -56,7 +56,7 @@ namespace AmpShell.Models
         public int CMountColumnWidth
         {
             get => _cMountColumnWidth;
-            set { Set<int>(ref _cMountColumnWidth, value); }
+            set => this.RaiseAndSetIfChanged(ref _cMountColumnWidth, value);
         }
 
         private int _setupExecutableColumnWidth = 150;
@@ -64,7 +64,7 @@ namespace AmpShell.Models
         public int SetupExecutableColumnWidth
         {
             get => _setupExecutableColumnWidth;
-            set { Set<int>(ref _setupExecutableColumnWidth, value); }
+            set => this.RaiseAndSetIfChanged(ref _setupExecutableColumnWidth, value);
         }
 
         private int _customConfigurationColumnWidth = 150;
@@ -72,7 +72,7 @@ namespace AmpShell.Models
         public int CustomConfigurationColumnWidth
         {
             get => _customConfigurationColumnWidth;
-            set { Set<int>(ref _customConfigurationColumnWidth, value); }
+            set => this.RaiseAndSetIfChanged(ref _customConfigurationColumnWidth, value);
         }
 
         private int _dMountColumnWidth = 150;
@@ -80,7 +80,7 @@ namespace AmpShell.Models
         public int DMountColumnWidth
         {
             get => _dMountColumnWidth;
-            set { Set<int>(ref _dMountColumnWidth, value); }
+            set => this.RaiseAndSetIfChanged(ref _dMountColumnWidth, value);
         }
 
         private int _mountingOptionsColumnWidth = 100;
@@ -88,7 +88,7 @@ namespace AmpShell.Models
         public int MountingOptionsColumnWidth
         {
             get => _mountingOptionsColumnWidth;
-            set { Set<int>(ref _mountingOptionsColumnWidth, value); }
+            set => this.RaiseAndSetIfChanged(ref _mountingOptionsColumnWidth, value);
         }
 
         private int _additionnalCommandsColumnWidth = 150;
@@ -96,7 +96,7 @@ namespace AmpShell.Models
         public int AdditionnalCommandsColumnWidth
         {
             get => _additionnalCommandsColumnWidth;
-            set { Set<int>(ref _additionnalCommandsColumnWidth, value); }
+            set => this.RaiseAndSetIfChanged(ref _additionnalCommandsColumnWidth, value);
         }
 
         private int _noConsoleColumnWidth = 100;
@@ -104,7 +104,7 @@ namespace AmpShell.Models
         public int NoConsoleColumnWidth
         {
             get => _noConsoleColumnWidth;
-            set { Set<int>(ref _noConsoleColumnWidth, value); }
+            set => this.RaiseAndSetIfChanged(ref _noConsoleColumnWidth, value);
         }
 
         private int _fullscreenColumnWidth = 100;
@@ -112,7 +112,7 @@ namespace AmpShell.Models
         public int FullscreenColumnWidth
         {
             get => _fullscreenColumnWidth;
-            set { Set<int>(ref _fullscreenColumnWidth, value); }
+            set => this.RaiseAndSetIfChanged(ref _fullscreenColumnWidth, value);
         }
 
         private int _quitOnExitColumnWidth = 100;
@@ -120,7 +120,7 @@ namespace AmpShell.Models
         public int QuitOnExitColumnWidth
         {
             get => _quitOnExitColumnWidth;
-            set { Set<int>(ref _quitOnExitColumnWidth, value); }
+            set => this.RaiseAndSetIfChanged(ref _quitOnExitColumnWidth, value);
         }
 
         private ViewMode _viewMode = ViewMode.LargeIcon;
@@ -128,7 +128,7 @@ namespace AmpShell.Models
         public ViewMode ViewMode
         {
             get => _viewMode;
-            set { Set<ViewMode>(ref _viewMode, value); }
+            set => this.RaiseAndSetIfChanged(ref _viewMode, value);
         }
     }
 }
