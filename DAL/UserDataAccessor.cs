@@ -65,13 +65,10 @@ namespace AmpShell.DAL
             return UserDataAccessor.UserData.ListChildren.Cast<Category>().ToList();
         }
 
-        public static Game CreateGame(int categoryId)
+        public static Game CreateGame(int categoryId, Game game)
         {
             var selectedCategory = GetCategory(categoryId);
-            var game = new Game()
-            {
-                Signature = GetAUniqueSignature()
-            };
+            game.Signature = GetAUniqueSignature();
             if (selectedCategory != null)
             {
                 selectedCategory.AddChild(game);
