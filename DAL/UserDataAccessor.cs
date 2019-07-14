@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AmpShell.DAL
 {
@@ -34,7 +35,7 @@ namespace AmpShell.DAL
                 Signature = GetAUniqueSignature()
             };
             UserData.AddChild(category);
-            SaveUserData();
+            _ = SaveUserDataAsync();
             return category;
         }
 
@@ -52,7 +53,7 @@ namespace AmpShell.DAL
                 int index = UserData.ListChildren.Cast<Category>().ToList().IndexOf(selectedCategory);
                 UserData.AddChild(updatedCategory);
                 UserData.MoveChildToPosition(updatedCategory, index);
-                SaveUserData();
+                _ = SaveUserDataAsync();
             }
         }
 
@@ -60,7 +61,7 @@ namespace AmpShell.DAL
         {
             var selectedCategory = GetCategory(id);
             UserData.RemoveChild(UserData.ListChildren.Cast<Category>().FirstOrDefault(x => x.Id == id));
-            SaveUserData();
+            _ = SaveUserDataAsync();
         }
 
         public static List<Category> GetAllCategories()
@@ -78,7 +79,7 @@ namespace AmpShell.DAL
             if (selectedCategory != null)
             {
                 selectedCategory.AddChild(game);
-                SaveUserData();
+                _ = SaveUserDataAsync();
             }
             return game;
         }
@@ -96,7 +97,7 @@ namespace AmpShell.DAL
             category.RemoveChild(selectedGame);
             category.AddChild(updatedGame);
             category.MoveChildToPosition(updatedGame, index);
-            SaveUserData();
+            _ = SaveUserDataAsync();
         }
 
         public static void DeleteGame(int gameId)
@@ -112,7 +113,7 @@ namespace AmpShell.DAL
                 return;
             }
             parentCategory.RemoveChild(selectedGame);
-            SaveUserData();
+            _ = SaveUserDataAsync();
         }
 
         private static Category GetParentCategory(int gameId)
@@ -125,39 +126,42 @@ namespace AmpShell.DAL
         /// </summary>
         public static Preferences UserData { get; private set; }
 
-        private static void SaveUserData()
+        private static async Task<bool> SaveUserDataAsync()
         {
-            if (!UserData.PortableMode)
+            return await Task.Run(async () =>
             {
-                ObjectSerializer.SerializeToDisk(GetDataFilePath(), UserData, typeof(ModelWithChildren));
-            }
-            else
-            {
-                foreach (Category category in UserData.ListChildren)
+                if (!UserData.PortableMode)
                 {
-                    foreach (Game game in category.ListChildren)
-                    {
-                        game.DOSEXEPath = game.DOSEXEPath.Replace(PathFinder.GetStartupPath(), "AppPath");
-                        game.DBConfPath = game.DBConfPath.Replace(PathFinder.GetStartupPath(), "AppPath");
-                        game.AdditionalCommands = game.AdditionalCommands.Replace(PathFinder.GetStartupPath(), "AppPath");
-                        game.Directory = game.Directory.Replace(PathFinder.GetStartupPath(), "AppPath");
-                        game.CDPath = game.CDPath.Replace(PathFinder.GetStartupPath(), "AppPath");
-                        game.SetupEXEPath = game.SetupEXEPath.Replace(PathFinder.GetStartupPath(), "AppPath");
-                        game.Icon = game.Icon.Replace(PathFinder.GetStartupPath(), "AppPath");
-                    }
+                    return await ObjectSerializer.SerializeToDiskFileAsync(GetDataFilePath(), UserData, typeof(ModelWithChildren));
                 }
-                UserData.DBDefaultConfFilePath = UserData.DBDefaultConfFilePath.Replace(PathFinder.GetStartupPath(), "AppPath");
-                UserData.DBDefaultLangFilePath = UserData.DBDefaultLangFilePath.Replace(PathFinder.GetStartupPath(), "AppPath");
-                UserData.DBPath = UserData.DBPath.Replace(PathFinder.GetStartupPath(), "AppPath");
-                UserData.ConfigEditorPath = UserData.ConfigEditorPath.Replace(PathFinder.GetStartupPath(), "AppPath");
-                UserData.ConfigEditorAdditionalParameters = UserData.ConfigEditorAdditionalParameters.Replace(PathFinder.GetStartupPath(), "AppPath");
-                ObjectSerializer.SerializeToDisk(PathFinder.GetStartupPath() + "\\AmpShell.xml", UserData, typeof(ModelWithChildren));
-            }
+                else
+                {
+                    foreach (Category category in UserData.ListChildren)
+                    {
+                        foreach (Game game in category.ListChildren)
+                        {
+                            game.DOSEXEPath = game.DOSEXEPath.Replace(PathFinder.GetStartupPath(), "AppPath");
+                            game.DBConfPath = game.DBConfPath.Replace(PathFinder.GetStartupPath(), "AppPath");
+                            game.AdditionalCommands = game.AdditionalCommands.Replace(PathFinder.GetStartupPath(), "AppPath");
+                            game.Directory = game.Directory.Replace(PathFinder.GetStartupPath(), "AppPath");
+                            game.CDPath = game.CDPath.Replace(PathFinder.GetStartupPath(), "AppPath");
+                            game.SetupEXEPath = game.SetupEXEPath.Replace(PathFinder.GetStartupPath(), "AppPath");
+                            game.Icon = game.Icon.Replace(PathFinder.GetStartupPath(), "AppPath");
+                        }
+                    }
+                    UserData.DBDefaultConfFilePath = UserData.DBDefaultConfFilePath.Replace(PathFinder.GetStartupPath(), "AppPath");
+                    UserData.DBDefaultLangFilePath = UserData.DBDefaultLangFilePath.Replace(PathFinder.GetStartupPath(), "AppPath");
+                    UserData.DBPath = UserData.DBPath.Replace(PathFinder.GetStartupPath(), "AppPath");
+                    UserData.ConfigEditorPath = UserData.ConfigEditorPath.Replace(PathFinder.GetStartupPath(), "AppPath");
+                    UserData.ConfigEditorAdditionalParameters = UserData.ConfigEditorAdditionalParameters.Replace(PathFinder.GetStartupPath(), "AppPath");
+                    return await ObjectSerializer.SerializeToDiskFileAsync(PathFinder.GetStartupPath() + "\\AmpShell.xml", UserData, typeof(ModelWithChildren));
+                }
+            });
         }
 
         private static void LoadUserData()
         {
-            UserData = (Preferences)ObjectSerializer.DeserializeFromDisk(GetDataFilePath(), typeof(ModelWithChildren));
+            UserData = (Preferences)ObjectSerializer.DeserializeFromFileAsync(GetDataFilePath(), typeof(ModelWithChildren)).Result;
             foreach (Category concernedCategory in UserData.ListChildren)
             {
                 foreach (Game concernedGame in concernedCategory.ListChildren)

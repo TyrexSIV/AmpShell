@@ -8,9 +8,11 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.*/
 
+using Avalonia.Logging;
 using System;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -18,21 +20,36 @@ namespace AmpShell.Serialization
 {
     public static class ObjectSerializer
     {
-        public static object DeserializeFromDisk<T>(string xmlPath, T targetObjectType) where T : Type
+        public static async Task<object> DeserializeFromFileAsync<T>(string xmlPath, T targetObjectType) where T : Type
         {
-            XmlSerializer deserializer = new XmlSerializer(targetObjectType);
-            var reader = new StreamReader(xmlPath, Encoding.Unicode);
-            var targetObjectInstance = deserializer.Deserialize(reader);
-            reader.Close();
-            return targetObjectInstance;
+            return await Task.Run(() =>
+            {
+                XmlSerializer deserializer = new XmlSerializer(targetObjectType);
+                var reader = new StreamReader(xmlPath, Encoding.Unicode);
+                var targetObjectInstance = (T)deserializer.Deserialize(reader);
+                reader.Close();
+                return targetObjectInstance;
+            });
         }
 
-        public static void SerializeToDisk<T>(string xmlPath, object objectToSerialize, T typeOfObjectToSerialize) where T : Type
+        public static async Task<bool> SerializeToDiskFileAsync<T>(string xmlPath, object objectToSerialize, T typeOfObjectToSerialize) where T : Type
         {
-            XmlSerializer serializer = new XmlSerializer(typeOfObjectToSerialize);
-            var writer = new StreamWriter(xmlPath, false, Encoding.Unicode);
-            serializer.Serialize(writer, objectToSerialize);
-            writer.Close();
+            try
+            {
+                await Task.Run(() =>
+                {
+                    XmlSerializer serializer = new XmlSerializer(typeOfObjectToSerialize);
+                    var writer = new StreamWriter(xmlPath, false, Encoding.Unicode);
+                    serializer.Serialize(writer, objectToSerialize);
+                    writer.Close();
+                });
+            }
+            catch (Exception e)
+            {
+                Logger.Fatal("Serialization", e, "Serialization to file failed", new object[]{ e });
+                return false;
+            }
+            return true;
         }
 
         private static T DeserializeXML<T>(string xmlData) where T : new()
