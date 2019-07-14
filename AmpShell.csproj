@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFrameworks>netcoreapp2.1;net461</TargetFrameworks>
-    <UseWindowsForms>true</UseWindowsForms>
+    <TargetFrameworks>netcoreapp3.0;net461</TargetFrameworks>
+    <OutputType>WinExe</OutputType>
     <StartupObject>AmpShell.Program</StartupObject>
+    <ApplicationIcon>AmpShell.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netcoreapp2.1|AnyCPU'">
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
