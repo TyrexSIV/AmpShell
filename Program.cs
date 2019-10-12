@@ -1,8 +1,7 @@
 ﻿using AmpShell.ViewModels;
-using AmpShell.Views;
-
 using Avalonia;
 using Avalonia.Logging.Serilog;
+using AmpShell.Views;
 
 namespace AmpShell
 {

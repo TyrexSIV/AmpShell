@@ -8,8 +8,10 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.*/
 
+using AmpShell.DAL;
 using AmpShell.Models;
 
+using System;
 using System.Diagnostics;
 using System.IO;
 
@@ -20,6 +22,46 @@ namespace AmpShell.DOSBox
     /// </summary>
     public static class DOSBoxController
     {
+        public static void AskForDOSBox()
+        {
+            //if DOSBoxPath is still empty, say to the user that dosbox's executable cannot be found
+            if (string.IsNullOrWhiteSpace(UserDataAccessor.UserData.DBPath))
+            {
+                //switch (MessageBox.Show("AmpShell cannot find DOSBox, do you want to indicate DOSBox's executable location now ? Choose 'Cancel' to quit.", "Cannot find DOSBox", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
+                //{
+                //    case DialogResult.Cancel:
+                //        Environment.Exit(0);
+                //        break;
+
+                //    case DialogResult.Yes:
+                //        {
+                //            var dosboxExeFileDialog = new OpenFileDialog
+                //            {
+                //                InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles),
+                //                Title = "Please indicate DOSBox's executable location...",
+                //                Filter = "DOSBox executable (dosbox*)|dosbox*"
+                //            };
+                //            using(dosboxExeFileDialog)
+                //            {
+                //                if (dosboxExeFileDialog.ShowDialog() == DialogResult.OK)
+                //                {
+                //                    UserDataAccessor.UserData.DBPath = dosboxExeFileDialog.FileName;
+                //                }
+                //                else
+                //                {
+                //                    Environment.Exit(0);
+                //                }
+                //            }
+
+                //        }
+                //        break;
+                //    case DialogResult.No:
+                //        UserDataAccessor.UserData.DBPath = string.Empty;
+                //        break;
+                //}
+            }
+        }
+
         /// <summary>
         /// Starts DOSBox, and returns whether it was successful.
         /// </summary>
@@ -58,6 +100,10 @@ namespace AmpShell.DOSBox
         /// <returns></returns>
         public static string BuildArgs(Game selectedGame, bool forSetupExe, string dosBoxExePath, string dosboxDefaultConfFilePath, string dosboxDefaultLangFilePath)
         {
+            if(selectedGame == null)
+            {
+                return "";
+            }
             var configFile = new DOSBoxConfigFile(selectedGame.DBConfPath);
 
             //Arguments string for DOSBox.exe
@@ -71,7 +117,7 @@ namespace AmpShell.DOSBox
 
             dosboxArgs += AddPrefsLangFile(dosboxDefaultLangFilePath);
 
-            dosboxArgs += AddAdditionnalCommands(selectedGame, forSetupExe, configFile);
+            dosboxArgs += AddAdditionalCommands(selectedGame, forSetupExe, configFile);
 
             //corresponds to the Fullscreen checkbox in GameForm
             if (selectedGame.InFullScreen == true)
@@ -135,7 +181,7 @@ namespace AmpShell.DOSBox
             return dosboxArgs;
         }
 
-        private static string AddAdditionnalCommands(Game selectedGame, bool forSetupExe, DOSBoxConfigFile configFile)
+        private static string AddAdditionalCommands(Game selectedGame, bool forSetupExe, DOSBoxConfigFile configFile)
         {
             string dosboxArgs = "";
             if (configFile.IsAutoExecSectionUsed() == true)
@@ -179,21 +225,33 @@ namespace AmpShell.DOSBox
                 }
                 else
                 {
+                    bool addedMountOptions;
                     if (selectedGame.UseIOCTL == true)
                     {
-                        dosboxArgs += " -c " + '"' + "mount d " + "'" + selectedGame.CDPath + "'" + " -t cdrom -usecd 0 -ioctl" + '"';
+                        addedMountOptions = true;
+                        dosboxArgs += " -c " + '"' + "mount d " + "'" + selectedGame.CDPath + "'" + " -t cdrom -usecd 0 -ioctl";
                     }
                     else if (selectedGame.MountAsFloppy == true)
                     {
-                        dosboxArgs += " -c " + '"' + "mount a " + "'" + selectedGame.CDPath + "'" + " -t floppy" + '"';
+                        addedMountOptions = true;
+                        dosboxArgs += " -c " + '"' + "mount a " + "'" + selectedGame.CDPath + "'" + " -t floppy";
                     }
                     else
                     {
+                        addedMountOptions = true;
                         dosboxArgs += " -c " + '"' + "mount d " + "'" + selectedGame.CDPath + "'";
+                    }
+                    if (string.IsNullOrWhiteSpace(selectedGame.CDLabel) == false && addedMountOptions)
+                    {
+                        dosboxArgs += " -label " + selectedGame.CDLabel;
+                    }
+                    if (addedMountOptions)
+                    {
+                        dosboxArgs += '"';
                     }
                 }
             }
-            //Additionnal user commands for the game
+            //Additional user commands for the game
             if (string.IsNullOrWhiteSpace(selectedGame.AdditionalCommands) == false)
             {
                 dosboxArgs += " " + selectedGame.AdditionalCommands;

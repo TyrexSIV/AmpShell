@@ -154,7 +154,12 @@ namespace AmpShell.DAL
 
         private static async Task<Preferences> LoadUserDataAsync()
         {
-            object userDataObject = await ObjectSerializer.DeserializeFromFileAsync(GetDataFilePath(), typeof(ModelWithChildren));
+            var filePath = GetDataFilePath();
+            if(string.IsNullOrWhiteSpace(filePath) || File.Exists(filePath) == false)
+            {
+                return new Preferences();
+            }
+            object userDataObject = await ObjectSerializer.DeserializeFromFileAsync(filePath, typeof(ModelWithChildren));
             var userData = (Preferences)userDataObject;
             await Task.Run(() =>
             {
@@ -179,11 +184,11 @@ namespace AmpShell.DAL
 
                 if (string.IsNullOrWhiteSpace(userData.DBPath))
                 {
-                    userData.DBPath = FileFinder.SearchDOSBox(GetDataFilePath(), UserData.PortableMode);
+                    userData.DBPath = FileFinder.SearchDOSBox(filePath, UserData.PortableMode);
                 }
                 else if (File.Exists(userData.DBPath) == false)
                 {
-                    userData.DBPath = FileFinder.SearchDOSBox(GetDataFilePath(), UserData.PortableMode);
+                    userData.DBPath = FileFinder.SearchDOSBox(filePath, UserData.PortableMode);
                 }
                 if (string.IsNullOrWhiteSpace(userData.ConfigEditorPath))
                 {
@@ -196,11 +201,11 @@ namespace AmpShell.DAL
 
                 if (string.IsNullOrWhiteSpace(userData.DBDefaultConfFilePath))
                 {
-                    userData.DBDefaultConfFilePath = FileFinder.SearchDOSBoxConf(GetDataFilePath(), userData.DBPath);
+                    userData.DBDefaultConfFilePath = FileFinder.SearchDOSBoxConf(filePath, userData.DBPath);
                 }
                 else if (File.Exists(UserData.DBDefaultConfFilePath) == false)
                 {
-                    userData.DBDefaultConfFilePath = FileFinder.SearchDOSBoxConf(GetDataFilePath(), userData.DBPath);
+                    userData.DBDefaultConfFilePath = FileFinder.SearchDOSBoxConf(filePath, userData.DBPath);
                 }
 
                 if (string.IsNullOrWhiteSpace(userData.DBDefaultLangFilePath) == false)
@@ -289,7 +294,7 @@ namespace AmpShell.DAL
             {
                 if (otherCat.Signature != signatureToTest)
                 {
-                    if (otherCat.ListChildren.Length != 0)
+                    if (otherCat.ListChildren.Count != 0)
                     {
                         foreach (Game otherGame in otherCat.ListChildren)
                         {

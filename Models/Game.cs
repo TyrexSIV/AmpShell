@@ -160,6 +160,17 @@ namespace AmpShell.Models
             set => this.RaiseAndSetIfChanged(ref _dosExePath, value);
         }
 
+        private string _cdLabel = "";
+
+        /// <summary>
+        /// Optional, user-specified CD LABEL (only when it is not an image)
+        /// </summary>
+        public string CDLabel
+        {
+            get => _cdLabel;
+            set => this.RaiseAndSetIfChanged(ref _cdLabel, value);
+        }
+
         private bool _cdIsAnImage;
 
         /// <summary>
