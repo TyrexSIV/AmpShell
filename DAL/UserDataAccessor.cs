@@ -234,40 +234,24 @@ namespace AmpShell.DAL
         /// </summary>
         private static string GetDataFilePath()
         {
-            var path = "";
-            //If the file named AmpShell.xml doesn't exists inside the directory AmpShell uses the one in the user's profile Application Data directory
-            if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\AmpShell\\AmpShell.xml") == false && File.Exists(PathFinder.GetStartupPath() + "\\AmpShell.xml") == false)
+            var appDataFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AmpShell\\AmpShell.xml");
+            if (FileFinder.HasWriteAccessToAssemblyLocationFolder() == false)
             {
-                //Setup the whole directory path
-                if (Directory.GetDirectoryRoot(PathFinder.GetStartupPath()) == Environment.GetFolderPath(System.Environment.SpecialFolder.ProgramFiles) || Directory.GetDirectoryRoot(PathFinder.GetStartupPath()) == Environment.SystemDirectory.Substring(0, 3) + "Program Files (x86)")
+                var appDataDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "AmpShell");
+                if (Directory.Exists(appDataDir) == false)
                 {
-                    path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\AmpShell";
-                    //create the directory
-                    if (Directory.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\AmpShell") == false)
-                    {
-                        Directory.CreateDirectory(path);
-                        path += "\\AmpShell.xml";
-                    }
+                    Directory.CreateDirectory(appDataDir);
                 }
-                else
-                {
-                    path = PathFinder.GetStartupPath() + "\\AmpShell.xml";
-                }
+                return appDataFile;
             }
-            //if the file named AmpShell.xml exists inside that directory
             else
             {
-                //then, deserialize it in Amp.
-                if (File.Exists(PathFinder.GetStartupPath() + "\\AmpShell.xml"))
+                if(File.Exists(appDataFile))
                 {
-                    path = PathFinder.GetStartupPath() + "\\AmpShell.xml";
+                    return appDataFile;
                 }
-                else if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\AmpShell\\AmpShell.xml"))
-                {
-                    path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\AmpShell\\AmpShell.xml";
-                }
+                return Path.Combine(PathFinder.GetStartupPath(), "AmpShell.xml");
             }
-            return path;
         }
 
         private static string GetAUniqueSignature()
