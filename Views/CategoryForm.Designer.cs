@@ -48,16 +48,15 @@ namespace AmpShell.Views
             // 
             this.NameTextBox.Location = new System.Drawing.Point(3, 16);
             this.NameTextBox.Name = "NameTextBox";
-            this.NameTextBox.Size = new System.Drawing.Size(339, 20);
+            this.NameTextBox.Size = new System.Drawing.Size(339, 23);
             this.NameTextBox.TabIndex = 1;
             // 
             // OK
             // 
-            this.OK.Image = global::AmpShell.Properties.Resources.NewFolderHS;
             this.OK.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.OK.Location = new System.Drawing.Point(143, 41);
+            this.OK.Location = new System.Drawing.Point(123, 41);
             this.OK.Name = "OK";
-            this.OK.Size = new System.Drawing.Size(111, 23);
+            this.OK.Size = new System.Drawing.Size(131, 23);
             this.OK.TabIndex = 2;
             this.OK.Text = "Add this category";
             this.OK.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -67,7 +66,6 @@ namespace AmpShell.Views
             // Cancel
             // 
             this.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Cancel.Image = global::AmpShell.Properties.Resources.DeleteHS;
             this.Cancel.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.Cancel.Location = new System.Drawing.Point(260, 41);
             this.Cancel.Name = "Cancel";
@@ -81,11 +79,10 @@ namespace AmpShell.Views
             // label
             // 
             this.label.AutoSize = true;
-            this.label.Image = global::AmpShell.Properties.Resources.Rename;
             this.label.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.label.Location = new System.Drawing.Point(0, 0);
             this.label.Name = "label";
-            this.label.Size = new System.Drawing.Size(128, 13);
+            this.label.Size = new System.Drawing.Size(136, 15);
             this.label.TabIndex = 4;
             this.label.Text = "      Please enter a name :";
             this.label.TextAlign = System.Drawing.ContentAlignment.MiddleRight;

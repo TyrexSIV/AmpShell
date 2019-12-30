@@ -98,20 +98,20 @@ namespace AmpShell.DAL
                 {
                     foreach (Game game in category.ListChildren)
                     {
-                        game.DOSEXEPath = game.DOSEXEPath.Replace(PathFinder.GetStartupPath(), "AppPath");
-                        game.DBConfPath = game.DBConfPath.Replace(PathFinder.GetStartupPath(), "AppPath");
-                        game.AdditionalCommands = game.AdditionalCommands.Replace(PathFinder.GetStartupPath(), "AppPath");
-                        game.Directory = game.Directory.Replace(PathFinder.GetStartupPath(), "AppPath");
-                        game.CDPath = game.CDPath.Replace(PathFinder.GetStartupPath(), "AppPath");
-                        game.SetupEXEPath = game.SetupEXEPath.Replace(PathFinder.GetStartupPath(), "AppPath");
-                        game.Icon = game.Icon.Replace(PathFinder.GetStartupPath(), "AppPath");
+                        game.DOSEXEPath = game.DOSEXEPath.Replace(PathFinder.GetStartupPath(), "AppPath", StringComparison.CurrentCulture);
+                        game.DBConfPath = game.DBConfPath.Replace(PathFinder.GetStartupPath(), "AppPath", StringComparison.CurrentCulture);
+                        game.AdditionalCommands = game.AdditionalCommands.Replace(PathFinder.GetStartupPath(), "AppPath", StringComparison.CurrentCulture);
+                        game.Directory = game.Directory.Replace(PathFinder.GetStartupPath(), "AppPath", StringComparison.CurrentCulture);
+                        game.CDPath = game.CDPath.Replace(PathFinder.GetStartupPath(), "AppPath", StringComparison.CurrentCulture);
+                        game.SetupEXEPath = game.SetupEXEPath.Replace(PathFinder.GetStartupPath(), "AppPath", StringComparison.CurrentCulture);
+                        game.Icon = game.Icon.Replace(PathFinder.GetStartupPath(), "AppPath", StringComparison.CurrentCulture);
                     }
                 }
-                UserData.DBDefaultConfFilePath = UserData.DBDefaultConfFilePath.Replace(PathFinder.GetStartupPath(), "AppPath");
-                UserData.DBDefaultLangFilePath = UserData.DBDefaultLangFilePath.Replace(PathFinder.GetStartupPath(), "AppPath");
-                UserData.DBPath = UserData.DBPath.Replace(PathFinder.GetStartupPath(), "AppPath");
-                UserData.ConfigEditorPath = UserData.ConfigEditorPath.Replace(PathFinder.GetStartupPath(), "AppPath");
-                UserData.ConfigEditorAdditionalParameters = UserData.ConfigEditorAdditionalParameters.Replace(PathFinder.GetStartupPath(), "AppPath");
+                UserData.DBDefaultConfFilePath = UserData.DBDefaultConfFilePath.Replace(PathFinder.GetStartupPath(), "AppPath", StringComparison.CurrentCulture);
+                UserData.DBDefaultLangFilePath = UserData.DBDefaultLangFilePath.Replace(PathFinder.GetStartupPath(), "AppPath", StringComparison.CurrentCulture);
+                UserData.DBPath = UserData.DBPath.Replace(PathFinder.GetStartupPath(), "AppPath", StringComparison.CurrentCulture);
+                UserData.ConfigEditorPath = UserData.ConfigEditorPath.Replace(PathFinder.GetStartupPath(), "AppPath", StringComparison.CurrentCulture);
+                UserData.ConfigEditorAdditionalParameters = UserData.ConfigEditorAdditionalParameters.Replace(PathFinder.GetStartupPath(), "AppPath", StringComparison.CurrentCulture);
                 ObjectSerializer.Serialize<Preferences>(PathFinder.GetStartupPath() + "\\AmpShell.xml", UserData);
             }
         }
@@ -127,20 +127,20 @@ namespace AmpShell.DAL
             {
                 foreach (Game concernedGame in concernedCategory.ListChildren)
                 {
-                    concernedGame.DOSEXEPath = concernedGame.DOSEXEPath.Replace("AppPath", PathFinder.GetStartupPath());
-                    concernedGame.DBConfPath = concernedGame.DBConfPath.Replace("AppPath", PathFinder.GetStartupPath());
-                    concernedGame.AdditionalCommands = concernedGame.AdditionalCommands.Replace("AppPath", PathFinder.GetStartupPath());
-                    concernedGame.Directory = concernedGame.Directory.Replace("AppPath", PathFinder.GetStartupPath());
-                    concernedGame.CDPath = concernedGame.CDPath.Replace("AppPath", PathFinder.GetStartupPath());
-                    concernedGame.SetupEXEPath = concernedGame.SetupEXEPath.Replace("AppPath", PathFinder.GetStartupPath());
-                    concernedGame.Icon = concernedGame.Icon.Replace("AppPath", PathFinder.GetStartupPath());
+                    concernedGame.DOSEXEPath = concernedGame.DOSEXEPath.Replace("AppPath", PathFinder.GetStartupPath(), StringComparison.CurrentCulture);
+                    concernedGame.DBConfPath = concernedGame.DBConfPath.Replace("AppPath", PathFinder.GetStartupPath(), StringComparison.CurrentCulture);
+                    concernedGame.AdditionalCommands = concernedGame.AdditionalCommands.Replace("AppPath", PathFinder.GetStartupPath(), StringComparison.CurrentCulture);
+                    concernedGame.Directory = concernedGame.Directory.Replace("AppPath", PathFinder.GetStartupPath(), StringComparison.CurrentCulture);
+                    concernedGame.CDPath = concernedGame.CDPath.Replace("AppPath", PathFinder.GetStartupPath(), StringComparison.CurrentCulture);
+                    concernedGame.SetupEXEPath = concernedGame.SetupEXEPath.Replace("AppPath", PathFinder.GetStartupPath(), StringComparison.CurrentCulture);
+                    concernedGame.Icon = concernedGame.Icon.Replace("AppPath", PathFinder.GetStartupPath(), StringComparison.CurrentCulture);
                 }
             }
-            UserData.DBDefaultConfFilePath = UserData.DBDefaultConfFilePath.Replace("AppPath", PathFinder.GetStartupPath());
-            UserData.DBDefaultLangFilePath = UserData.DBDefaultLangFilePath.Replace("AppPath", PathFinder.GetStartupPath());
-            UserData.DBPath = UserData.DBPath.Replace("AppPath", PathFinder.GetStartupPath());
-            UserData.ConfigEditorPath = UserData.ConfigEditorPath.Replace("AppPath", PathFinder.GetStartupPath());
-            UserData.ConfigEditorAdditionalParameters = UserData.ConfigEditorAdditionalParameters.Replace("AppPath", PathFinder.GetStartupPath());
+            UserData.DBDefaultConfFilePath = UserData.DBDefaultConfFilePath.Replace("AppPath", PathFinder.GetStartupPath(), StringComparison.CurrentCulture);
+            UserData.DBDefaultLangFilePath = UserData.DBDefaultLangFilePath.Replace("AppPath", PathFinder.GetStartupPath(), StringComparison.CurrentCulture);
+            UserData.DBPath = UserData.DBPath.Replace("AppPath", PathFinder.GetStartupPath(), StringComparison.CurrentCulture);
+            UserData.ConfigEditorPath = UserData.ConfigEditorPath.Replace("AppPath", PathFinder.GetStartupPath(), StringComparison.CurrentCulture);
+            UserData.ConfigEditorAdditionalParameters = UserData.ConfigEditorAdditionalParameters.Replace("AppPath", PathFinder.GetStartupPath(), StringComparison.CurrentCulture);
 
             if (string.IsNullOrWhiteSpace(UserData.DBPath))
             {

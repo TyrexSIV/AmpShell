@@ -25,11 +25,9 @@ namespace AmpShell.Serialization
                 throw new ArgumentNullException(nameof(xmlPath));
             }
             XmlReaderSettings settings = new XmlReaderSettings() { XmlResolver = null };
-            using (var reader = XmlReader.Create(xmlPath, settings))
-            {
-                var serializer = new XmlSerializer(new T().GetType());
-                return (T)serializer.Deserialize(reader);
-            }
+            using var reader = XmlReader.Create(xmlPath, settings);
+            var serializer = new XmlSerializer(new T().GetType());
+            return (T)serializer.Deserialize(reader);
         }
 
         public static void Serialize<T>(string xmlPath, T objectToSerialize)
@@ -39,11 +37,9 @@ namespace AmpShell.Serialization
                 throw new ArgumentNullException(nameof(objectToSerialize));
             }
             XmlSerializer serializer = new XmlSerializer(typeof(T));
-            using (var writer = new StreamWriter(xmlPath, false, Encoding.Unicode))
-            {
-                serializer.Serialize(writer, objectToSerialize);
-                writer.Close();
-            }
+            using var writer = new StreamWriter(xmlPath, false, Encoding.Unicode);
+            serializer.Serialize(writer, objectToSerialize);
+            writer.Close();
         }
     }
 }
