@@ -136,7 +136,7 @@ namespace AmpShell.DAL
             UserData.ConfigEditorPath = UserData.ConfigEditorPath.Replace("AppPath", PathFinder.GetStartupPath());
             UserData.ConfigEditorAdditionalParameters = UserData.ConfigEditorAdditionalParameters.Replace("AppPath", PathFinder.GetStartupPath());
 
-            if (string.IsNullOrWhiteSpace(UserData.DBPath))
+            if (string.IsNullOrEmpty(UserData.DBPath))
             {
                 UserData.DBPath = FileFinder.SearchDOSBox(GetDataFilePath(), UserData.PortableMode);
             }
@@ -144,7 +144,7 @@ namespace AmpShell.DAL
             {
                 UserData.DBPath = FileFinder.SearchDOSBox(GetDataFilePath(), UserData.PortableMode);
             }
-            if (string.IsNullOrWhiteSpace(UserData.ConfigEditorPath))
+            if (string.IsNullOrEmpty(UserData.ConfigEditorPath))
             {
                 UserData.ConfigEditorPath = FileFinder.SearchCommonTextEditor();
             }
@@ -153,7 +153,7 @@ namespace AmpShell.DAL
                 UserData.ConfigEditorPath = FileFinder.SearchCommonTextEditor();
             }
 
-            if (string.IsNullOrWhiteSpace(UserData.DBDefaultConfFilePath))
+            if (string.IsNullOrEmpty(UserData.DBDefaultConfFilePath))
             {
                 UserData.DBDefaultConfFilePath = FileFinder.SearchDOSBoxConf(GetDataFilePath(), UserData.DBPath);
             }
@@ -162,7 +162,7 @@ namespace AmpShell.DAL
                 UserData.DBDefaultConfFilePath = FileFinder.SearchDOSBoxConf(GetDataFilePath(), UserData.DBPath);
             }
 
-            if (string.IsNullOrWhiteSpace(UserData.DBDefaultLangFilePath) == false)
+            if (string.IsNullOrEmpty(UserData.DBDefaultLangFilePath) == false)
             {
                 UserData.DBDefaultLangFilePath = FileFinder.SearchDOSBoxLanguageFile(GetDataFilePath(), UserData.DBPath);
             }
