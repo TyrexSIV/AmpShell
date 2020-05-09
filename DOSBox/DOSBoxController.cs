@@ -15,7 +15,7 @@ namespace AmpShell.DOSBox
     using System.IO;
     using System.Windows.Forms;
     using AmpShell.DAL;
-    using AmpShell.Model;
+    using AmpShell.Models;
 
     /// <summary>
     /// Used to start DOSBox with a game in it.

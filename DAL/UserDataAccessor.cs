@@ -16,7 +16,7 @@ namespace AmpShell.DAL
     using System.Linq;
 
     using AmpShell.AutoConfig;
-    using AmpShell.Model;
+    using AmpShell.Models;
     using AmpShell.Serialization;
 
     public static class UserDataAccessor
