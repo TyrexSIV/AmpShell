@@ -1,5 +1,5 @@
 ﻿/*AmpShell : .NET front-end for DOSBox
- * Copyright (C) 2009, 2019 Maximilien Noal
+ * Copyright (C) 2009, 2020 Maximilien Noal
  *This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -16,19 +16,20 @@ using System.Xml.Serialization;
 namespace AmpShell.Models
 {
     /// <summary>
-    /// Root node for the xml file
+    /// Root node for the xml file.
     /// </summary>
     [XmlRoot("AmpShell")]
     public class ModelWithChildren : ViewModelBase
     {
         /// <summary>
-        /// List that will build up the tree of categories and games through the AddChild and RemoveChild and ListChildren methods
+        /// List that will build up the tree of categories and games through the AddChild and
+        /// RemoveChild and ListChildren methods.
         /// </summary>
-        private readonly List<object> _children = new List<object>();
+        private readonly List<object> children = new List<object>();
 
         public ModelWithChildren()
         {
-            _children = new List<object>();
+            this.children = new List<object>();
         }
 
         [XmlElement("Window", typeof(Preferences))]
@@ -37,34 +38,35 @@ namespace AmpShell.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227:Collection properties should be read only", Justification = "User Data Compatibility")]
         public List<object> ListChildren
         {
-            get => _children;
+            get => this.children;
+
             set
             {
-                _children.Clear();
-                if (value != null && value != _children)
+                this.children.Clear();
+                if (value != null && value != this.children)
                 {
-                    _children.AddRange(value);
+                    this.children.AddRange(value);
                 }
             }
         }
 
         public void AddChild(object child)
         {
-            _children.Add(child);
+            this.children.Add(child);
         }
 
         public void MoveChildToPosition(object child, int index)
         {
-            if (_children.Contains(child))
+            if (this.children.Contains(child))
             {
-                _children.Remove(child);
-                _children.Insert(index, child);
+                this.children.Remove(child);
+                this.children.Insert(index, child);
             }
         }
 
         public void RemoveChild(object child)
         {
-            _children.Remove(child);
+            this.children.Remove(child);
         }
     }
 }

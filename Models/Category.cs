@@ -1,5 +1,5 @@
 ﻿/*AmpShell : .NET front-end for DOSBox
- * Copyright (C) 2009, 2019 Maximilien Noal
+ * Copyright (C) 2009, 2020 Maximilien Noal
  *This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -15,16 +15,20 @@ using System.Xml.Serialization;
 
 namespace AmpShell.Models
 {
+    using System.Windows.Forms;
+    using System.Xml.Serialization;
+
     public class Category : ModelWithChildren
     {
-        public Category() : base()
+        public Category()
+            : base()
         {
         }
 
-        public Category(string CategoryTitle, string CategorySignature)
+        public Category(string categoryTitle, string categorySignature)
         {
-            Title = CategoryTitle;
-            Signature = CategorySignature;
+            this.Title = categoryTitle;
+            this.Signature = categorySignature;
         }
 
         [XmlAttribute("Title")]
@@ -43,7 +47,15 @@ namespace AmpShell.Models
             set => this.RaiseAndSetIfChanged(ref _nameColumnWidth, value);
         }
 
-        private int _executableColumnWith = 150;
+        private int releaseDateColumnWidth = 150;
+
+        public int ReleaseDateColumnWidth
+        {
+            get => releaseDateColumnWidth;
+            set { Set(ref releaseDateColumnWidth, value); }
+        }
+
+        private int executableColumnWith = 150;
 
         public int ExecutableColumnWidth
         {
@@ -51,7 +63,7 @@ namespace AmpShell.Models
             set => base.RaiseAndSetIfChanged(ref _executableColumnWith, value);
         }
 
-        private int _cMountColumnWidth = 150;
+        private int cMountColumnWidth = 150;
 
         public int CMountColumnWidth
         {
@@ -59,7 +71,7 @@ namespace AmpShell.Models
             set => this.RaiseAndSetIfChanged(ref _cMountColumnWidth, value);
         }
 
-        private int _setupExecutableColumnWidth = 150;
+        private int setupExecutableColumnWidth = 150;
 
         public int SetupExecutableColumnWidth
         {
@@ -67,7 +79,7 @@ namespace AmpShell.Models
             set => this.RaiseAndSetIfChanged(ref _setupExecutableColumnWidth, value);
         }
 
-        private int _customConfigurationColumnWidth = 150;
+        private int customConfigurationColumnWidth = 150;
 
         public int CustomConfigurationColumnWidth
         {
@@ -75,7 +87,7 @@ namespace AmpShell.Models
             set => this.RaiseAndSetIfChanged(ref _customConfigurationColumnWidth, value);
         }
 
-        private int _dMountColumnWidth = 150;
+        private int dMountColumnWidth = 150;
 
         public int DMountColumnWidth
         {
@@ -83,7 +95,7 @@ namespace AmpShell.Models
             set => this.RaiseAndSetIfChanged(ref _dMountColumnWidth, value);
         }
 
-        private int _mountingOptionsColumnWidth = 100;
+        private int mountingOptionsColumnWidth = 100;
 
         public int MountingOptionsColumnWidth
         {
@@ -99,7 +111,7 @@ namespace AmpShell.Models
             set => this.RaiseAndSetIfChanged(ref _additionnalCommandsColumnWidth, value);
         }
 
-        private int _noConsoleColumnWidth = 100;
+        private int noConsoleColumnWidth = 100;
 
         public int NoConsoleColumnWidth
         {
@@ -107,7 +119,7 @@ namespace AmpShell.Models
             set => this.RaiseAndSetIfChanged(ref _noConsoleColumnWidth, value);
         }
 
-        private int _fullscreenColumnWidth = 100;
+        private int fullscreenColumnWidth = 100;
 
         public int FullscreenColumnWidth
         {
@@ -115,7 +127,7 @@ namespace AmpShell.Models
             set => this.RaiseAndSetIfChanged(ref _fullscreenColumnWidth, value);
         }
 
-        private int _quitOnExitColumnWidth = 100;
+        private int quitOnExitColumnWidth = 100;
 
         public int QuitOnExitColumnWidth
         {

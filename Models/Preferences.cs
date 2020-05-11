@@ -1,5 +1,5 @@
 ﻿/*AmpShell : .NET front-end for DOSBox
- * Copyright (C) 2009, 2019 Maximilien Noal
+ * Copyright (C) 2009, 2020 Maximilien Noal
  *This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -15,6 +15,9 @@ using System.Xml.Serialization;
 
 namespace AmpShell.Models
 {
+    using System.Collections.Generic;
+    using System.Xml.Serialization;
+
     [XmlType(TypeName = "Window")]
     public class Preferences : ModelWithChildren
     {
@@ -44,7 +47,7 @@ namespace AmpShell.Models
             set => this.RaiseAndSetIfChanged(ref _portableMode, value);
         }
 
-        private bool _defaultIconViewOverride = false;
+        private bool defaultIconViewOverride = false;
 
         public bool DefaultIconViewOverride
         {
@@ -64,7 +67,7 @@ namespace AmpShell.Models
             set => this.RaiseAndSetIfChanged(ref _categoriesDefaultViewMode, value);
         }
 
-        private bool _rememberWindowPosition = true;
+        private bool rememberWindowPosition = true;
 
         public bool RememberWindowPosition
         {
@@ -72,7 +75,7 @@ namespace AmpShell.Models
             set => this.RaiseAndSetIfChanged(ref _rememberWindowPosition, value);
         }
 
-        private bool _rememberWindowSize = true;
+        private bool rememberWindowSize = true;
 
         public bool RememberWindowSize
         {
@@ -80,7 +83,7 @@ namespace AmpShell.Models
             set => this.RaiseAndSetIfChanged(ref _rememberWindowSize, value);
         }
 
-        private bool _gameDeletePrompt = true;
+        private bool gameDeletePrompt = true;
 
         public bool GameDeletePrompt
         {
@@ -88,7 +91,7 @@ namespace AmpShell.Models
             set => this.RaiseAndSetIfChanged(ref _gameDeletePrompt, value);
         }
 
-        private bool _categoryDeletePrompt = true;
+        private bool categoryDeletePrompt = true;
 
         public bool CategoryDeletePrompt
         {
@@ -96,7 +99,7 @@ namespace AmpShell.Models
             set => this.RaiseAndSetIfChanged(ref _categoryDeletePrompt, value);
         }
 
-        private bool _gamesNoConsole = true;
+        private bool gamesNoConsole = true;
 
         public bool GamesNoConsole
         {
@@ -104,7 +107,7 @@ namespace AmpShell.Models
             set => this.RaiseAndSetIfChanged(ref _gamesNoConsole, value);
         }
 
-        private bool _gamesInFullScreen = true;
+        private bool gamesInFullScreen = true;
 
         public bool GamesInFullScreen
         {
@@ -112,7 +115,7 @@ namespace AmpShell.Models
             set => this.RaiseAndSetIfChanged(ref _gamesInFullScreen, value);
         }
 
-        private bool _gamesQuitOnExit = true;
+        private bool gamesQuitOnExit = true;
 
         public bool GamesQuitOnExit
         {
@@ -160,7 +163,7 @@ namespace AmpShell.Models
             set => this.RaiseAndSetIfChanged(ref _configEditorAdditionalParameters, value);
         }
 
-        private bool _fullScreen;
+        private bool fullScreen;
 
         public bool Fullscreen
         {
@@ -168,7 +171,7 @@ namespace AmpShell.Models
             set => this.RaiseAndSetIfChanged(ref _fullScreen, value);
         }
 
-        private bool _menuBarVisible = true;
+        private bool menuBarVisible = true;
 
         public bool MenuBarVisible
         {
@@ -176,7 +179,7 @@ namespace AmpShell.Models
             set => this.RaiseAndSetIfChanged(ref _menuBarVisible, value);
         }
 
-        private bool _toolBarVisible = true;
+        private bool toolBarVisible = true;
 
         public bool ToolBarVisible
         {
@@ -216,7 +219,7 @@ namespace AmpShell.Models
             set => this.RaiseAndSetIfChanged(ref _dbDefaultLangFilePath, value);
         }
 
-        private int _width = 640;
+        private int width = 640;
 
         public int Width
         {
@@ -224,7 +227,7 @@ namespace AmpShell.Models
             set => this.RaiseAndSetIfChanged(ref _width, value);
         }
 
-        private int _height = 400;
+        private int height = 400;
 
         public int Height
         {
@@ -232,7 +235,7 @@ namespace AmpShell.Models
             set => this.RaiseAndSetIfChanged(ref _height, value);
         }
 
-        private int _largeViewModeSize = 48;
+        private int largeViewModeSize = 48;
 
         public int LargeViewModeSize
         {

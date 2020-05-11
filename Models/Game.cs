@@ -1,5 +1,5 @@
 ﻿/*AmpShell : .NET front-end for DOSBox
- * Copyright (C) 2009, 2019 Maximilien Noal
+ * Copyright (C) 2009, 2020 Maximilien Noal
  *This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
@@ -32,8 +32,16 @@ namespace AmpShell.Models
 
         private string _directory;
 
+        public DateTime ReleaseDate
+        {
+            get => releaseDate;
+            set { Set(ref releaseDate, value); }
+        }
+
+        private string directory = string.Empty;
+
         /// <summary>
-        /// Game's directory mounted as C:
+        /// Gets or sets game's directory mounted as C:.
         /// </summary>
         public string Directory
         {
@@ -44,7 +52,7 @@ namespace AmpShell.Models
         private string _cdPath;
 
         /// <summary>
-        /// Game's CD image / CD directory (like 'D:\') location
+        /// Gets or sets game's CD image / CD directory (like 'D:\') location.
         /// </summary>
         public string CDPath
         {
@@ -53,6 +61,17 @@ namespace AmpShell.Models
         }
 
         private string _setupEEXEPath;
+
+        /// <summary>
+        /// Optional, user-specified CD LABEL (only when it is not an image)
+        /// </summary>
+        public string CDLabel
+        {
+            get => _cdLabel;
+            set { this.RaiseAndSetIfChanged(ref _cdLabel, value); }
+        }
+
+        private string _setupEXEPath = "";
 
         /// <summary>
         /// Game's setup executable location
@@ -66,7 +85,7 @@ namespace AmpShell.Models
         private string _dbConfPath;
 
         /// <summary>
-        /// Game's custom DOSBox .conf file path
+        /// Gets or sets game's custom DOSBox .conf file path.
         /// </summary>
         public string DBConfPath
         {
@@ -77,7 +96,7 @@ namespace AmpShell.Models
         private string _additionalCommands;
 
         /// <summary>
-        /// Game's additionnal commands for DOSBox
+        /// Gets or sets game's additional commands for DOSBox.
         /// </summary>
         public string AdditionalCommands
         {
@@ -85,10 +104,10 @@ namespace AmpShell.Models
             set => this.RaiseAndSetIfChanged(ref _additionalCommands, value);
         }
 
-        private bool _useIOCTL;
+        private bool useIOCTL;
 
         /// <summary>
-        /// Option to use IOCTL (only available for optical drives)
+        /// Gets or sets a value indicating whether option to use IOCTL (only available for optical drives).
         /// </summary>
         public bool UseIOCTL
         {
@@ -96,10 +115,10 @@ namespace AmpShell.Models
             set => this.RaiseAndSetIfChanged(ref _useIOCTL, value);
         }
 
-        private bool _mountAsFloppy;
+        private bool mountAsFloppy;
 
         /// <summary>
-        /// Option to use the image file as a floppy (A:)
+        /// Gets or sets a value indicating whether option to use the image file as a floppy (A:).
         /// </summary>
         public bool MountAsFloppy
         {
@@ -107,11 +126,11 @@ namespace AmpShell.Models
             set => this.RaiseAndSetIfChanged(ref _mountAsFloppy, value);
         }
 
-        private bool _noConfig;
+        private bool noConfig;
 
         /// <summary>
-        /// Boolean if no config is used ("Don't use any config file at all" checkbox in GameForm)
-        /// Legacy 0.72 or older DOSBox option
+        /// Gets or sets a value indicating whether boolean if no config is used ("Don't use any
+        /// config file at all" checkbox in GameForm) Legacy 0.72 or older DOSBox option.
         /// </summary>
         public bool NoConfig
         {
@@ -119,7 +138,7 @@ namespace AmpShell.Models
             set => this.RaiseAndSetIfChanged(ref _noConfig, value);
         }
 
-        private bool _inFullScreen;
+        private bool inFullScreen;
 
         public bool InFullScreen
         {
@@ -127,10 +146,10 @@ namespace AmpShell.Models
             set => this.RaiseAndSetIfChanged(ref _inFullScreen, value);
         }
 
-        private bool _noConsole;
+        private bool noConsole;
 
         /// <summary>
-        /// Boolean for displaying DOSBox's console
+        /// Gets or sets a value indicating whether boolean for displaying DOSBox's console.
         /// </summary>
         public bool NoConsole
         {
@@ -138,10 +157,11 @@ namespace AmpShell.Models
             set => this.RaiseAndSetIfChanged(ref _noConsole, value);
         }
 
-        private bool _quitOnExit;
+        private bool quitOnExit;
 
         /// <summary>
-        /// Boolean for the -exit switch for DOSBox (if set to true, DOSBox closes when the game exits)
+        /// Gets or sets a value indicating whether boolean for the -exit switch for DOSBox (if set
+        /// to true, DOSBox closes when the game exits).
         /// </summary>
         public bool QuitOnExit
         {
@@ -152,7 +172,7 @@ namespace AmpShell.Models
         private string _dosExePath;
 
         /// <summary>
-        /// Game's main executable location
+        /// Gets or sets game's main executable location.
         /// </summary>
         public string DOSEXEPath
         {
@@ -160,21 +180,11 @@ namespace AmpShell.Models
             set => this.RaiseAndSetIfChanged(ref _dosExePath, value);
         }
 
-        private string _cdLabel = "";
+        private bool cdIsAnImage;
 
         /// <summary>
-        /// Optional, user-specified CD LABEL (only when it is not an image)
-        /// </summary>
-        public string CDLabel
-        {
-            get => _cdLabel;
-            set => this.RaiseAndSetIfChanged(ref _cdLabel, value);
-        }
-
-        private bool _cdIsAnImage;
-
-        /// <summary>
-        /// True if GameCDPath points to a CD image file, wrong if it points to a directory
+        /// Gets or sets a value indicating whether if GameCDPath points to a CD image file (false
+        /// if it points to a directory).
         /// </summary>
         public bool CDIsAnImage
         {
@@ -193,7 +203,8 @@ namespace AmpShell.Models
         private string _alternateDOSBoxExePath;
 
         /// <summary>
-        /// If we want to use DOSBox Daum, ECE, SVN, or other instead of the one set in the global preferences
+        /// Gets or sets if we want to use DOSBox Daum, ECE, SVN, or other instead of the one set in
+        /// the global preferences.
         /// </summary>
         public string AlternateDOSBoxExePath
         {
