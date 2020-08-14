@@ -8,7 +8,7 @@
  * You should have received a copy of the GNU General Public License along with this program.
  * If not, see <http://www.gnu.org/licenses/>.*/
 
-namespace AmpShell.Models
+namespace AmpShell.Model
 {
     using System.Collections.Generic;
     using System.Xml.Serialization;

@@ -11,7 +11,7 @@
 #pragma warning disable SA1201 // Elements should appear in the correct order
 #pragma warning disable SA1101 // Prefix local calls with this
 
-namespace AmpShell.Models
+namespace AmpShell.Model
 {
     using System.Collections.Generic;
     using System.Xml.Serialization;

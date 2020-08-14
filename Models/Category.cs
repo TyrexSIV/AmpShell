@@ -11,7 +11,7 @@
 #pragma warning disable SA1201 // Elements should appear in the correct order
 #pragma warning disable SA1101 // Prefix local calls with this
 
-namespace AmpShell.Models
+namespace AmpShell.Model
 {
     using System.Windows.Forms;
     using System.Xml.Serialization;
@@ -129,6 +129,14 @@ namespace AmpShell.Models
         {
             get => quitOnExitColumnWidth;
             set { Set(ref quitOnExitColumnWidth, value); }
+        }
+
+        private int notesColumnWidth = 400;
+
+        public int NotesColumnWidth
+        {
+            get => notesColumnWidth;
+            set { Set(ref notesColumnWidth, value); }
         }
 
         private View viewMode = View.LargeIcon;
