@@ -144,7 +144,7 @@ namespace AmpShell.Views
 
             List<ListViewItem> tabs = this.CategoriesListView.Items.Cast<ListViewItem>().ToList();
 
-            foreach (Category category in UserDataAccessor.UserData.ListChildren)
+            foreach (Category category in UserDataAccessor.UserData.ListChildren.ToList())
             {
                 UserDataAccessor.UserData.MoveChildToPosition(category, tabs.IndexOf(tabs.FirstOrDefault(x => Convert.ToString(x.Tag, CultureInfo.InvariantCulture) == category.Signature)));
             }
@@ -267,7 +267,10 @@ namespace AmpShell.Views
 
         private void MoveFirstButton_Click(object sender, EventArgs e)
         {
-            this.CategoriesListViewItemMoveTo(0);
+            if (this.CategoriesListView.FocusedItem.Index > 0)
+            {
+                this.CategoriesListViewItemMoveTo(0);
+            }
         }
 
         private void DOSBoxPathBrowseButton_Click(object sender, EventArgs e)
@@ -363,7 +366,10 @@ namespace AmpShell.Views
 
         private void MoveLastButton_Click(object sender, EventArgs e)
         {
-            this.CategoriesListViewItemMoveTo(this.CategoriesListView.Items.Count - 1);
+            if (this.CategoriesListView.FocusedItem.Index < this.CategoriesListView.Items.Count - 1)
+            {
+                this.CategoriesListViewItemMoveTo(this.CategoriesListView.Items.Count - 1);
+            }
         }
 
         private void LargeIconsRadioButton_MouseClick(object sender, MouseEventArgs e)
@@ -416,7 +422,7 @@ namespace AmpShell.Views
 
         private void MoveNextButton_Click(object sender, EventArgs e)
         {
-            if (this.CategoriesListView.FocusedItem.Index < this.CategoriesListView.Items.Count)
+            if (this.CategoriesListView.FocusedItem.Index < this.CategoriesListView.Items.Count - 1)
             {
                 this.CategoriesListViewItemMoveTo(this.CategoriesListView.FocusedItem.Index + 1);
             }
